@@ -1,6 +1,8 @@
 import marketData
 from assets import Assets
 from portfolio import Portfolio
+import matplotlib.pyplot as plt
+import numpy as np
 
 '''
 This is the meat of this entire project.
@@ -18,6 +20,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
     if abs(totalWeight - 1.0) > .0009:
         raise RuntimeError("Your weights don't add up to 1.0")
 
+    simulationIteration = 0
     # why 2? python and last year of the simlulation are both exclusive
     for startYear in range(minSimYear, maxSimYear - length + 2):
         for i in range(0, len(strategies)):
@@ -42,6 +45,8 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                     for i in range(0, len(strategies)):
                         actualWithdrawal += strategies[i].withdraw(inflationRate, numPeriodsPerYear)
                         strategies[i].grow(monthGrowth)
+                    currentPortfolioValue = sum(s.getPortfolio().value for s in strategies) / inflationRate
+                    simulation.recordData(simulationIteration, simulationYear, month, actualWithdrawal / inflationRate, currentPortfolioValue)
                     diff = actualWithdrawal - (sum(s.getInitialWithDrawal() / numPeriodsPerYear for s in strategies) * inflationRate)
                     if actualWithdrawal < .99999 * failMin / numPeriodsPerYear:
                         raise StopIteration
@@ -57,6 +62,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
             simulation.underflow.append(underflow)
             simulation.overflow.append(overflow)
             simulation.endRelativeInflation.append(inflationRate)
+            simulationIteration += 1
     simulation.finalize()
     return simulation
 
@@ -74,6 +80,16 @@ class Simulation:
         self.overflow = []
         self.endPortfolioValue = []
         self.endRelativeInflation = []
+
+        # this is a list of lists, where the top level list is per simulation and the second
+        # dimension list is a tuple of (year, month, withdrawal, portfolioValue). Year and
+        # month aren't strictly necessary (can be inferred from other data),but make it easier to debug.
+        self.recordedData = []
+
+    def recordData(self, simIteration, year, month, withdrawal, portfolioValue):
+        if len(self.recordedData) < simIteration + 1:
+            self.recordedData.append([])
+        self.recordedData[simIteration].append((year, month, withdrawal, portfolioValue))
 
     def recordSuccess(self):
         self.iterations += 1
@@ -94,6 +110,33 @@ class Simulation:
             raise RuntimeError
         if self.iterations != len(self.endRelativeInflation):
             raise RuntimeError
+
+    # who knows where this is going, right now just plot the first iteration.
+    def drawMe(self):
+        fig, ax1 = plt.subplots()
+        x = []
+        for i in range(0, len(self.recordedData[0])):
+            x.append(i)
+        y = []
+        y2 = []
+        for d in self.recordedData[0]:
+            y.append(d[2])
+            y2.append(d[3])
+        ax1.plot(x, y, 'r--')
+        ax1.set_xlabel("Months")
+        ax1.set_ylabel("Withdraw Dollars (red)")
+
+        ax2 = ax1.twinx()
+        ax2.plot(x, y2, 'bs')
+        ax2.set_ylabel("Portfolio Dollars (blue)")
+
+        #plt.xlabel("Months")
+        #plt.ylabel("Dollars")
+        #plt.plot(x, y, 'r--', x, y2, 'bs')
+        #plt.show()
+
+        fig.tight_layout()
+        plt.show()
 
     def __str__(self):
         output = []

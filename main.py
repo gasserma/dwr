@@ -17,6 +17,7 @@ result = runSimulation(
     2010
 )
 
+
 print(result)
 print("\n\n\n")
 
@@ -46,5 +47,7 @@ result = runSimulation(
     1926,
     2010
 )
+
+result.drawMe()
 
 print(result)
