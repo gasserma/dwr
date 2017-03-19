@@ -25,10 +25,48 @@ That said, I agree with them largely, and on all the important data points (succ
 
 If you look in test_trinity.py you can see more of this enumerated.
 
+## Some Vocabulary I Made Up
+Tracking the outcomes of these simulations isn't an obvious task. These are the metrics I am currently tracking that might not have an obvious meaning.
+*Overflow* - The sum of all withdrawals that were above the initial withdrawal amount (inflation adjusted). Overflow is good.
+
+*Underflow* - The sum of all the withdrawals that were below the initial withdrawal amount (inflation adjusted). Underflow is bad. Note that the way these are defined a single simulation run may have overflow and underflow. Note that the 4% withdrawal rule in the trinity study doesn't produce either of these things. But if you did something like withdraw a fixed percentage of your portfolio or follow Guyton Klinger or pretty much any other strategy you get these things.
+
+*Legacy* - This is the end value of the portfolio, ie what you are leaving behind.
+
+If you look at what gets printed out at the end of a simulation you'll see, mean, min, max, 5, 50, and 95th percentiles for these metrics. Also note TODO #8 below.
+
 ## Overview of Software
 This is all python code at this point, that runs on version 3.5.1. I'm using an anaconda windows installation.
 
 The easiest way to understand what is happening in this code is probably to read a combination of test_strategies.py and simulation.py, particularly the runSimulation method.
+
+The important thing is the interface to runSimulation. Examples can be found in the tests and in main.py. Here is an example call...  
+~~~~
+cwsWeight = 0.6
+retirementLength = 30
+initialPortfolioValue = 1*1000*1000
+failureThreshhold = 20*1000
+result = runSimulation(
+    retirementLength,
+    initialPortfolioValue,
+    failureThreshhold,
+    (
+        (ConstantWithdrawalAmountStrategy(initialPortfolio * .04 * cwsWeight), Assets(stocks:0.5, bonds:0.5), cwsWeight),
+        (ConstantPercentWithdrawalStrategy(.04), Assets(stocks:1.0, bonds:0.0), 1.0 - cwsWeight)
+    ),
+    1926,
+    2010
+)
+
+result.drawMe()
+print(result)
+~~~~
+
+That is saying run a simulation over all 30 year periods from 1926 to 2010 using two strategies (constant amount and constant percent). If the amount we withdraw ever dips below 20,000, that is a failure. Weight the ca strategy as .6 of our portfolio, and cp as .4. Have the ca strategy use 50/50 stocks and bonds and the cp one use 100 stocks. For ca, withdraw what is 4% of the portfolio initially. For cp, withdraw what is 4% of the portfolio at withdrawal time. All of this is inflation adjusted.
+
+The weights for the strategies and portfolios in the strategies need to add up to 1.0, which they do here.
+
+Then at the end draw a graph and print some stuff.
 
 ### Main
 There is nothing that interesting in main.py. Its just a good starting point to see if the code runs for you and I use it occasionally as an entry point for the profiler, etc.
@@ -64,5 +102,5 @@ Context is important for this class, it might represent a portfolio and each flo
 4. Play around with visualizations. This is going to end up being the compelling way of looking at this stuff I think.
 5. Clean up the market data.
 6. Get more market data sources for fun.
-
-
+7. The full trinity tests are really really slow. Like 1 min run time each...gross.
+8. All the stats I print out are hard to reason about because they are in terms of the whole simluation length. Maybe I should just divide by the number of years in the simulation? Although probably not for the legacy metric.
