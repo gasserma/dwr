@@ -43,7 +43,7 @@ The easiest way to understand what is happening in this code is probably to read
 
 The important thing is the interface to runSimulation. Examples can be found in the tests and in main.py. Here is an example call...  
 ~~~~
-cwsWeight = 0.6
+cwasWeight = 0.6
 retirementLength = 30
 initialPortfolioValue = 1*1000*1000
 failureThreshhold = 20*1000
@@ -52,8 +52,8 @@ result = runSimulation(
     initialPortfolioValue,
     failureThreshhold,
     (
-        (ConstantWithdrawalAmountStrategy(initialPortfolio * .04 * cwsWeight), Assets(stocks:0.5, bonds:0.5), cwsWeight),
-        (ConstantPercentWithdrawalStrategy(.04), Assets(stocks:1.0, bonds:0.0), 1.0 - cwsWeight)
+        (ConstantWithdrawalAmountStrategy(initialPortfolio * .04 * cwsWeight), Assets(stocks:0.5, bonds:0.5), cwasWeight),
+        (ConstantPercentWithdrawalStrategy(.04), Assets(stocks:1.0, bonds:0.0), 1.0 - cwasWeight)
     ),
     1926,
     2010
