@@ -27,6 +27,7 @@ If you look in test_trinity.py you can see more of this enumerated.
 
 ## Some Vocabulary I Made Up
 Tracking the outcomes of these simulations isn't an obvious task. These are the metrics I am currently tracking that might not have an obvious meaning.
+
 *Overflow* - The sum of all withdrawals that were above the initial withdrawal amount (inflation adjusted). Overflow is good.
 
 *Underflow* - The sum of all the withdrawals that were below the initial withdrawal amount (inflation adjusted). Underflow is bad. Note that the way these are defined a single simulation run may have overflow and underflow. Note that the 4% withdrawal rule in the trinity study doesn't produce either of these things. But if you did something like withdraw a fixed percentage of your portfolio or follow Guyton Klinger or pretty much any other strategy you get these things.
