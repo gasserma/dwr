@@ -1,10 +1,26 @@
 from strategies.test_trinity import *
+from strategies.guyton_klinger import *
 
 '''
 This is currently running on Python 3.5.1
 '''
 retirementLength = 30
 initialPortfolio = 1 * 1000 * 1000
+
+result = runSimulation(
+    retirementLength,
+    initialPortfolio,
+    .02 * initialPortfolio,
+    (
+        (GuytonKlinger(.04, retirementLength), Assets(.5, .5), 1.0),
+    ),
+    1926,
+    2010
+)
+
+print(result)
+print("\n\n\n")
+
 
 result = runSimulation(
     retirementLength,

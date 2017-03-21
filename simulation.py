@@ -2,7 +2,6 @@ import marketData
 from assets import Assets
 from portfolio import Portfolio
 import matplotlib.pyplot as plt
-import numpy as np
 
 '''
 This is the meat of this entire project.
@@ -45,7 +44,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                     for i in range(0, len(strategies)):
                         actualWithdrawal += strategies[i].withdraw(inflationRate, numPeriodsPerYear)
                         strategies[i].grow(monthGrowth)
-                    currentPortfolioValue = sum(s.getPortfolio().value for s in strategies) / inflationRate
+                    currentPortfolioValue = sum(s.getPortfolioValue() for s in strategies) / inflationRate
                     simulation.recordData(simulationIteration, simulationYear, month, actualWithdrawal / inflationRate, currentPortfolioValue)
                     diff = actualWithdrawal - (sum(s.getInitialWithDrawal() / numPeriodsPerYear for s in strategies) * inflationRate)
                     if actualWithdrawal < .99999 * failMin / numPeriodsPerYear:
@@ -58,7 +57,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
         except StopIteration:
             simulation.recordFailure(startYear, candidateFailureYear)
         finally:
-            simulation.endPortfolioValue.append(sum(s.getPortfolio().value for s in strategies) / inflationRate)
+            simulation.endPortfolioValue.append(sum(s.getPortfolioValue() for s in strategies) / inflationRate)
             simulation.underflow.append(underflow)
             simulation.overflow.append(overflow)
             simulation.endRelativeInflation.append(inflationRate)

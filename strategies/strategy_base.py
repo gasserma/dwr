@@ -20,9 +20,8 @@ class StrategyBase:
     @abstractmethod
     def withdraw(self, inflationRate, numPeriodsPerYear): pass
 
-    # consider just making these last two implemented here. Not sure who is going to alter them.
     @abstractmethod
-    def getPortfolio(self): pass
+    def getPortfolioValue(self): pass
 
     @abstractmethod
     def grow(self, monthGrowth):

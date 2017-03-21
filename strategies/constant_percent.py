@@ -23,9 +23,9 @@ class ConstantPercentWithdrawalStrategy(StrategyBase):
         # rebalance is implicit
         return withdrawal
 
-    def getPortfolio(self):
-        super(ConstantPercentWithdrawalStrategy, self).getPortfolio()
-        return self.portfolio
+    def getPortfolioValue(self):
+        super(ConstantPercentWithdrawalStrategy, self).getPortfolioValue()
+        return self.portfolio.value
 
     def grow(self, monthGrowth):
         super(ConstantPercentWithdrawalStrategy, self).grow(monthGrowth)

@@ -20,9 +20,9 @@ class ConstantWithdrawalAmountStrategy(StrategyBase):
         withdrawal = inflationRate * self.initialWithdrawal / numPeriodsPerYear
         return self.portfolio.withdraw(withdrawal)
 
-    def getPortfolio(self):
-        super(ConstantWithdrawalAmountStrategy, self).getPortfolio()
-        return self.portfolio
+    def getPortfolioValue(self):
+        super(ConstantWithdrawalAmountStrategy, self).getPortfolioValue()
+        return self.portfolio.value
 
     def grow(self, monthGrowth):
         super(ConstantWithdrawalAmountStrategy, self).grow(monthGrowth)
