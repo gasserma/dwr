@@ -1,50 +1,60 @@
-from strategies.strategy_base import StrategyBase
+from strategies.strategy_base import *
 from assets import *
 
 '''
 This is the implementation of the guyton klinger strategy
 '''
-class GuytonKlinger(StrategyBase):
-    def __init__(self, initialPercent, simulationLength):
-        self.initialPercent = initialPercent
-        self.currentPercent = initialPercent
+class GuytonKlinger(YearlyStrategyBase):
+    def __init__(self, initialAmount, simulationLength):
+        self.initialAmount = initialAmount
+        self.currentAmount = initialAmount
         self.simulationLength = simulationLength
 
     def getInitialWithDrawal(self):
-        super(GuytonKlinger, self).getInitialWithDrawal()
-        return self.initialWithdrawal
+        return self.initialAmount
 
-    def reset(self, portfolio):
-        super(GuytonKlinger, self).reset(portfolio)
+    def getCurrentWithdrawalAmount(self):
+        return self.currentAmount
+
+    def yearBaseReset(self, portfolio):
         self.portfolio = portfolio
-        self.initialWithdrawal = portfolio.value * self.initialPercent
+        self.initialRate = self.initialAmount / portfolio.value
         self.cashReserves = 0.0
         self.year = 0.0
         self.previousValue = self.getPortfolioValue()
         self.initialAllocation = portfolio.allocation
+        self.previousInflation = 1.0
 
-    def withdraw(self, inflationRate, numPeriodsPerYear):
-        super(GuytonKlinger, self).withdraw(inflationRate, numPeriodsPerYear)
-        self.year += 1.0 / numPeriodsPerYear # TODO double check edge cases around this as it applies to (CPR)
+    def currentRate(self):
+        return self.currentAmount / self.getPortfolioValue()
+
+    def yearWithdraw(self, inflationRate):
+        marginalInflation = inflationRate / self.previousInflation
+        self.previousInflation = inflationRate
+        self.year += 1
+
+        if self.getPortfolioValue() == 0.0:
+            return 0.0
 
         # Inflation Rule (IR)
-        if self.getPortfolioValue() < self.previousValue and self.currentPercent * min(inflationRate, 1.06) < self.initialWithdrawal:
-            self.currentPercent = self.currentPercent * min(inflationRate, 1.06)
+        if self.getPortfolioValue() > self.previousValue * marginalInflation \
+                or self.currentAmount * min(marginalInflation, 1.06) < self.initialAmount * inflationRate:
+            self.currentAmount = self.currentAmount * min(marginalInflation, 1.06)
 
         # Capital Preservation Rule (CPR)
-        if self.currentPercent > 1.2 * self.initialPercent:
+        if self.currentRate() > 1.2 * self.initialRate:
             if self.simulationLength - self.year > 15:
-                self.currentPercent = self.currentPercent * .9
+                self.currentAmount = self.currentAmount * .9
 
         # Prosperity Rule (PR)
-        if self.currentPercent < .8 * self.initialPercent:
-            self.currentPercent = self.currentPercent * 1.1
+        if self.currentRate() < .8 * self.initialRate:
+            self.currentAmount = self.currentAmount * 1.1
 
         # Portfolio Management Rule (PMR)
         # Other half of this rule in grow(...)
-        desiredWithdrawal = self.portfolio.value * self.currentPercent / numPeriodsPerYear
+        desiredWithdrawal = self.currentAmount
         actualWithdrawal = 0.0
-        if desiredWithdrawal > self.cashReserves:
+        if desiredWithdrawal < self.cashReserves:
             self.cashReserves -= desiredWithdrawal
             actualWithdrawal = desiredWithdrawal
         elif self.cashReserves > 0.0:
@@ -61,21 +71,20 @@ class GuytonKlinger(StrategyBase):
         super(GuytonKlinger, self).getPortfolioValue()
         return self.portfolio.value + self.cashReserves
 
-    def grow(self, monthGrowth):
-        super(GuytonKlinger, self).grow(monthGrowth)
+    def yearGrow(self, yearGrowth):
         # PMR other half, rebalance excess into cash
 
-        # TODO I THINK THERE IS A DIFFERENT DECISION HERE IF THERE IS A NEGATIVE RETURN
-        minPerformance = float("inf")
-        for i in range(0, len(monthGrowth)):
-            if monthGrowth[i] < minPerformance:
-                minPerformance = monthGrowth[i]
+        # this is stupid, and right now it seems like it is as described by Guyton and Klinger.
+        # you can screw this whole strategy up by having a teeny tiny sliver
+        # of your portfolio dedicated to an asset class that performs terribly
+        if self.portfolio.value * self.portfolio.allocation * yearGrowth > self.portfolio.value:
+            minPerformance = min(yearGrowth)
 
-        newAssets = []
-        for i in range(0, len(monthGrowth)):
-            self.cashReserves += self.portfolio.allocation[i] * self.portfolio.value * (monthGrowth[i] - minPerformance)
-            newAssets.append(minPerformance)
+            newAssets = []
+            for i in range(0, len(yearGrowth)):
+                self.cashReserves += self.portfolio.allocation[i] * self.portfolio.value * (yearGrowth[i] - minPerformance)
+                newAssets.append(minPerformance)
 
-        monthGrowth = Assets(newAssets)
+            yearGrowth = Assets(newAssets)
 
-        self.portfolio.grow(monthGrowth)
+        self.portfolio.grow(yearGrowth)

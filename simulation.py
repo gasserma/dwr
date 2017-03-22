@@ -47,7 +47,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                     currentPortfolioValue = sum(s.getPortfolioValue() for s in strategies) / inflationRate
                     simulation.recordData(simulationIteration, simulationYear, month, actualWithdrawal / inflationRate, currentPortfolioValue)
                     diff = actualWithdrawal - (sum(s.getInitialWithDrawal() / numPeriodsPerYear for s in strategies) * inflationRate)
-                    if actualWithdrawal < .99999 * failMin / numPeriodsPerYear:
+                    if actualWithdrawal <= .99999 * failMin / numPeriodsPerYear:
                         raise StopIteration
                     if diff < 0:
                         underflow += diff / inflationRate

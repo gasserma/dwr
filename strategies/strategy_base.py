@@ -28,3 +28,40 @@ class StrategyBase:
         if not isinstance(monthGrowth, Assets):
             raise RuntimeWarning
 
+class YearlyStrategyBase(StrategyBase):
+    def reset(self, portfolio):
+        self.month = 0
+        self.yearBaseReset(portfolio)
+        self.yearGrowthAccumulator = Assets.getMultiplicationUnitAssets()
+
+    def grow(self, monthGrowth):
+        self.yearGrowthAccumulator = self.yearGrowthAccumulator * monthGrowth
+        if self.month % 12 == 0:
+            self.yearGrow(self.yearGrowthAccumulator)
+            self.yearGrowthAccumulator = Assets.getMultiplicationUnitAssets()
+
+    def withdraw(self, inflationRate, numPeriodsPerYear):
+        self.month += 1
+        if numPeriodsPerYear != 12:
+            raise RuntimeError
+
+        if self.month % 12 == 0:
+            self.yearWithdraw(inflationRate) # inflation rates are already yearly
+
+        return self.getCurrentWithdrawalAmount() /12.0
+
+    @abstractmethod
+    def yearWithdraw(self, inflationRate): pass
+
+    @abstractmethod
+    def getCurrentWithdrawalAmount(self): pass
+
+    @abstractmethod
+    def yearGrow(self, yearGrowth):
+        if not isinstance(yearGrowth, Assets):
+            raise RuntimeWarning
+
+    @abstractmethod
+    def yearBaseReset(self, portfolio):
+        if not isinstance(portfolio, Portfolio):
+            raise RuntimeWarning

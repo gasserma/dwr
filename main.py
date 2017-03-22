@@ -10,9 +10,9 @@ initialPortfolio = 1 * 1000 * 1000
 result = runSimulation(
     retirementLength,
     initialPortfolio,
-    .02 * initialPortfolio,
+    0.0,
     (
-        (GuytonKlinger(.04, retirementLength), Assets(.5, .5), 1.0),
+        (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.8, .2), 1.0),
     ),
     1926,
     2010
@@ -21,7 +21,7 @@ result = runSimulation(
 print(result)
 print("\n\n\n")
 
-
+'''
 result = runSimulation(
     retirementLength,
     initialPortfolio,
@@ -67,3 +67,4 @@ result = runSimulation(
 result.drawMe()
 
 print(result)
+'''

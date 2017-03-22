@@ -117,3 +117,7 @@ class Assets(tuple):
             marketData.getSP500TotalReturn(year, month),
             marketData.getLongTermCorpBondsReturn(year, month)
         )
+
+    @staticmethod
+    def getMultiplicationUnitAssets():
+        return Assets(1.0, 1.0)
