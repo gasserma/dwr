@@ -21,7 +21,7 @@ result = runSimulation(
 print(result)
 print("\n\n\n")
 
-'''
+
 result = runSimulation(
     retirementLength,
     initialPortfolio,
@@ -67,4 +67,3 @@ result = runSimulation(
 result.drawMe()
 
 print(result)
-'''
