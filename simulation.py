@@ -37,7 +37,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                 if ignoreInflation:
                     inflationRate = 1.0
                 failMin = failureThreshhold * inflationRate
-                numPeriodsPerYear = 12 # 12 == months, etc.
+                numPeriodsPerYear = 12 # 12 == months, etc. Actually it is a farce to pretend anything other than 12 works here.
                 for month in range(1, numPeriodsPerYear + 1):
                     monthGrowth = Assets.getMarketReturns(simulationYear, month)
                     actualWithdrawal = 0.0
@@ -73,7 +73,7 @@ class Simulation:
         self.ignoreInflation = ignoreInflation
         self.initialPortfolio = initialPortfolio
         self.failureThreshhold = failureThreshhold
-        self.iterations = 0.0
+        self.iterations = 0
         self.failures = []
         self.underflow = []
         self.overflow = []
@@ -111,22 +111,28 @@ class Simulation:
             raise RuntimeError
 
     # who knows where this is going, right now just plot the first iteration.
-    def drawMe(self):
+    def drawMe(self, simIteration):
         fig, ax1 = plt.subplots()
         x = []
-        for i in range(0, len(self.recordedData[0])):
+        for i in range(0, len(self.recordedData[simIteration])):
             x.append(i)
-        y = []
-        y2 = []
-        for d in self.recordedData[0]:
-            y.append(d[2])
-            y2.append(d[3])
-        ax1.plot(x, y, 'r--')
+        withdrawals = []
+        portfolio = []
+        initialPortfolio = []
+        initialRate = []
+        irActual = self.recordedData[simIteration][0][2]
+        ipActual = self.recordedData[simIteration][0][3]
+        for d in self.recordedData[simIteration]:
+            withdrawals.append(d[2])
+            portfolio.append(d[3])
+            initialRate.append(irActual)
+            initialPortfolio.append(ipActual)
+        ax1.plot(x, withdrawals, 'rs', x, initialRate, 'r--')
         ax1.set_xlabel("Months")
         ax1.set_ylabel("Withdraw Dollars (red)")
 
         ax2 = ax1.twinx()
-        ax2.plot(x, y2, 'bs')
+        ax2.plot(x, portfolio, 'bs', x, initialPortfolio, 'b--')
         ax2.set_ylabel("Portfolio Dollars (blue)")
 
         #plt.xlabel("Months")
@@ -134,6 +140,7 @@ class Simulation:
         #plt.plot(x, y, 'r--', x, y2, 'bs')
         #plt.show()
 
+        fig.suptitle("Simulation Starting in {0}".format(self.minYear + simIteration))
         fig.tight_layout()
         plt.show()
 

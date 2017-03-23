@@ -7,7 +7,6 @@ This is the implementation of the guyton klinger strategy
 class GuytonKlinger(YearlyStrategyBase):
     def __init__(self, initialAmount, simulationLength):
         self.initialAmount = initialAmount
-        self.currentAmount = initialAmount
         self.simulationLength = simulationLength
 
     def getInitialWithDrawal(self):
@@ -24,6 +23,7 @@ class GuytonKlinger(YearlyStrategyBase):
         self.previousValue = self.getPortfolioValue()
         self.initialAllocation = portfolio.allocation
         self.previousInflation = 1.0
+        self.currentAmount = self.initialAmount
 
     def currentRate(self):
         return self.currentAmount / self.getPortfolioValue()

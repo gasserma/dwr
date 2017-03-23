@@ -30,15 +30,15 @@ class StrategyBase:
 
 class YearlyStrategyBase(StrategyBase):
     def reset(self, portfolio):
-        self.month = 0
+        self.month = -1
         self.yearBaseReset(portfolio)
         self.yearGrowthAccumulator = Assets.getMultiplicationUnitAssets()
 
     def grow(self, monthGrowth):
-        self.yearGrowthAccumulator = self.yearGrowthAccumulator * monthGrowth
-        if self.month % 12 == 0:
+        if self.month % 12 == 0: # Do all this first to get the first iteration right.
             self.yearGrow(self.yearGrowthAccumulator)
             self.yearGrowthAccumulator = Assets.getMultiplicationUnitAssets()
+        self.yearGrowthAccumulator = self.yearGrowthAccumulator * monthGrowth
 
     def withdraw(self, inflationRate, numPeriodsPerYear):
         self.month += 1

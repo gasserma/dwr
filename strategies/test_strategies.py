@@ -4,6 +4,7 @@ from assets import Assets
 from strategies.constant_amount import *
 from simulation import runSimulation
 from strategies.constant_percent import *
+from strategies.guyton_klinger import *
 
 '''
 This is a collection of tests that primarily verify the overall engine is functioning correctly.
@@ -76,3 +77,28 @@ class TestStrategies(unittest.TestCase):
 
         #it always works because you never run out with a percent withdrwawal strategy
         self.assertAlmostEqual(result.getSuccessRate(), 1.0, delta=.005)
+
+    def test_yearBase(self):
+        length = 30
+        gk = GuytonKlinger(.05, length)
+        gk.reset(Portfolio(Assets(.5, .5)))
+
+        initialWithdrawal = gk.withdraw(1.1, 12)
+        initialPortfolio = gk.getPortfolioValue()
+        gk.grow(Assets(1.1, 1.1))
+        for i in range(1, 11): # one shy of a year's months
+            withdrawal = gk.withdraw(1.1, 12)
+            gk.grow(Assets(1.1, 1.1))
+            portfolio = gk.getPortfolioValue()
+            self.assertAlmostEqual(withdrawal, initialWithdrawal, delta=.0005)
+            self.assertAlmostEqual(portfolio, initialPortfolio, delta=.0005)
+
+        grownWithdrawal = gk.withdraw(1.1, 12)
+        gk.grow(Assets(1.1, 1.1))
+        grownPortfolio = gk.getPortfolioValue()
+        self.assertNotAlmostEqual(grownWithdrawal, initialWithdrawal, delta=.00005)
+        self.assertNotAlmostEqual(grownPortfolio, initialPortfolio, delta=.00005)
+
+
+
+

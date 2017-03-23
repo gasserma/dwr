@@ -5,20 +5,24 @@ from strategies.guyton_klinger import *
 This is currently running on Python 3.5.1
 '''
 retirementLength = 30
-initialPortfolio = 1 * 1000 * 1000
+initialPortfolio = 2 * 1000 * 1000
 
 result = runSimulation(
     retirementLength,
     initialPortfolio,
-    0.0,
+    .055 * initialPortfolio * .5,
     (
-        (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.8, .2), 1.0),
+        (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
     ),
     1926,
     2010
 )
 
 print(result)
+for i in range(0, result.iterations):
+    result.drawMe(i)
+
+'''
 print("\n\n\n")
 
 
@@ -67,3 +71,4 @@ result = runSimulation(
 result.drawMe()
 
 print(result)
+'''
