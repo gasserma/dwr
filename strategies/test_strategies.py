@@ -83,16 +83,20 @@ class TestStrategies(unittest.TestCase):
         gk = GuytonKlinger(.05, length)
         gk.reset(Portfolio(Assets(.5, .5)))
 
-        initialWithdrawal = gk.withdraw(1.1, 12)
+        # withdraw and grow once
+        initialWithdrawal = gk.withdraw(1.0, 12)
         initialPortfolio = gk.getPortfolioValue()
         gk.grow(Assets(1.1, 1.1))
-        for i in range(1, 11): # one shy of a year's months
-            withdrawal = gk.withdraw(1.1, 12)
+
+        # now do it 11 more times
+        for i in range(1, 12):
+            withdrawal = gk.withdraw(1.0, 12)
             gk.grow(Assets(1.1, 1.1))
             portfolio = gk.getPortfolioValue()
             self.assertAlmostEqual(withdrawal, initialWithdrawal, delta=.0005)
             self.assertAlmostEqual(portfolio, initialPortfolio, delta=.0005)
 
+        # now do it 1 more time, which will trigger the new year calculations.
         grownWithdrawal = gk.withdraw(1.1, 12)
         gk.grow(Assets(1.1, 1.1))
         grownPortfolio = gk.getPortfolioValue()
