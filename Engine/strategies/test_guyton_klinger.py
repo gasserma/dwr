@@ -1,8 +1,7 @@
 import unittest
-from strategies.constant_amount import *
-from simulation import runSimulation
-from strategies.constant_percent import *
-from strategies.guyton_klinger import *
+
+from Engine.strategies.constant_percent import *
+from Engine.strategies.guyton_klinger import *
 
 '''
 This is a set of tests that cover guyton klinger. They are much more granular given how complicated guyton klinger is.

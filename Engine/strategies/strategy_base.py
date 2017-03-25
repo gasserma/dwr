@@ -1,6 +1,7 @@
-from assets import Assets
-from portfolio import Portfolio
 from abc import ABCMeta, abstractmethod
+
+from Engine.assets import Assets
+from Engine.portfolio import Portfolio
 
 '''
 This class is of dubious utility...

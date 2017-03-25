@@ -1,5 +1,5 @@
-from strategies.strategy_base import *
-from assets import *
+from Engine.assets import *
+from Engine.strategies.strategy_base import *
 
 '''
 This is the implementation of the guyton klinger strategy

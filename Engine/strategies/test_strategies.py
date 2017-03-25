@@ -1,10 +1,12 @@
 import unittest
-from portfolio import Portfolio
-from assets import Assets
-from strategies.constant_amount import *
-from simulation import runSimulation
-from strategies.constant_percent import *
-from strategies.guyton_klinger import *
+
+from Engine.portfolio import Portfolio
+from Engine.strategies.constant_percent import *
+from Engine.strategies.guyton_klinger import *
+
+from Engine.assets import Assets
+from Engine.simulation import runSimulation
+from Engine.strategies.constant_amount import *
 
 '''
 This is a collection of tests that primarily verify the overall engine is functioning correctly.

@@ -1,7 +1,8 @@
-import marketData
-from assets import Assets
-from portfolio import Portfolio
 import matplotlib.pyplot as plt
+from Engine.portfolio import Portfolio
+
+from Engine import marketData
+from Engine.assets import Assets
 
 '''
 This is the meat of this entire project.

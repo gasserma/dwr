@@ -1,5 +1,5 @@
-from strategies.test_trinity import *
-from strategies.guyton_klinger import *
+from Engine.strategies.guyton_klinger import GuytonKlinger
+from Engine.strategies.test_trinity import *
 
 '''
 This is currently running on Python 3.5.1

@@ -1,5 +1,6 @@
-import marketData
 import math
+
+from Engine import marketData
 
 '''
 The point of this class is to stop you from having to write .stocks/.bonds/.gold etc everywhere

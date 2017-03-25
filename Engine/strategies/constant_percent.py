@@ -1,4 +1,4 @@
-from strategies.strategy_base import StrategyBase
+from Engine.strategies.strategy_base import StrategyBase
 
 '''
 This is a withdrawal strategy that takes a constant percentage of the portfolio every period.
