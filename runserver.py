@@ -1,5 +1,5 @@
 from os import environ
-from FlaskWebServer.__init__ import app
+from __init__ import app
 
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')
