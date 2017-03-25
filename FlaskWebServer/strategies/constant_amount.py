@@ -1,4 +1,4 @@
-from Engine.strategies.strategy_base import StrategyBase
+from FlaskWebServer.strategies.strategy_base import StrategyBase
 
 '''
 This is the implementation of the trinity study's constant withdrawal amount.

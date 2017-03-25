@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from Engine.portfolio import Portfolio
 
-from Engine import marketData
-from Engine.assets import Assets
+from FlaskWebServer import marketData
+from FlaskWebServer.assets import Assets
+from FlaskWebServer.portfolio import Portfolio
 
 '''
 This is the meat of this entire project.

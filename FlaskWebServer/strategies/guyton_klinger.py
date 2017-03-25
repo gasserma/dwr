@@ -1,9 +1,11 @@
-from Engine.assets import *
-from Engine.strategies.strategy_base import *
 
 '''
 This is the implementation of the guyton klinger strategy
 '''
+from FlaskWebServer.assets import Assets
+from FlaskWebServer.strategies.strategy_base import YearlyStrategyBase
+
+
 class GuytonKlinger(YearlyStrategyBase):
     def __init__(self, initialAmount, simulationLength):
         self.initialAmount = initialAmount

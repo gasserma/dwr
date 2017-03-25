@@ -1,5 +1,6 @@
-from Engine.strategies.guyton_klinger import GuytonKlinger
-from Engine.strategies.test_trinity import *
+from FlaskWebServer.assets import Assets
+from FlaskWebServer.simulation import runSimulation
+from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
 
 '''
 This is currently running on Python 3.5.1

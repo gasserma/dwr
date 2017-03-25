@@ -1,11 +1,9 @@
 import unittest
 
-from Engine.portfolio import Portfolio
-from Engine.strategies.constant_percent import *
-
-from Engine.assets import Assets
-from Engine.simulation import runSimulation
-from Engine.strategies.constant_amount import *
+from FlaskWebServer.assets import Assets
+from FlaskWebServer.simulation import runSimulation
+from FlaskWebServer.portfolio import Portfolio
+from FlaskWebServer.strategies.constant_amount import ConstantWithdrawalAmountStrategy
 
 '''
 This class attempts to test that we get the same conclusion as the trinity study.
