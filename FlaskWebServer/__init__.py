@@ -40,6 +40,8 @@ def calc():
         return result.__str__()
     except ImportError as e:
         return e.__str__()
+    except Exception as e:
+        return e.__str__()
 
 
 
