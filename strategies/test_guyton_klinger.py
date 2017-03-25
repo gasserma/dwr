@@ -1,8 +1,8 @@
 import unittest
 
-from FlaskWebServer.assets import Assets
-from FlaskWebServer.portfolio import Portfolio
-from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
+from assets import Assets
+from portfolio import Portfolio
+from strategies.guyton_klinger import GuytonKlinger
 
 '''
 This is a set of tests that cover guyton klinger. They are much more granular given how complicated guyton klinger is.

@@ -1,11 +1,11 @@
 import unittest
 
-from FlaskWebServer.assets import Assets
-from FlaskWebServer.portfolio import Portfolio
-from FlaskWebServer.simulation import runSimulation
-from FlaskWebServer.strategies.constant_amount import ConstantWithdrawalAmountStrategy
-from FlaskWebServer.strategies.constant_percent import ConstantPercentWithdrawalStrategy
-from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
+from assets import Assets
+from portfolio import Portfolio
+from simulation import runSimulation
+from strategies.constant_amount import ConstantWithdrawalAmountStrategy
+from strategies.constant_percent import ConstantPercentWithdrawalStrategy
+from strategies.guyton_klinger import GuytonKlinger
 
 '''
 This is a collection of tests that primarily verify the overall engine is functioning correctly.

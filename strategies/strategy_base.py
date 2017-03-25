@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
 
-from FlaskWebServer.assets import Assets
+from assets import Assets
 
-from FlaskWebServer.portfolio import Portfolio
+from portfolio import Portfolio
 
 '''
 This class is of dubious utility...

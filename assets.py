@@ -1,6 +1,6 @@
 import math
 
-from FlaskWebServer import marketData
+from market_data import getSP500TotalReturn, getLongTermCorpBondsReturn, getBondReturn, getStockReturn
 
 '''
 The point of this class is to stop you from having to write .stocks/.bonds/.gold etc everywhere
@@ -109,14 +109,14 @@ class Assets(tuple):
 
     def getMarketReturns(year):
         return Assets(
-            marketData.getStockReturn(year),
-            marketData.getBondReturn(year)
+            getStockReturn(year),
+            getBondReturn(year)
         )
 
     def getMarketReturns(year, month):
         return Assets(
-            marketData.getSP500TotalReturn(year, month),
-            marketData.getLongTermCorpBondsReturn(year, month)
+            getSP500TotalReturn(year, month),
+            getLongTermCorpBondsReturn(year, month)
         )
 
     @staticmethod

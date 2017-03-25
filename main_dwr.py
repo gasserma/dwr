@@ -1,6 +1,6 @@
-from FlaskWebServer.assets import Assets
-from FlaskWebServer.simulation import runSimulation
-from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
+from assets import Assets
+from simulation import runSimulation
+from strategies.guyton_klinger import GuytonKlinger
 
 '''
 This is currently running on Python 3.5.1

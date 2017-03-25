@@ -2,8 +2,8 @@
 '''
 This is the implementation of the guyton klinger strategy
 '''
-from FlaskWebServer.assets import Assets
-from FlaskWebServer.strategies.strategy_base import YearlyStrategyBase
+from assets import Assets
+from strategies.strategy_base import YearlyStrategyBase
 
 
 class GuytonKlinger(YearlyStrategyBase):

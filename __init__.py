@@ -24,9 +24,9 @@ def calc():
     initialPortfolio = 2 * 1000 * 1000
 
     try:
-        from FlaskWebServer.simulation import runSimulation
-        from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
-        from FlaskWebServer.assets import Assets
+        from simulation import runSimulation
+        from strategies.guyton_klinger import GuytonKlinger
+        from assets import Assets
         result = runSimulation(
             retirementLength,
             initialPortfolio,

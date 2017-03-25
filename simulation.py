@@ -1,12 +1,13 @@
 #import matplotlib.pyplot as plt
 
-from FlaskWebServer import marketData
-from FlaskWebServer.assets import Assets
-from FlaskWebServer.portfolio import Portfolio
-
 '''
 This is the meat of this entire project.
 '''
+from assets import Assets
+from market_data import getInflation
+from portfolio import Portfolio
+
+
 def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False):
     simulation = Simulation(minSimYear, maxSimYear, length, ignoreInflation, initialPortfolio, failureThreshhold)
     strategies = []
@@ -34,7 +35,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
             overflow = 0.0
             for simulationYear in range(startYear, startYear + length + 1):
                 candidateFailureYear = simulationYear
-                inflationRate = marketData.getInflation(startYear - 1, simulationYear - 1)
+                inflationRate = getInflation(startYear - 1, simulationYear - 1)
                 if ignoreInflation:
                     inflationRate = 1.0
                 failMin = failureThreshhold * inflationRate
