@@ -2,8 +2,8 @@ from flask import Flask
 
 #from simulation import runSimulation
 #from strategies.test_trinity import *
-from simulation import runSimulation
-from strategies.guyton_klinger import *
+#from simulation import runSimulation
+#from strategies.guyton_klinger import *
 
 app = Flask(__name__)
 
