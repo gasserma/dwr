@@ -3,7 +3,7 @@ The flask application package.
 """
 
 from flask import Flask
-app = Flask(__name__)
+app = Flask(__name__, template_folder="./FlaskWebServer/templates")
 
 from datetime import datetime
 from flask import render_template
@@ -37,7 +37,7 @@ def calc():
        2010
     )
 
-    return result.__str__()
+    return "actually ran a simulation"
 
 @app.route('/test')
 def test():
