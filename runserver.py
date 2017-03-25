@@ -1,7 +1,3 @@
-"""
-This script runs the FlaskWebProject1 application using a development server.
-"""
-
 from os import environ
 from FlaskWebServer.__init__ import app
 
