@@ -6,6 +6,7 @@ from flask import Flask
 app = Flask(__name__, template_folder="./FlaskWebServer/templates", static_folder="./FlaskWebServer/static")
 
 from datetime import datetime
+import sys
 from flask import render_template
 
 @app.route('/')
@@ -18,8 +19,9 @@ def home():
             title='Hi Emily',
             year=datetime.now().year,
         )
-    except Exception as e:
-        return e.__str__()
+    except:  # catch *all* exceptions
+        e = sys.exc_info()[0]
+        return "<p>Error: {0}</p>".format(e)
 
 @app.route('/calc')
 def calc():
@@ -41,8 +43,9 @@ def calc():
             2010
         )
         return result.__str__()
-    except Exception as e:
-        return e.__str__()
+    except:  # catch *all* exceptions
+        e = sys.exc_info()[0]
+        return "<p>Error: {0}</p>".format(e)
 
 
 
