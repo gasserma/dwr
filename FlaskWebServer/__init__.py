@@ -23,20 +23,23 @@ def calc():
     retirementLength = 30
     initialPortfolio = 2 * 1000 * 1000
 
-    from FlaskWebServer.simulation import runSimulation
-    from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
-    from FlaskWebServer.assets import Assets
-    result = runSimulation(
-        retirementLength,
-        initialPortfolio,
-        .055 * initialPortfolio * .5,
-        (
-            (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
-        ),
-        1926,
-        2010
-    )
-    return result.__str__()
+    try:
+        from FlaskWebServer.simulation import runSimulation
+        from FlaskWebServer.strategies.guyton_klinger import GuytonKlinger
+        from FlaskWebServer.assets import Assets
+        result = runSimulation(
+            retirementLength,
+            initialPortfolio,
+            .055 * initialPortfolio * .5,
+            (
+                (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
+            ),
+            1926,
+            2010
+        )
+        return result.__str__()
+    except ImportError as e:
+        return e.__str__()
 
 
 
