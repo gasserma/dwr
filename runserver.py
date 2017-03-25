@@ -5,7 +5,6 @@ This script runs the FlaskWebProject1 application using a development server.
 from os import environ
 from FlaskWebServer.__init__ import app
 
-
 if __name__ == '__main__':
     HOST = environ.get('SERVER_HOST', 'localhost')
     try:
