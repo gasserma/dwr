@@ -43,7 +43,16 @@ def calc():
     except Exception as e:
         return e.__str__()
 
-
+@app.route('/assets')
+def assets():
+    try:
+        from FlaskWebServer.assets import Assets
+        ass = Assets(.5, .5)
+        return ass.__str__()
+    except ImportError as e:
+        return e.__str__()
+    except Exception as e:
+        return e.__str__()
 
 @app.route('/test')
 def test():
