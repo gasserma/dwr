@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 from FlaskWebServer import marketData
 from FlaskWebServer.assets import Assets
@@ -112,6 +112,7 @@ class Simulation:
             raise RuntimeError
 
     # who knows where this is going, right now just plot the first iteration.
+    '''
     def drawMe(self, simIteration):
         fig, ax1 = plt.subplots()
         x = []
@@ -144,6 +145,7 @@ class Simulation:
         fig.suptitle("Simulation Starting in {0}".format(self.minYear + simIteration))
         fig.tight_layout()
         plt.show()
+    '''
 
     def __str__(self):
         output = []
