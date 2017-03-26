@@ -2,6 +2,7 @@
 The flask application package.
 """
 
+import traceback
 from flask import Flask
 app = Flask(__name__)
 
@@ -37,22 +38,22 @@ def calc():
             1926,
             2010
         )
-        return result.__str__()
+        return result.toJson()
     except ImportError as e:
-        return e.__str__()
+        traceback.print_exc()
     except Exception as e:
-        return e.__str__()
+        traceback.print_exc()
 
 @app.route('/assets')
 def assets():
     try:
-        from FlaskWebServer.assets import Assets
+        from assets import Assets
         ass = Assets(.5, .5)
         return ass.__str__()
     except ImportError as e:
-        return e.__str__()
+        return traceback.print_exc()
     except Exception as e:
-        return e.__str__()
+        return traceback.print_exc()
 
 @app.route('/test')
 def test():

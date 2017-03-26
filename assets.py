@@ -99,7 +99,7 @@ class Assets(tuple):
             return sum(self) < other
 
     def __str__(self):
-        return "Stock: {0} | Bond: {1}".format(self.assets[Assets.STOCK_INDEX], self.assets[Assets.BOND_INDEX])
+        return "Stock: {0} | Bond: {1}".format(self[Assets.STOCK_INDEX], self[Assets.BOND_INDEX])
 
     def divideIntoSinglePeriod(a, periods):
         seq = []
