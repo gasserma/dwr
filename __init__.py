@@ -38,7 +38,7 @@ def calc():
             1926,
             2010
         )
-        return result.__str__()
+        return result.toJson()
     except ImportError:
         return "ie"
     except Exception:

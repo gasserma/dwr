@@ -150,8 +150,8 @@ class Simulation:
         plt.show()
     '''
 
-#    def toJson(self): # eventually this should take over __str__()
-#        return json.dumps(self.__dict__)
+    def toJson(self): # eventually this should take over __str__()
+        return json.dumps(self.__dict__)
 
     def __str__(self):
         output = []
