@@ -47,8 +47,8 @@ def calc():
 @app.route('/assets')
 def assets():
     try:
-        return "god damn it."
         from assets import Assets
+        return "god damn it."
         ass = Assets(.5, .5)
         return ass.__str__()
     except ImportError as e:
