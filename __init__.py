@@ -51,10 +51,10 @@ def assets():
         return "god damn it."
         ass = Assets(.5, .5)
         return ass.__str__()
-    except ImportError as e:
-        return e.__str__()
-    except Exception as e:
-        return e.__str__()
+    except ImportError:
+        return "ie"
+    except Exception:
+        return "e"
 
 @app.route('/test')
 def test():
