@@ -3,11 +3,23 @@ The flask application package.
 """
 
 import traceback
+
+import flask
 from flask import Flask
 app = Flask(__name__)
 
 from datetime import datetime
 from flask import render_template
+
+@app.errorhandler(500)
+def topLevel500(e):
+    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc())
+
+@app.errorhandler(Exception)
+def topLevelError(e):
+    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc())
+
+
 
 @app.route('/')
 @app.route('/home')
@@ -38,7 +50,7 @@ def calc():
             1926,
             2010
         )
-        return result.toJson()
+        return flask.jsonify(success_rate=result.getSuccessRate())
     except ImportError:
         return "ie"
     except Exception:
@@ -58,3 +70,15 @@ def assets():
 @app.route('/test')
 def test():
     return "iis is the least debuggable thing in the world"
+
+@app.route('/error')
+def error():
+    return 15/0.0
+
+@app.route('/log')
+def about():
+    app.logger.warning('gasser flask warning')
+    app.logger.error('gasser flask error')
+    app.logger.info('gasser flask info')
+    return "did some logging..."
+
