@@ -6,8 +6,8 @@ This is the meat of this entire project.
 from assets import Assets
 from market_data import getInflation
 from portfolio import Portfolio
-#import json
-#from json import encoder
+import json
+from json import encoder
 #encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
 def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False):
