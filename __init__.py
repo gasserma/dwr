@@ -52,9 +52,9 @@ def assets():
         ass = Assets(.5, .5)
         return ass.__str__()
     except ImportError as e:
-        return traceback.print_exc()
+        return e.__str__()
     except Exception as e:
-        return traceback.print_exc()
+        return e.__str__()
 
 @app.route('/test')
 def test():
