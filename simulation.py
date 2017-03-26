@@ -6,7 +6,7 @@ This is the meat of this entire project.
 from assets import Assets
 from market_data import getInflation
 from portfolio import Portfolio
-import json
+#import json
 #from json import encoder
 #encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
@@ -150,8 +150,8 @@ class Simulation:
         plt.show()
     '''
 
-    def toJson(self): # eventually this should take over __str__()
-        return json.dumps(self.__dict__)
+#    def toJson(self): # eventually this should take over __str__()
+#        return json.dumps(self.__dict__)
 
     def __str__(self):
         output = []

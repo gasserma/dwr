@@ -38,17 +38,16 @@ def calc():
             1926,
             2010
         )
-        return result.toJson()
-    except ImportError as e:
-        traceback.print_exc()
-    except Exception as e:
-        traceback.print_exc()
+        return result.__str__()
+    except ImportError:
+        return "ie"
+    except Exception:
+        return "e"
 
 @app.route('/assets')
 def assets():
     try:
         from assets import Assets
-        return "god damn it."
         ass = Assets(.5, .5)
         return ass.__str__()
     except ImportError:
