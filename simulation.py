@@ -89,6 +89,27 @@ class Simulation:
         # month aren't strictly necessary (can be inferred from other data),but make it easier to debug.
         self.recordedData = []
 
+    def getSimResults(self):
+        results = []
+        for i in range(0, self.iterations):
+            ps = [self.initialPortfolio]
+            ws = [self.initialPortfolio * .04] #TODO fix this.
+
+            p = None
+            for y in range(0, 30):
+                wAccumulator = 0
+                for m in range(0,12):
+                    if len(self.recordedData[i]) > m+(y*12):
+                        wAccumulator += self.recordedData[i][m+(y*12)][2]
+                        p = self.recordedData[i][m+(y*12)][3]
+                    else:
+                        wAccumulator += 0
+                ps.append(p)
+                ws.append(wAccumulator)
+
+            results.append({"portfolio_values" : ps, "withdrawals" : ws})
+        return results
+
     def recordData(self, simIteration, year, month, withdrawal, portfolioValue):
         if len(self.recordedData) < simIteration + 1:
             self.recordedData.append([])

@@ -105,3 +105,5 @@ Context is important for this class, it might represent a portfolio and each flo
 6. Get more market data sources for fun.
 7. The full trinity tests are really really slow. Like 1 min run time each...gross.
 8. All the stats I print out are hard to reason about because they are in terms of the whole simluation length. Maybe I should just divide by the number of years in the simulation? Although probably not for the legacy metric.
+9. Wrap the http stuff in something that standardizes logging, etc.
+10. Maybe the strtegy implementation classes should have a multiple by weight method.

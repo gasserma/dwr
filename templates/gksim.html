@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sim - BETA</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/sim.css" />
+</head>
+<body>
+    <p id="simgraph"></p>
+    <p>Hello simulation. This shows a gk run, with some stock parameters.</p>
+    <p id="replaceme">something</p>
+    <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script></script>
+    <script src="/static/scripts/sim.js"></script>
+    <button type="button"
+        onclick="
+        var posty = d3.xhr('/gkresults')
+            .header('Content-Type', 'application/json')
+            .post(
+                JSON.stringify({amount: '12345'}),
+                function(err, rawData){
+                    var data = JSON.parse(rawData.response);
+                    console.log('got response', data);
+                    document.getElementById('replaceme').innerHTML = data['some_value']
+                }
+            );
+        ">
+        Butt
+    </button>
+</body>
+</html>

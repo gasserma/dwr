@@ -1,15 +1,22 @@
 """
 The flask application package.
 """
-
+import os
 import traceback
+import logging
+from logging.handlers import RotatingFileHandler
 
 import flask
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
+handler = RotatingFileHandler('dwr.log', maxBytes=1000000, backupCount=3)
+handler.setLevel(logging.INFO)
+app.logger.addHandler(handler)
 
 from datetime import datetime
 from flask import render_template
+
+# TODO standardize logging and exception handling here.
 
 @app.errorhandler(500)
 def topLevel500(e):
@@ -55,6 +62,42 @@ def calc():
         return "ie"
     except Exception:
         return "e"
+
+@app.route("/gkresults", methods=["POST"])
+def gkPost():
+    amt = request.json["amount"]
+    return flask.jsonify(some_value=amt)
+
+@app.route("/gk")
+def gk():
+    return render_template(
+        'gksim.html'
+    )
+
+@app.route("/example")
+def example():
+    retirementLength = 30
+    initialPortfolio = 1 * 1000 * 1000
+    from simulation import runSimulation
+    from strategies.guyton_klinger import GuytonKlinger
+    from assets import Assets
+    result = runSimulation(
+        retirementLength,
+        initialPortfolio,
+        .055 * initialPortfolio * .5,
+        (
+            (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
+        ),
+        1926,
+        2010
+    )
+    return flask.jsonify(
+        success_rate=result.getSuccessRate(),
+        initial_withdrawal_amt=55000,
+        simulation_start=1926,
+        simulation_end=2010,
+        results=result.getSimResults()
+    )
 
 @app.route('/assets')
 def assets():
