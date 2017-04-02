@@ -8,12 +8,12 @@ var w = 1000 - margins.right;
 var h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 
 // TODO, 30 year simulations, 4mil portfolios, and 200k withdrawal rates are all entirely arbitrary
-var xScale = d3.scale.linear().domain([0, 30]).range([0, w]);
-var yScale = d3.scale.linear().domain([0, 4000000]).range([h, 0]);
-var rScale = d3.scale.sqrt().domain([0, 200000]).range([0, 25]);
+var xScale = d3.scaleLinear().domain([0, 30]).range([0, w]);
+var yScale = d3.scaleLinear().domain([0, 4000000]).range([h, 0]);
+var rScale = d3.scaleSqrt().domain([0, 200000]).range([0, 25]);
 
-var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(10, d3.format(",d"));
-var yAxis = d3.svg.axis().scale(yScale).orient("left");
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale);
 
 var svg = d3.select("#simgraph").append("svg")
             .attr("width", w + margins.left + margins.right)
@@ -87,15 +87,14 @@ d3.json("/example", function(simResults) {
                    .on("mouseover", manualScroll);
 
   svg.transition()
-      .duration(30000) // ms, apparently
-      .ease("linear")
-      .tween("year", getMouseOverYear) // tween...wut
-      .each("end", enableInteraction);
+     .duration(30000) // ms, apparently
+     .ease(d3.easeLinear)
+     .attrTween("year", getMouseOverYear);
 
   function position(dot) {
     dot.attr("cx", function(sr) { return xScale(x(sr)); })
        .attr("cy", function(sr) { return yScale(y(sr)); })
-       .attr("r", function(sr) { return rScale(radius(sr)); });
+       .attr("r", function(sr) { return rScale(radius(sr)); })
   }
 
   function order(a, b) {
@@ -103,10 +102,10 @@ d3.json("/example", function(simResults) {
   }
 
   function manualScroll() {
-    var yearScale = d3.scale.linear()
-        .domain([1926, 2010-30])
-        .range([box.x + 10, box.x + box.width - 10])
-        .clamp(true);
+    var yearScale = d3.scaleLinear()
+                      .domain([1926, 2010-30])
+                      .range([box.x + 10, box.x + box.width - 10])
+                      .clamp(true);
 
     // Apparently this is how you cancel ongoing transitions.
     svg.transition().duration(0);

@@ -6,9 +6,34 @@
     <title>{{ title }} - BETA</title>
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
 </head>
-
+<div class="topnav" id="myTopnav">
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#faq">FAQ</a>
+    <a href="#eli5">ELI5</a>
+    <a href="#playground">Playground</a>
+</div>
 <body>
     <h1>{{ title }}</h1>
-    <p> Welcome to python on Hell</p>
+    <div id="lipsum">
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula viverra sem non iaculis. Proin id erat elit. Aliquam porta mi non tempor scelerisque. In rhoncus finibus mauris non accumsan. Quisque condimentum ipsum erat, id dictum arcu imperdiet a. Ut venenatis faucibus sem, in vehicula justo ultrices mattis. Morbi tristique lorem a lectus mattis, sollicitudin maximus purus vestibulum. Vivamus nec vehicula neque. Phasellus odio lorem, suscipit id mauris eget, condimentum commodo est. Maecenas mollis facilisis ipsum id pharetra. Nunc blandit consequat eros, condimentum varius purus bibendum et. Fusce ante sapien, efficitur et euismod facilisis, posuere quis libero. Maecenas luctus mollis arcu. Praesent placerat mauris ut lacinia iaculis.
+        </p>
+        <p>
+            Fusce nec diam ultricies, malesuada nisi vitae, iaculis turpis. Cras et sem euismod, efficitur ligula non, sodales felis. Nullam euismod eros efficitur quam porttitor, vitae luctus odio porta. Sed vulputate ut tortor non pulvinar. Vestibulum augue tortor, sagittis a consequat sit amet, varius nec risus. Sed in condimentum enim. Proin auctor enim quis metus gravida gravida at quis neque. Mauris ante ligula, dictum sed ullamcorper at, convallis vitae turpis.
+        </p>
+        <p>
+            Fusce iaculis ornare sapien, ac euismod tellus imperdiet ut. In hac habitasse platea dictumst. Nullam sollicitudin elementum nisi, sed fringilla leo semper fringilla. Vivamus et erat at metus pulvinar varius eget vitae lorem. Proin porttitor convallis mi, eu luctus quam bibendum finibus. Suspendisse bibendum metus ex, eget pulvinar eros aliquet vitae. Sed lacinia pellentesque ante. Integer convallis lacus pulvinar consequat gravida. Nunc eget tellus porttitor, porta magna at, elementum massa. Nulla facilisi. Ut scelerisque lorem vulputate tincidunt aliquam. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent non hendrerit tellus. Integer quis finibus nisi.
+        </p>
+        <p>
+            Duis laoreet eros eu lacinia hendrerit. Morbi venenatis turpis nec massa faucibus ultricies. Maecenas vel mauris in nisl dictum viverra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam auctor diam ut lorem bibendum, sit amet sagittis leo aliquam. Quisque congue est vitae dui pulvinar, ac molestie magna pulvinar. Nulla varius varius tincidunt. In commodo finibus libero id ornare. Cras et tristique arcu.
+        </p>
+        <p>
+            Sed iaculis pharetra eros. Nullam accumsan pharetra blandit. Sed tristique odio a massa lacinia scelerisque. Nam nulla mi, fermentum non lacinia vel, lobortis eu nibh. In quis cursus velit. Integer consequat molestie quam quis porta. Mauris placerat leo vel mauris rutrum, vitae placerat libero tristique. Nunc consequat diam vel nisi egestas rutrum sodales a dui. Suspendisse sit amet lorem ipsum. Nunc cursus sed lectus eget commodo. Integer id massa non tellus rhoncus consequat. Aenean volutpat placerat dui, eu facilisis lectus malesuada in. Mauris dictum ut felis ut accumsan. Phasellus sed elit finibus, dapibus felis quis, ultrices nibh. Nunc varius augue nibh, tempor mattis leo tincidunt eu.
+        </p>
+    </div>
+    <form method="POST" action="/formSubmit">
+        {{ percent }}
+        <input type="submit" value="Go">
+    </form>
 </body>
-

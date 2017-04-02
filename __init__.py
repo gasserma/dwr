@@ -35,8 +35,9 @@ def home():
     return render_template(
         'index.html',
         title='Hi Emily',
-        year=datetime.now().year,
+        percent=0.04
     )
+
 
 @app.route('/calc')
 def calc():
@@ -66,7 +67,7 @@ def calc():
 @app.route("/gkresults", methods=["POST"])
 def gkPost():
     amt = request.json["amount"]
-    return flask.jsonify(some_value=amt)
+    return flask.jsonify(some_value=int(amt)-1)
 
 @app.route("/gk")
 def gk():
@@ -98,25 +99,6 @@ def example():
         simulation_end=2010,
         results=result.getSimResults()
     )
-
-@app.route('/assets')
-def assets():
-    try:
-        from assets import Assets
-        ass = Assets(.5, .5)
-        return ass.__str__()
-    except ImportError:
-        return "ie"
-    except Exception:
-        return "e"
-
-@app.route('/test')
-def test():
-    return "iis is the least debuggable thing in the world"
-
-@app.route('/error')
-def error():
-    return 15/0.0
 
 @app.route('/log')
 def about():
