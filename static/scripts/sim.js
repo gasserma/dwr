@@ -66,7 +66,7 @@ function color(sr) {
 function key(sr) { return sr.year; }
 
 // Actually do our animation and initialize the rest.
-d3.json("/example", function(simResults) {
+d3.json("/dbg/gkexample", function(simResults) {
   var dot = svg.append("g")
                .attr("class", "dots")
                .selectAll(".dot")
@@ -148,7 +148,7 @@ d3.json("/example", function(simResults) {
     var index = simulationStartYear - simResults.simulation_start;
     var data = []
     for(simYear=0; simYear < 30; simYear++){
-      var ex = simResults.results[index].withdrawals[simYear] > simResults.initial_withdrawal_amt;
+      var ex = simResults.results[index].withdrawals[simYear] >= simResults.initial_withdrawal_amt;
       data.push({
           portfolio_amt : simResults.results[index].portfolio_values[simYear],
           withdrawal : simResults.results[index].withdrawals[simYear],

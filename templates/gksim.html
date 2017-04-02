@@ -13,7 +13,7 @@
     <script src="/static/scripts/sim.js"></script>
     <button type="button"
         onclick="
-        var posty = d3.xhr('/gkresults')
+        var posty = d3.xhr('/dbg/posttest')
             .header('Content-Type', 'application/json')
             .post(
                 JSON.stringify({amount: '12345'}),
