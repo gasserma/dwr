@@ -92,8 +92,8 @@ class Simulation:
     def getSimResults(self):
         results = []
         for i in range(0, self.iterations):
-            ps = [self.initialPortfolio]
-            ws = [self.initialPortfolio * .04] #TODO fix this.
+            ps = []
+            ws = []
 
             p = None
             for y in range(0, 30):

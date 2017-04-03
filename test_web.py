@@ -40,6 +40,10 @@ class TestWeb(unittest.TestCase):
         rv = self.app.get('/notarealpage')
         self.assertEqual(rv._status_code, 404)
 
+    def test_dbgJunk(self):
+        rv = self.app.get('/dbg/gkexample')
+        self.assertEqual(rv._status_code, 200)
+
     # this is just sitting here until we write an actual test for the simulations endpoint.
     def test_dbgPost(self):
         rv = self.app.post(
