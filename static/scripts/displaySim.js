@@ -2,71 +2,71 @@
 // In particular, https://bost.ocks.org/mike/nations/
 // Which is just about the best example of visualized 4/5 dimensional data I can find.
 
-// TODO, this is all rather arbirtrary...and we should either be okay with that or not.
-var margins = {top: 10, right: 10, bottom: 50, left: 100};
-var w = 1000 - margins.right;
-var h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
+function showSimulation(simResults){
+  // TODO, this is all rather arbirtrary...and we should either be okay with that or not.
+  var margins = {top: 10, right: 10, bottom: 50, left: 100};
+  var w = 1000 - margins.right;
+  var h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 
-// TODO, 30 year simulations, 4mil portfolios, and 200k withdrawal rates are all entirely arbitrary
-var xScale = d3.scaleLinear().domain([0, 30]).range([0, w]);
-var yScale = d3.scaleLinear().domain([0, 4000000]).range([h, 0]);
-var rScale = d3.scaleSqrt().domain([0, 200000]).range([0, 25]);
+  // TODO, 30 year simulations, 4mil portfolios, and 200k withdrawal rates are all entirely arbitrary
+  var xScale = d3.scaleLinear().domain([0, 30]).range([0, w]);
+  var yScale = d3.scaleLinear().domain([0, 4000000]).range([h, 0]);
+  var rScale = d3.scaleSqrt().domain([0, 200000]).range([0, 25]);
 
-var xAxis = d3.axisBottom(xScale);
-var yAxis = d3.axisLeft(yScale);
+  var xAxis = d3.axisBottom(xScale);
+  var yAxis = d3.axisLeft(yScale);
 
-var svg = d3.select("#simgraph").append("svg")
-            .attr("width", w + margins.left + margins.right)
-            .attr("height", h + margins.top + margins.bottom)
-            .append("g")
-            .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
+  var svg = d3.select("#simgraph").append("svg")
+              .attr("width", w + margins.left + margins.right)
+              .attr("height", h + margins.top + margins.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
 
-svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + h + ")")
-    .call(xAxis);
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + h + ")")
+      .call(xAxis);
 
-svg.append("g")
-    .attr("class", "y axis")
-    .call(yAxis);
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
 
-svg.append("text")
-    .attr("class", "x label")
-    .attr("text-anchor", "end")
-    .attr("x", w)
-    .attr("y", h - 5)
-    .text("time");
+  svg.append("text")
+      .attr("class", "x label")
+      .attr("text-anchor", "end")
+      .attr("x", w)
+      .attr("y", h - 5)
+      .text("time");
 
-svg.append("text")
-    .attr("class", "y label")
-    .attr("text-anchor", "end")
-    .attr("y", 5)
-    .attr("dy", ".75em")
-    .attr("transform", "rotate(-90)")
-    .text("portfolio size");
+  svg.append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", 5)
+      .attr("dy", ".75em")
+      .attr("transform", "rotate(-90)")
+      .text("portfolio size");
 
-var label = svg.append("text")
-    .attr("class", "year label")
-    .attr("text-anchor", "end")
-    .attr("y", h - 10)
-    .attr("x", w)
-    .text(1926);
+  var label = svg.append("text")
+      .attr("class", "year label")
+      .attr("text-anchor", "end")
+      .attr("y", h - 10)
+      .attr("x", w)
+      .text(1926);
 
-// Some remappings so that you can think about a graph instead of constantly having to remember
-// that radius of our circles is the withdrawal rate.
-function x(sr) { return sr.year; }
-function y(sr) { return sr.portfolio_amt; }
-function radius(sr) { return sr.withdrawal; }
-function color(sr) {
-  if (sr.exceeded){
-    return "#335EFF";
+  // Some remappings so that you can think about a graph instead of constantly having to remember
+  // that radius of our circles is the withdrawal rate.
+  function x(sr) { return sr.year; }
+  function y(sr) { return sr.portfolio_amt; }
+  function radius(sr) { return sr.withdrawal; }
+  function color(sr) {
+    if (sr.exceeded){
+      return "#335EFF";
+    }
+    return "#FF3333";
   }
-  return "#FF3333";
-}
-function key(sr) { return sr.year; }
+  function key(sr) { return sr.year; }
 
-// Actually do our animation and initialize the rest.
-d3.json("/dbg/gkexample", function(simResults) {
+  // Actually do our animation and initialize the rest.
   var dot = svg.append("g")
                .attr("class", "dots")
                .selectAll(".dot")
@@ -160,4 +160,4 @@ d3.json("/dbg/gkexample", function(simResults) {
 
     return data;
   }
-});
+}
