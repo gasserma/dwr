@@ -4,7 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }} - BETA</title>
+    <link rel="stylesheet" type="text/css" href="/static/style/sim.css" />
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script></script>
+    <script src="/static/scripts/form.js"></script>
+    <script src="/static/scripts/displaySim.js"></script>
 </head>
 <div class="topnav" id="myTopnav">
     <a href="/home">Home</a>
@@ -26,11 +32,29 @@
         <p>
             Fusce iaculis ornare sapien, ac euismod tellus imperdiet ut. In hac habitasse platea dictumst. Nullam sollicitudin elementum nisi, sed fringilla leo semper fringilla. Vivamus et erat at metus pulvinar varius eget vitae lorem. Proin porttitor convallis mi, eu luctus quam bibendum finibus. Suspendisse bibendum metus ex, eget pulvinar eros aliquet vitae. Sed lacinia pellentesque ante. Integer convallis lacus pulvinar consequat gravida. Nunc eget tellus porttitor, porta magna at, elementum massa. Nulla facilisi. Ut scelerisque lorem vulputate tincidunt aliquam. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent non hendrerit tellus. Integer quis finibus nisi.
         </p>
-        <p>
-            Duis laoreet eros eu lacinia hendrerit. Morbi venenatis turpis nec massa faucibus ultricies. Maecenas vel mauris in nisl dictum viverra. Interdum et malesuada fames ac ante ipsum primis in faucibus. Etiam auctor diam ut lorem bibendum, sit amet sagittis leo aliquam. Quisque congue est vitae dui pulvinar, ac molestie magna pulvinar. Nulla varius varius tincidunt. In commodo finibus libero id ornare. Cras et tristique arcu.
-        </p>
-        <p>
-            Sed iaculis pharetra eros. Nullam accumsan pharetra blandit. Sed tristique odio a massa lacinia scelerisque. Nam nulla mi, fermentum non lacinia vel, lobortis eu nibh. In quis cursus velit. Integer consequat molestie quam quis porta. Mauris placerat leo vel mauris rutrum, vitae placerat libero tristique. Nunc consequat diam vel nisi egestas rutrum sodales a dui. Suspendisse sit amet lorem ipsum. Nunc cursus sed lectus eget commodo. Integer id massa non tellus rhoncus consequat. Aenean volutpat placerat dui, eu facilisis lectus malesuada in. Mauris dictum ut felis ut accumsan. Phasellus sed elit finibus, dapibus felis quis, ultrices nibh. Nunc varius augue nibh, tempor mattis leo tincidunt eu.
-        </p>
     </div>
+
+    <div class="CreateSimulation">
+        <h2>Show Results</h2>
+        <form action="" name="simulate">
+            <label for="initial_portfolio_value">Portfolio Size</label>
+            <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1000000" class="input_main"/>
+
+            <label for="retirement_length">Retirement Length</label>
+            <input type="text" name="retirement_length" id="retirement_length" value="30" class="input_main"/>
+
+            <label for="failure_threshhold">Year Withdrawal Failure Threshhold</label>
+            <input type="text" name="failure_threshhold" id="failure_threshhold" value="20000" class="input_main"/>
+
+            <select id="sdd">
+                <option value="none"></option>
+                <option value="const_amount">Constant Amount</option>
+                <option value="const_percentage">Constant Percent</option>
+                <option value="guyton_klinger">Guyton-Klinger</option>
+            </select>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+    <p id="simgraph"></p>
 </body>

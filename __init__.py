@@ -65,15 +65,15 @@ def simulations():
     strategies = []
     for s in request.json["strategies"]:
         args = s["args"]
-        allocation = s["asset_allocation"]
-        weight = s.get("weight", 1.0)
+        allocation = [float(f) for f in s["asset_allocation"]]
+        weight = float(s.get("weight", 1.0))
         type = s["type"]
         if type.lower() == "guyton_klinger":
-            strategy = GuytonKlinger(args.get("initial_amount"), retirementLength)
+            strategy = GuytonKlinger(float(args.get("initial_amount")), retirementLength)
         elif type.lower() == "const_amount":
-            strategy = ConstantWithdrawalAmountStrategy(args["amount"])
+            strategy = ConstantWithdrawalAmountStrategy(float(args["amount"]))
         elif type.lower() == "const_percentage":
-            strategy = ConstantPercentWithdrawalStrategy(args["percent"])
+            strategy = ConstantPercentWithdrawalStrategy(float(args["percent"]))
         else:
             raise NotImplemented("Unrecognized strategy: {0}".format(type))
 
@@ -88,9 +88,13 @@ def simulations():
         maxYear,
     )
 
+    results = result.getSimResults()
     return flask.jsonify(
         success_rate=result.getSuccessRate(),
-        results=result.getSimResults()
+        initial_withdrawal_amt=results[0]["withdrawals"][0],
+        simulation_start=minYear,
+        simulation_end=maxYear,
+        results=results
     )
 
 @app.route('/dbg/calc')
