@@ -7,54 +7,68 @@
     <link rel="stylesheet" type="text/css" href="/static/style/sim.css" />
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script></script>
     <script src="/static/scripts/form.js"></script>
     <script src="/static/scripts/displaySim.js"></script>
 </head>
-<div class="topnav" id="myTopnav">
-    <a href="/home">Home</a>
-    <a href="/about">About</a>
-    <a href="/faq">FAQ</a>
-    <a href="/eli5">ELI5</a>
-    <a href="/playground">Playground</a>
-    <a href="https://github.com/gasserma/dwr">Source</a>
-</div>
+<ul class="topnav" id="myTopnav">
+    <li><a href="/home">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/faq">FAQ</a></li>
+    <li><a href="/eli5">ELI5</a></li>
+    <li><a href="/playground">Playground</a></li>
+    <li><a href="https://github.com/gasserma/dwr">Source</a></li>
+</ul>
 <body>
-    <h1>{{ title }}</h1>
-    <div id="lipsum">
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In vehicula viverra sem non iaculis. Proin id erat elit. Aliquam porta mi non tempor scelerisque. In rhoncus finibus mauris non accumsan. Quisque condimentum ipsum erat, id dictum arcu imperdiet a. Ut venenatis faucibus sem, in vehicula justo ultrices mattis. Morbi tristique lorem a lectus mattis, sollicitudin maximus purus vestibulum. Vivamus nec vehicula neque. Phasellus odio lorem, suscipit id mauris eget, condimentum commodo est. Maecenas mollis facilisis ipsum id pharetra. Nunc blandit consequat eros, condimentum varius purus bibendum et. Fusce ante sapien, efficitur et euismod facilisis, posuere quis libero. Maecenas luctus mollis arcu. Praesent placerat mauris ut lacinia iaculis.
-        </p>
-        <p>
-            Fusce nec diam ultricies, malesuada nisi vitae, iaculis turpis. Cras et sem euismod, efficitur ligula non, sodales felis. Nullam euismod eros efficitur quam porttitor, vitae luctus odio porta. Sed vulputate ut tortor non pulvinar. Vestibulum augue tortor, sagittis a consequat sit amet, varius nec risus. Sed in condimentum enim. Proin auctor enim quis metus gravida gravida at quis neque. Mauris ante ligula, dictum sed ullamcorper at, convallis vitae turpis.
-        </p>
-        <p>
-            Fusce iaculis ornare sapien, ac euismod tellus imperdiet ut. In hac habitasse platea dictumst. Nullam sollicitudin elementum nisi, sed fringilla leo semper fringilla. Vivamus et erat at metus pulvinar varius eget vitae lorem. Proin porttitor convallis mi, eu luctus quam bibendum finibus. Suspendisse bibendum metus ex, eget pulvinar eros aliquet vitae. Sed lacinia pellentesque ante. Integer convallis lacus pulvinar consequat gravida. Nunc eget tellus porttitor, porta magna at, elementum massa. Nulla facilisi. Ut scelerisque lorem vulputate tincidunt aliquam. Suspendisse potenti. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent non hendrerit tellus. Integer quis finibus nisi.
-        </p>
+    <div id="actualBody">
+        <div class="CreateSimulation">
+            <fieldset>
+                <label for="initial_portfolio_value">Portfolio Size</label>
+                <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1000000" class="input_main"/>
+
+                <label for="retirement_length">Retirement Length</label>
+                <input type="text" name="retirement_length" id="retirement_length" value="30" class="input_main"/>
+
+                <label for="failure_threshhold">Failure Threshhold</label>
+                <input type="text" name="failure_threshhold" id="failure_threshhold" value="20000" class="input_main"/>
+
+                <div class="dropdown">
+                  <label type="submit" class="addStrategyButt">Add Withdrawal Strategy</label>
+                  <div class="dropdown-content">
+                    <a value="const_amount", id="caSelect">Constant Amount</a>
+                    <a value="const_percentage", id="cpSelect">Constant Percent</a>
+                    <a value="guyton_klinger", id="gkSelect">Guyton-Klinger</a>
+                  </div>
+                </div>
+
+                <label type="submit" class="runSimButt" style="display: none;">RunSimulation</label>
+            </fieldset>
+        </div>
+        <div class="Strategy" style="display: none;">
+            <fieldset class="stratFieldset">
+                <label for="weight">Weight</label>
+                <input type="text" name="weight" id="weight" value="1.0" class="weight"/>
+                <label for="stocks">Stocks</label>
+                <input type="text" name="weight" id="stocks" value=".5" class="stocks"/>
+                <label for="bonds">Bonds</label>
+                <input type="text" name="bonds" id="bonds" value=".5" class="bonds"/>
+            </fieldset>
+        </div>
+        <div class="GuytonKlinger" style="display: none;">
+            <label for="gk_input">Initial Withdrawal Amount</label>
+            <input type="text" name="initial_amount" id="gk_input" value="50000" class="input_strat"/>
+            <label type="submit" class="removeStrategyButt">ClickToRemove</label>
+        </div>
+        <div class="ConstAmount" style="display: none;">
+            <label for="const_amount">Amount</label>
+            <input type="text" name="amount" id="const_amount" value="40000" class="input_strat"/>
+            <label type="submit" class="removeStrategyButt">ClickToRemove</label>
+        </div>
+        <div class="ConstPercent" style="display: none;">
+            <label for="const_percent">Percent</label>
+            <input type="text" name="percent" id="const_percent" value=".04" class="input_strat"/>
+            <label type="submit" class="removeStrategyButt">ClickToRemove</label>
+        </div>
+        <p id="simgraph"></p>
     </div>
-
-    <div class="CreateSimulation">
-        <h2>Show Results</h2>
-        <form action="" name="simulate">
-            <label for="initial_portfolio_value">Portfolio Size</label>
-            <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1000000" class="input_main"/>
-
-            <label for="retirement_length">Retirement Length</label>
-            <input type="text" name="retirement_length" id="retirement_length" value="30" class="input_main"/>
-
-            <label for="failure_threshhold">Year Withdrawal Failure Threshhold</label>
-            <input type="text" name="failure_threshhold" id="failure_threshhold" value="20000" class="input_main"/>
-
-            <select id="sdd">
-                <option value="none"></option>
-                <option value="const_amount">Constant Amount</option>
-                <option value="const_percentage">Constant Percent</option>
-                <option value="guyton_klinger">Guyton-Klinger</option>
-            </select>
-
-            <button type="submit">Register</button>
-        </form>
-    </div>
-    <p id="simgraph"></p>
 </body>

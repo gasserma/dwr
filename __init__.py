@@ -43,8 +43,7 @@ def topLevelError(e):
 def home():
     return render_template(
         'index.html',
-        title='Hi Emily',
-        percent=0.04
+        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
     )
 
 @app.route('/about')
