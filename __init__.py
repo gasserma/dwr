@@ -71,7 +71,7 @@ def simulations():
             strategy = GuytonKlinger(float(args.get("initial_amount")), retirementLength)
         elif type.lower() == "const_amount":
             strategy = ConstantWithdrawalAmountStrategy(float(args["amount"]))
-        elif type.lower() == "const_percentage":
+        elif type.lower() == "const_percent":
             strategy = ConstantPercentWithdrawalStrategy(float(args["percent"]))
         else:
             raise NotImplemented("Unrecognized strategy: {0}".format(type))

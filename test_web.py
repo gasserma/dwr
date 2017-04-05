@@ -107,7 +107,7 @@ class TestWeb(unittest.TestCase):
 
         strats.append(dict(
             weight=0.2,
-            type="const_percentage",
+            type="const_percent",
             args=dict(
                 percent=.04
             ),

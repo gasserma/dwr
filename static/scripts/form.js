@@ -1,8 +1,9 @@
+var tempHiddenStrats = [];
+
 $(document).ready(function () {
     $('.runSimButt').click(function () {
         $("#simgraph").remove();
         var body = $("#actualBody");
-        $("<p id=\"simgraph\"></p>").appendTo(body);
 
         var data = {}
 
@@ -10,8 +11,11 @@ $(document).ready(function () {
             data[this.name] = this.value
         });
 
+        tempHiddenStrats.push($(".CreateSimulation"));
+
         data['strategies'] = [];
         $(".Strategy:visible").each(function () {
+            tempHiddenStrats.push($(this));
             var strat = {};
             $(this).find(".input_strat").each(function() {
                 strat['args'] = {};
@@ -41,6 +45,24 @@ $(document).ready(function () {
         var j = JSON.stringify(data);
         console.log(j);
 
+        $("<label type=\"submit\" class=\"showParamsButt\">+</label>").appendTo(body).click(function() {
+            for (var i = 0; i< l; i++){
+                tempHiddenStrats[i].toggle(200);
+            }
+
+            if ($(".showParamsButt").text() == "+"){
+                $(".showParamsButt").text("-");
+            } else {
+                $(".showParamsButt").text("+");
+            }
+        });
+
+        $("<label type=\"submit\" class=\"reAnimateButt\">Restart Animation</label>").hide().appendTo(body).click(function() {
+            alert("restart");
+        });
+
+        $("<p id=\"simgraph\"></p>").appendTo(body);
+
         $.ajax({
             type: 'POST',
             url: '/simulations',
@@ -50,23 +72,27 @@ $(document).ready(function () {
             success: function(data) {
                 console.log('data: ' + JSON.stringify(data));
                 showSimulation(data);
+                $(".reAnimateButt").show();
             }
         });
+
+        var l = tempHiddenStrats.length;
+        for (var i = 0; i< l; i++){
+            tempHiddenStrats[i].hide(200);
+        }
     });
 });
 
 var strategyCount = 0;
 function addStrategy(c, t){
-    var newStratDiv = $(".Strategy").last().clone().appendTo("#actualBody").show('slow');
+    var newStratDiv = $("#stratClone").clone().removeAttr('id').appendTo("#actualBody").show('slow');
     $(newStratDiv).data("type", t);
-    $("<legend>" + c + "</legend>").last().clone().appendTo(newStratDiv.find('.stratFieldset'));
+    $("<legend>" + c + "</legend>").appendTo(newStratDiv.find('.stratFieldset'));
     $("." + c).last().clone().appendTo(newStratDiv.find('.stratFieldset')).show('slow');
-    $(newStratDiv).find(".removeStrategyButt").click(function()
-    {
+    $(newStratDiv).find(".removeStrategyButt").click(function(){
         $(this).parent().parent().parent().remove()
         strategyCount--;
-        if (strategyCount <= 0)
-        {
+        if (strategyCount <= 0){
             strategyCount = 0;
             $(".runSimButt").hide('slow');
         }

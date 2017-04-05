@@ -36,7 +36,7 @@
                   <label type="submit" class="addStrategyButt">Add Withdrawal Strategy</label>
                   <div class="dropdown-content">
                     <a value="const_amount", id="caSelect">Constant Amount</a>
-                    <a value="const_percentage", id="cpSelect">Constant Percent</a>
+                    <a value="const_percent", id="cpSelect">Constant Percent</a>
                     <a value="guyton_klinger", id="gkSelect">Guyton-Klinger</a>
                   </div>
                 </div>
@@ -44,7 +44,7 @@
                 <label type="submit" class="runSimButt" style="display: none;">RunSimulation</label>
             </fieldset>
         </div>
-        <div class="Strategy" style="display: none;">
+        <div class="Strategy" id="stratClone" style="display: none;">
             <fieldset class="stratFieldset">
                 <label for="weight">Weight</label>
                 <input type="text" name="weight" id="weight" value="1.0" class="weight"/>
