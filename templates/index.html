@@ -21,7 +21,7 @@
 </ul>
 <body>
     <div id="actualBody">
-        <div class="CreateSimulation">
+        <div class="CreateSimulation" id="createClone">
             <fieldset>
                 <label for="initial_portfolio_value">Portfolio Size</label>
                 <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1000000" class="input_main"/>
@@ -35,15 +35,17 @@
                 <div class="dropdown">
                   <label type="submit" class="addStrategyButt">Add Withdrawal Strategy</label>
                   <div class="dropdown-content">
-                    <a value="const_amount", id="caSelect">Constant Amount</a>
-                    <a value="const_percent", id="cpSelect">Constant Percent</a>
-                    <a value="guyton_klinger", id="gkSelect">Guyton-Klinger</a>
+                    <a value="const_amount", class="caSelect">Constant Amount</a>
+                    <a value="const_percent", class="cpSelect">Constant Percent</a>
+                    <a value="guyton_klinger", class="gkSelect">Guyton-Klinger</a>
                   </div>
                 </div>
-
-                <label type="submit" class="runSimButt" style="display: none;">RunSimulation</label>
             </fieldset>
         </div>
+
+        <label type="submit" class="compareButt" style="display: none;">Compare With Another Strategy</label>
+        <label type="submit" class="runSimButt" style="display: none;">Run Simulation</label>
+
         <div class="Strategy" id="stratClone" style="display: none;">
             <fieldset class="stratFieldset">
                 <label for="weight">Weight</label>

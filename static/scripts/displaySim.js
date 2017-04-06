@@ -18,11 +18,28 @@ var sim = new function(){
     var radius = function(sr) { return sr.withdrawal; };
     var color = function(sr) {
         if (sr.exceeded){
-          return "#335EFF";
+            if (sr.resultSet == 0){
+                return "blue";
+            }
+            return "green";
         }
-        return "#FF3333";
+
+        if (sr.resultSet == 0){
+            return "red";
+        }
+        return "yellow";
     };
-    var key = function(sr) { return sr.year; };
+    var opacity = function(sr) {
+        if (comparing()){
+            return 0.5;
+        }
+
+        return 1.0
+    };
+
+    // This has the potential to fail if we ever get market data for the year 926
+    var key = function(sr) { return sr.year - (sr.resultSet * 1000)};
+    var comparing = function() { return secondSimResults != null }
 
     var getSingleSimulation = function(simulationStartYear) {
         simulationStartYear = Math.round(simulationStartYear);
@@ -33,23 +50,36 @@ var sim = new function(){
             data.push({
                 portfolio_amt : simResults.results[index].portfolio_values[simYear],
                 withdrawal : simResults.results[index].withdrawals[simYear],
-                exceeded : ex,
-                year : simYear
+                exceeded : ex, //TODO we should name this something to reflect the "or =" part
+                year : simYear,
+                resultSet : 0
             });
+
+            if (comparing()) {
+                ex = secondSimResults.results[index].withdrawals[simYear] >= secondSimResults.initial_withdrawal_amt;
+                data.push({
+                    portfolio_amt : secondSimResults.results[index].portfolio_values[simYear],
+                    withdrawal : secondSimResults.results[index].withdrawals[simYear],
+                    exceeded : ex,
+                    year : simYear,
+                    resultSet : 1
+                });
+            }
         }
 
+        console.log(simulationStartYear);
+        console.log(JSON.stringify(data));
         return data;
     };
 
     var displaySimulationStartYear = function(simulationStartYear) {
         dot.data(getSingleSimulation(simulationStartYear), key)
            .call(position)
+           .style("opacity", function(sr) { return opacity(sr); })
            .style("fill", function(sr) { return color(sr); })
            .sort(order);
         label.text(Math.round(simulationStartYear));
     };
-
-
 
     var manualScroll = function() {
         var yearScale = d3.scaleLinear()
@@ -85,17 +115,18 @@ var sim = new function(){
         };
     };
 
-    var position = function(dot) {
-        dot.attr("cx", function(sr) { return xScale(x(sr)); })
-           .attr("cy", function(sr) { return yScale(y(sr)); })
-           .attr("r", function(sr) { return rScale(radius(sr)); })
+    var position = function(point) {
+        point.attr("cx", function(sr) { return xScale(x(sr)); })
+             .attr("cy", function(sr) { return yScale(y(sr)); })
+             .attr("r", function(sr) { return rScale(radius(sr)); })
     };
 
     var order = function(a, b) {
         return radius(b) - radius(a);
     };
 
-    var svg, xScale, yScale, rScale, xAxis, yAxis, label, simResults,
+    var svg, xScale, yScale, rScale, xAxis, yAxis, label,
+        simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
         dot, box, overlay;
 
     // Init all the svg stuffs
@@ -152,19 +183,22 @@ var sim = new function(){
                    .text(1926);
     };
 
-    this.showSimulation = function showSimulation(results){
+    this.showSimulation = function showSimulation(results, secondResults=null){
         simResults = results;
+        secondSimResults = secondResults;
 
         // Actually do our animation and initialize the rest.
         dot = svg.append("g")
                  .attr("class", "dots")
                  .selectAll(".dot")
                  .data(getSingleSimulation(1926))
-                 .enter().append("circle")
-                 .attr("class", "dot")
-                 .style("fill", function(sr) { return color(sr); })
-                 .call(position)
-                 .sort(order);
+                 .enter()
+                     .append("circle")
+                     .attr("class", "dot")
+                     .style("opacity", function(sr) { return opacity(sr); })
+                     .style("fill", function(sr) { return color(sr); })
+                     .call(position)
+                     .sort(order);
 
         box = label.node().getBBox();
         overlay = svg.append("rect")
