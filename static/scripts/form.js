@@ -5,6 +5,10 @@ function getJsonRequest(createDiv) {
         data[this.name] = this.value
     });
 
+    // Hardcoded for now...
+    data["min_year"] = 1926;
+    data["max_year"] = 2010;
+
     data['strategies'] = [];
     createDiv.nextUntil(".CreateSimulation").each(function () {
         if ($(this).is(":visible") && $(this).attr('class') == "Strategy") { //There is certainly a jquery'er way to do this.
@@ -34,9 +38,9 @@ function getJsonRequest(createDiv) {
             data['strategies'].push(strat)
         }
     });
-    var j = JSON.stringify(data);
-    console.log(j);
-    return j;
+
+    console.log(JSON.stringify(data));
+    return data;
 }
 
 var tempHiddenStrats = [];
@@ -80,7 +84,7 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: '/simulations',
-            data: requests[0],
+            data: JSON.stringify(requests[0]),
             contentType: "application/json",
             dataType: 'json',
             success: function(data) {
@@ -88,23 +92,30 @@ $(document).ready(function () {
                     $.ajax({ // TODO: stop...it...find the right way to do these in parallel...
                         type: 'POST',
                         url: '/simulations',
-                        data: requests[1],
+                        data: JSON.stringify(requests[1]),
                         contentType: "application/json",
                         dataType: 'json',
                         success: function(data2) {
-                            console.log('data: ' + JSON.stringify(data));
-                            console.log('data2: ' + JSON.stringify(data2));
-                            sim.init();
+                            sim.init(
+                                Number(requests[0].retirement_length),
+                                Number(requests[0].initial_portfolio_value),
+                                Number(requests[0].min_year),
+                                Number(requests[0].max_year));
                             sim.showSimulation(data, data2);
                             $(".reAnimateButt").show();
                         }
                     });
 
                 } else {
-                    console.log('data: ' + JSON.stringify(data));
-                    sim.init();
+                    console.log(JSON.stringify(data))
+                    sim.init(
+                        Number(requests[0].retirement_length),
+                        Number(requests[0].initial_portfolio_value),
+                        Number(requests[0].min_year),
+                        Number(requests[0].max_year));
                     sim.showSimulation(data);
                     $(".reAnimateButt").show();
+                    displayResults(data);
                 }
             }
         });
@@ -115,6 +126,11 @@ $(document).ready(function () {
         }
     });
 });
+
+function displayResults(results){
+    var body = $("#actualBody");
+    $('#Results').html(results.success_rate.toString()).appendTo(body).show();
+}
 
 $(document).ready(function () {
     $('.compareButt').click(function () {
@@ -133,10 +149,10 @@ $(document).ready(function () {
 
 var strategyCount = 0;
 function addStrategy(c, t, after){
-    var newStratDiv = $("#stratClone").clone().removeAttr('id').insertAfter(after).show('slow');
+    var newStratDiv = $("#stratClone").clone().removeAttr('id').insertAfter(after).show();
     $(newStratDiv).data("type", t);
     $("<legend>" + c + "</legend>").appendTo(newStratDiv.find('.stratFieldset'));
-    $("." + c).last().clone().appendTo(newStratDiv.find('.stratFieldset')).show('slow');
+    $("." + c).last().clone().appendTo(newStratDiv.find('.stratFieldset')).show();
     $(newStratDiv).find(".removeStrategyButt").click(function(){
         $(this).parent().parent().parent().remove()
         strategyCount--;

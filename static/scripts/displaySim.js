@@ -34,10 +34,10 @@ var sim = new function(){
             return 0.5;
         }
 
-        return 1.0
+        return .9;
     };
 
-    // This has the potential to fail if we ever get market data for the year 926
+    // This has the potential to fail if we ever get market data for the year 926 or earlier
     var key = function(sr) { return sr.year - (sr.resultSet * 1000)};
     var comparing = function() { return secondSimResults != null }
 
@@ -45,8 +45,9 @@ var sim = new function(){
         simulationStartYear = Math.round(simulationStartYear);
         var index = simulationStartYear - simResults.simulation_start;
         var data = [];
-        for(simYear=0; simYear < 30; simYear++){
-            var ex = simResults.results[index].withdrawals[simYear] >= simResults.initial_withdrawal_amt;
+        for(simYear=0; simYear < retirementLength; simYear++){
+            // These * 1.0001 are ghetto floating point comparisons.
+            var ex = simResults.results[index].withdrawals[simYear] * 1.0001 >= simResults.initial_withdrawal_amt;
             data.push({
                 portfolio_amt : simResults.results[index].portfolio_values[simYear],
                 withdrawal : simResults.results[index].withdrawals[simYear],
@@ -56,7 +57,7 @@ var sim = new function(){
             });
 
             if (comparing()) {
-                ex = secondSimResults.results[index].withdrawals[simYear] >= secondSimResults.initial_withdrawal_amt;
+                ex = secondSimResults.results[index].withdrawals[simYear] * 1.0001 >= secondSimResults.initial_withdrawal_amt;
                 data.push({
                     portfolio_amt : secondSimResults.results[index].portfolio_values[simYear],
                     withdrawal : secondSimResults.results[index].withdrawals[simYear],
@@ -67,8 +68,6 @@ var sim = new function(){
             }
         }
 
-        console.log(simulationStartYear);
-        console.log(JSON.stringify(data));
         return data;
     };
 
@@ -83,7 +82,7 @@ var sim = new function(){
 
     var manualScroll = function() {
         var yearScale = d3.scaleLinear()
-                          .domain([1926, 2010-30])
+                          .domain([startYear, endYear - retirementLength])
                           .range([box.x + 10, box.x + box.width - 10])
                           .clamp(true);
 
@@ -109,7 +108,7 @@ var sim = new function(){
     }
 
     var getMouseOverYear = function() {
-        var year = d3.interpolateNumber(1926, 2010-30);
+        var year = d3.interpolateNumber(startYear, endYear - retirementLength);
         return function(t) {
             displaySimulationStartYear(year(t));
         };
@@ -125,21 +124,27 @@ var sim = new function(){
         return radius(b) - radius(a);
     };
 
-    var svg, xScale, yScale, rScale, xAxis, yAxis, label,
+    var svg, xScale, yScale, rScale, xAxis, yAxis, label, w, h,
+        retirementLength, initialPortfolio, startYear, endYear,
         simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
         dot, box, overlay;
 
     // Init all the svg stuffs
-    this.init = function init() {
+    this.init = function init(length, initPortfolio, start, end) {
+        retirementLength = length;
+        initialPortfolio = initPortfolio;
+        startYear = start;
+        endYear = end;
+
         // TODO, this is all rather arbirtrary...and we should either be okay with that or not.
         var margins = {top: 10, right: 10, bottom: 50, left: 100};
-        var w = 1000 - margins.right;
-        var h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
+        w = 1000 - margins.right;
+        h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 
-        // TODO, 30 year simulations, 4mil portfolios, and 200k withdrawal rates are all entirely arbitrary
-        xScale = d3.scaleLinear().domain([0, 30]).range([0, w]);
-        yScale = d3.scaleLinear().domain([0, 4000000]).range([h, 0]);
-        rScale = d3.scaleSqrt().domain([0, 200000]).range([0, 25]);
+
+        xScale = d3.scaleLinear().domain([0, length]).range([0, w]);
+        yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([h, 0]);
+        rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, 35]);
 
         xAxis = d3.axisBottom(xScale);
         yAxis = d3.axisLeft(yScale);
@@ -165,7 +170,7 @@ var sim = new function(){
            .attr("text-anchor", "end")
            .attr("x", w)
            .attr("y", h - 5)
-           .text("time");
+           .text("Years Into Simulation");
 
         svg.append("text")
            .attr("class", "y label")
@@ -173,14 +178,14 @@ var sim = new function(){
            .attr("y", 5)
            .attr("dy", ".75em")
            .attr("transform", "rotate(-90)")
-           .text("portfolio size");
+           .text("Portfolio Size in Inflation Adjusted Dollars");
 
         label = svg.append("text")
                    .attr("class", "year label")
                    .attr("text-anchor", "end")
-                   .attr("y", h - 10)
+                   .attr("y", 80)
                    .attr("x", w)
-                   .text(1926);
+                   .text(startYear.toString());
     };
 
     this.showSimulation = function showSimulation(results, secondResults=null){
@@ -191,7 +196,7 @@ var sim = new function(){
         dot = svg.append("g")
                  .attr("class", "dots")
                  .selectAll(".dot")
-                 .data(getSingleSimulation(1926))
+                 .data(getSingleSimulation(startYear))
                  .enter()
                      .append("circle")
                      .attr("class", "dot")
@@ -214,7 +219,7 @@ var sim = new function(){
 
     this.animate = function animate(){
         svg.transition()
-           .duration(30000) // ms, apparently
+           .duration(retirementLength * 1000) // one second per year
            .ease(d3.easeLinear)
            .attrTween("year", getMouseOverYear);
     };

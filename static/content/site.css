@@ -75,6 +75,10 @@ label[type=submit], select {
     background: green;
 }
 
+.compareButt:hover {
+    background: yellow;
+}
+
 /* DROPDOWNS */
 .dropdown {
     width: 100%;
