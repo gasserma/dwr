@@ -96,7 +96,7 @@ class Simulation:
             ws = []
 
             p = None
-            for y in range(0, 30):
+            for y in range(0, self.length + 1):
                 wAccumulator = 0
                 for m in range(0,12):
                     if len(self.recordedData[i]) > m+(y*12):

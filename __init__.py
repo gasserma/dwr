@@ -88,9 +88,13 @@ def simulations():
     )
 
     results = result.getSimResults()
+    initialWithdrawal = results[0]["withdrawals"][0]
+    if type.lower() == "const_percent":
+        initialWithdrawal = initialPortfolioValue * float(args["percent"]);
+
     return flask.jsonify(
         success_rate=result.getSuccessRate(),
-        initial_withdrawal_amt=results[0]["withdrawals"][0],
+        initial_withdrawal_amt=initialWithdrawal,
         simulation_start=minYear,
         simulation_end=maxYear,
         results=results

@@ -45,7 +45,7 @@ var sim = new function(){
         simulationStartYear = Math.round(simulationStartYear);
         var index = simulationStartYear - simResults.simulation_start;
         var data = [];
-        for(simYear=0; simYear < retirementLength; simYear++){
+        for(simYear=0; simYear < retirementLength + 1; simYear++){
             // These * 1.0001 are ghetto floating point comparisons.
             var ex = simResults.results[index].withdrawals[simYear] * 1.0001 >= simResults.initial_withdrawal_amt;
             data.push({
@@ -137,7 +137,7 @@ var sim = new function(){
         endYear = end;
 
         // TODO, this is all rather arbirtrary...and we should either be okay with that or not.
-        var margins = {top: 10, right: 10, bottom: 50, left: 100};
+        var margins = {top: 10, right: 100, bottom: 50, left: 100};
         w = 1000 - margins.right;
         h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 

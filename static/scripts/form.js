@@ -104,6 +104,7 @@ $(document).ready(function () {
             // On single ajax call we get the data in result1
             // On double ajax call we get the data at result1[0] and result2[0]
             // Not sure why, but its working for now...so TODO figure this out.
+            console.log(JSON.stringify(result1));
             sim.init(
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
@@ -193,6 +194,8 @@ $(document).ready(function () {
                     $(this).remove();
                 }
             });
+
+            strategies[1] = [];
 
             $(lastCreate).remove();
             $(this).text("Compare With Another Strategy");
