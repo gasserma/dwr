@@ -316,9 +316,9 @@ function addStrategy(c, t, create, strategyIndex){
     }
     $(".compareButt").show();
 
-    $(newStratDiv).find(".weight").each(function (){
+    /*$(newStratDiv).find(".weight").each(function (){
         $(this).data('oldVal', parseFloat($(this).val()));
-    });
+    });*/
 
     $(newStratDiv).find(".weight").change(function (){
         $(this).data('manualChange', true);
@@ -467,17 +467,33 @@ function weightChanged(weightInputReference) {
         return;
     }
 
+    var highlight = true;
+    if (isNaN(oldVal)){
+        oldVal = 100.0;
+        if (newVal == 100){
+            highlight = false;
+        }
+    }
+
     var ratio = newVal / oldVal;
 
-    $(weightInputReference).effect("highlight", { color: '#84b1f9'}, 3000);
+    if (highlight){
+        $(weightInputReference).effect("highlight", { color: '#84b1f9'}, 3000);
+    }
 
     $(weightInputReference).parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
-        $(this).val((parseFloat(old) * ratio).toFixed(0)).effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).val((parseFloat(old) * ratio).toFixed(0));
+        if (highlight){
+            $(this).effect("highlight", { color: '#84b1f9'}, 3000);
+        }
     });
 
     $(weightInputReference).parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
-        $(this).val((parseFloat(old) * ratio).toFixed(0)).effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).val((parseFloat(old) * ratio).toFixed(0));
+        if (highlight){
+            $(this).effect("highlight", { color: '#84b1f9'}, 3000);
+        }
     });
 }
