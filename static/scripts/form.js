@@ -1,13 +1,15 @@
 function validateForm(){
     for (var i = 0; i < 2; i++){
         var totalWeight = 0.0;
+        var strats = false;
         for (var s = 0; s < strategies[i].length; s++){
             $(strategies[i][s]).find(".weight").each(function() {
                 totalWeight += parseFloat(this.value)/100.0;
+                strats = true;
             });
         }
 
-        if (totalWeight != 1.0){
+        if (totalWeight * 1.0000001 <= 1.0 && strats){
             for (var s = 0; s < strategies[i].length; s++){
                 $(strategies[i][s]).find(".weight").each(function() {
                     $(this).effect("highlight", { color: "red" }, 1000);
