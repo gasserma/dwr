@@ -7,7 +7,8 @@
     <link rel="stylesheet" type="text/css" href="/static/style/sim.css" />
     <link rel="stylesheet" type="text/css" href="/static/content/site.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-    <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="/static/scripts/form.js"></script>
     <script src="/static/scripts/displaySim.js"></script>
 </head>
@@ -27,7 +28,7 @@
                 <label for="initial_portfolio_value">Portfolio Size</label>
                 <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1000000" class="input_main"/>
 
-                <label for="retirement_length">Retirement Length</label>
+                <label for="retirement_length">Retirement Leth</label>
                 <input type="text" name="retirement_length" id="retirement_length" value="30" class="input_main"/>
 
                 <label for="failure_threshhold">Failure Threshhold</label>
@@ -50,11 +51,11 @@
         <div class="Strategy" id="stratClone" style="display: none;">
             <fieldset class="stratFieldset">
                 <label for="weight">Weight</label>
-                <input type="text" name="weight" id="weight" value="1.0" class="weight"/>
+                <input type="text" name="weight" id="weight" value="100 %" class="weight"/>
                 <label for="stocks">Stocks</label>
-                <input type="text" name="weight" id="stocks" value=".5" class="stocks"/>
+                <input type="text" name="weight" id="stocks" value="50 %" class="stocks"/>
                 <label for="bonds">Bonds</label>
-                <input type="text" name="bonds" id="bonds" value=".5" class="bonds"/>
+                <input type="text" name="bonds" id="bonds" value="50%" class="bonds"/>
             </fieldset>
         </div>
         <div class="GuytonKlinger" style="display: none;">
@@ -69,7 +70,7 @@
         </div>
         <div class="ConstPercent" style="display: none;">
             <label for="const_percent">Percent</label>
-            <input type="text" name="percent" id="const_percent" value=".04" class="input_strat"/>
+            <input type="text" name="percent" id="const_percent" value="4 %" class="input_strat"/>
             <label type="submit" class="removeStrategyButt">ClickToRemove</label>
         </div>
         <p id="simgraph"></p>

@@ -28,11 +28,11 @@ from assets import Assets
 # TODO, test this. It seems like it is returning a 200...
 @app.errorhandler(500)
 def topLevel500(e):
-    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc())
+    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc()), 500
 
 @app.errorhandler(Exception)
 def topLevelError(e):
-    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc())
+    return flask.jsonify(status=500, exception=e.__str__(), trace=traceback.format_exc()), 500
 
 # Everything at /* is a page that you might visit except for...
 #               /simulations* which is the rest endpoint you post to do run simulations and
