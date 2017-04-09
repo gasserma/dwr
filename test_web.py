@@ -53,6 +53,34 @@ class TestWeb(unittest.TestCase):
         response = json.loads(rv.data)
         self.assertEqual(response["some_value"], 99)
 
+    def test_ErrorCase(self):
+        initial_portfolio_value = 1 * 1000 * 1000
+        strats = []
+        strats.append(dict(
+            weight=.6, # This is what causes the error.
+            type="const_amount",
+            args=dict(
+                amount=.04 * initial_portfolio_value
+            ),
+            asset_allocation=[.5, .5]
+        ))
+
+        request = dict(
+            initial_portfolio_value=initial_portfolio_value,
+            retirement_length=30,
+            failure_threshhold=0,
+            min_year=1926,
+            max_year=2010,
+            strategies=strats,
+        )
+
+        jsonString = json.dumps(request)
+
+        rv = self.app.post(
+            "/simulations",
+            data=jsonString,
+            content_type="application/json")
+        self.assertEqual(500, rv.status_code)
 
     def test_trinityResultsWeb(self):
         initial_portfolio_value = 1 * 1000 * 1000
