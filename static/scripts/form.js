@@ -1,3 +1,25 @@
+function validateForm(){
+    for (var i = 0; i < 2; i++){
+        var totalWeight = 0.0;
+        for (var s = 0; s < strategies[i].length; s++){
+            $(strategies[i][s]).find(".weight").each(function() {
+                totalWeight += parseFloat(this.value)/100.0;
+            });
+        }
+
+        if (totalWeight != 1.0){
+            for (var s = 0; s < strategies[i].length; s++){
+                $(strategies[i][s]).find(".weight").each(function() {
+                    $(this).effect("highlight", { color: "red" }, 1000);
+                });
+            }
+
+            return false;
+        }
+    }
+    return true;
+}
+
 function getJsonRequest(createDiv) {
     var data = {}
 
@@ -65,6 +87,10 @@ function showInputs(){
 
 $(document).ready(function () {
     $('.runSimButt').click(function () {
+        if (!validateForm()){
+            $(this).effect("highlight", { color: "red" }, 1000);
+            return;
+        }
         $("#simgraph").remove();
         $(".showParamsButt").remove();
         $(".reAnimateButt").remove();
@@ -246,9 +272,9 @@ function addStrategy(c, t, create, strategyIndex){
     strategies[strategyIndex].push(newStratDiv);
     $(newStratDiv).data("type", t);
     $(newStratDiv).data("strategyIndex", strategyIndex);
-    $("<legend>" + c + "</legend>").appendTo(newStratDiv.find('.stratFieldset'));
     var newStrat = $("." + c).last().clone();
     if (c == "GuytonKlinger"){
+        $("<legend>Guyton Klinger</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=initial_amount]').each(function() {
             var defaultVal = $(this).val();
             $(this).val(defaultVal * ratio);
@@ -256,10 +282,15 @@ function addStrategy(c, t, create, strategyIndex){
     }
 
     if (c == "ConstAmount"){
+        $("<legend>Constant Amount</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=amount]').each(function() {
             var defaultVal = $(this).val();
             $(this).val(defaultVal * ratio);
         });
+    }
+
+    if (c == "ConstPercent") {
+        $("<legend>Constant Percent</legend>").appendTo(newStratDiv.find('.stratFieldset'));
     }
 
     $(newStrat).appendTo(newStratDiv.find('.stratFieldset')).show();
@@ -287,6 +318,11 @@ function addStrategy(c, t, create, strategyIndex){
 
     $(newStratDiv).find(".weight").each(function (){
         $(this).data('oldVal', parseFloat($(this).val()));
+    });
+
+    $(newStratDiv).find(".weight").change(function (){
+        $(this).data('manualChange', true);
+        balanceWeights();
     });
 
     $(newStratDiv).find(".stocks").change(function (){
@@ -372,19 +408,36 @@ function balanceWeights() {
     for (i = 0; i < 2; i++){
         var weightCount = 0;
         var roundingError = 100.0;
+        var accountedFor = 0.0;
+
         $('.weight').each(function (){
             if (Number($(this).parent().parent().data("strategyIndex")) == i){
-                weightCount++;
+                if ($(this).data("manualChange")){
+                    accountedFor += parseFloat($(this).val());
+                } else {
+                    weightCount++;
+                }
             }
         });
+
+        if (accountedFor > 100.0){
+            accountedFor = 0.0;
+            $('.weight').each(function (){
+                if (Number($(this).parent().parent().data("strategyIndex")) == i){
+                    $(this).data("manualChange", false)
+                }
+            });
+        }
 
         var lastWeightChanged = null;
         $('.weight').each(function (){
             if (Number($(this).parent().parent().data("strategyIndex")) == i){
-                var newString = (100.0/weightCount).toFixed(0) + " %";
-                if ($(this).val() != newString){
-                   $(this).val(newString).effect("highlight", { color: '#84b1f9'}, 3000);
-                   lastWeightChanged = $(this);
+                if (!$(this).data("manualChange")){
+                    var newString = ((100.0-accountedFor)/weightCount).toFixed(0) + " %";
+                    if ($(this).val() != newString){
+                        $(this).val(newString);
+                       lastWeightChanged = $(this);
+                    }
                 }
 
                 roundingError -= parseFloat($(this).val());
@@ -415,6 +468,8 @@ function weightChanged(weightInputReference) {
     }
 
     var ratio = newVal / oldVal;
+
+    $(weightInputReference).effect("highlight", { color: '#84b1f9'}, 3000);
 
     $(weightInputReference).parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
