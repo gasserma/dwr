@@ -47,7 +47,22 @@ function getJsonRequest(createDiv) {
     return data;
 }
 
-var tempHiddenStrats = [];
+function hideInputs(){
+    $(".CreateSimulation").hide(200);
+    $(".Strategy:visible").hide(200);
+    $(".runSimButt").hide();
+    $(".compareButt").hide();
+}
+
+function showInputs(){
+    $(".CreateSimulation").show(200);
+    $(".Strategy:not(#stratClone)").show(200);
+    if (runSimulationAvailable()) {
+        $(".runSimButt").show();
+    }
+    $(".compareButt").show();
+}
+
 $(document).ready(function () {
     $('.runSimButt').click(function () {
         $("#simgraph").remove();
@@ -55,14 +70,12 @@ $(document).ready(function () {
         $(".reAnimateButt").remove();
 
         $(".runSimButt").hide(350); // This is so you don't notice how long the web calls take :)
+        $(".compareButt").hide(350);
 
         var body = $("#actualBody");
 
         var data = {};
-        tempHiddenStrats.push($(".CreateSimulation"));
-        $(".Strategy:visible").each(function () {
-            tempHiddenStrats.push($(this));
-        });
+
 
         requests = [];
         $(document).find(".CreateSimulation").each(function (){
@@ -70,14 +83,12 @@ $(document).ready(function () {
         });
 
         $("<label type=\"submit\" class=\"showParamsButt\">+</label>").appendTo(body).click(function() {
-            for (var i = 0; i< l; i++){
-                tempHiddenStrats[i].toggle(200);
-            }
-
             if ($(".showParamsButt").text() == "+"){
                 $(".showParamsButt").text("-");
+                showInputs();
             } else {
                 $(".showParamsButt").text("+");
+                hideInputs();
             }
         });
 
@@ -139,10 +150,7 @@ $(document).ready(function () {
             .then(success, failure);
         }
 
-        var l = tempHiddenStrats.length;
-        for (var i = 0; i< l; i++){
-            tempHiddenStrats[i].hide(200);
-        }
+        hideInputs();
     });
 });
 
@@ -156,9 +164,6 @@ $(document).ready(function () {
     $('.compareButt').click(function () {
         if (!comparing){
             comparing = true;
-            $("#simgraph").remove();
-            $(".showParamsButt").remove();
-            $(".reAnimateButt").remove();
             $(".runSimButt").hide();
 
             var newCreateDiv = $("#createClone").clone().removeAttr('id').insertAfter(".compareButt").show('slow');
@@ -178,30 +183,61 @@ $(document).ready(function () {
                 $(this).data('oldVal', parseFloat($(this).val()));
             });
 
-            var l = tempHiddenStrats.length;
-            for (var i = 0; i< l; i++){
-                tempHiddenStrats[i].show(200);
-            }
-
-            tempHiddenStrats = [];
             $(this).text("Remove Second Strategy");
         } else {
             $(".runSimButt").show();
             comparing = false;
-            $(".CreateSimulation").last().remove();
+            var lastCreate = $(".CreateSimulation").last();
+            $(lastCreate).nextUntil(".CreateSimulation").each(function () {
+                if ($(this).is(":visible") && $(this).attr('class') == "Strategy") {
+                    $(this).remove();
+                }
+            });
+
+            $(lastCreate).remove();
             $(this).text("Compare With Another Strategy");
         }
     });
 });
 
-var strategyCount = 0;
-function addStrategy(c, t, after, strategyIndex){
+function runSimulationAvailable(){
+    var available = false;
+    $('.CreateSimulation').each(function () {
+        available = false;
+        $(this).nextUntil(".CreateSimulation").each(function () {
+            if ($(this).is(":visible") && $(this).attr('class') == "Strategy") {
+                available = true;
+            }
+        });
+
+        if (!available){
+            return false;
+        }
+    });
+
+    return available;
+}
+
+var strategies = [[],[]]
+function addStrategy(c, t, create, strategyIndex){
     var ratio;
-    $(after).find('input[name=initial_portfolio_value]').each(function() {
+    $(create).find('input[name=initial_portfolio_value]').each(function() {
         ratio = $(this).val() / 1000000.0;
     });
 
-    var newStratDiv = $("#stratClone").clone().removeAttr('id').insertAfter(after).show();
+    if (strategies[strategyIndex].length == 0){
+       var newStratDiv = $("#stratClone").clone()
+                                  .removeAttr('id')
+                                  .insertAfter($(create))
+                                  .show();
+    } else {
+        var newStratDiv = $("#stratClone").clone()
+                                          .removeAttr('id')
+                                          .insertAfter($(strategies[strategyIndex][strategies[strategyIndex].length -1]))
+                                          .show();
+    }
+
+    strategies[strategyIndex].push(newStratDiv);
     $(newStratDiv).data("type", t);
     $(newStratDiv).data("strategyIndex", strategyIndex);
     $("<legend>" + c + "</legend>").appendTo(newStratDiv.find('.stratFieldset'));
@@ -223,26 +259,19 @@ function addStrategy(c, t, after, strategyIndex){
     $(newStrat).appendTo(newStratDiv.find('.stratFieldset')).show();
     $(newStratDiv).find(".removeStrategyButt").click(function(){
         $(this).parent().parent().parent().remove()
-        strategyCount--;
-        if (strategyCount <= 0){
-            strategyCount = 0;
+        balanceWeights();
+
+        if (!runSimulationAvailable()){
             $(".runSimButt").hide('slow');
-            $(".compareButt").hide('slow');
         }
     });
 
-    $(".runSimButt").show();
+    if (runSimulationAvailable()){
+        $(".runSimButt").show();
+    }
     $(".compareButt").show();
-    strategyCount++;
 
-    // TODO the factoring of this is pretty stupid
-    $(newStratDiv).find(".weight").change(function (){
-        weightChanged($(this));
-    });
     $(newStratDiv).find(".weight").each(function (){
-        $(this).data('oldVal', parseFloat($(this).val()));
-    });
-    $(newStratDiv).find(".weight").focus(function (){
         $(this).data('oldVal', parseFloat($(this).val()));
     });
 
@@ -325,6 +354,7 @@ function portfolioChange(inputDiv, strategyIndex){
 }
 
 function balanceWeights() {
+    $(':input').stop(true, true);
     for (i = 0; i < 2; i++){
         var weightCount = 0;
         var roundingError = 100.0;
@@ -354,7 +384,9 @@ function balanceWeights() {
         }
 
         $('.weight').each(function (){
-            weightChanged($(this));
+            if (Number($(this).parent().parent().data("strategyIndex")) == i){
+                weightChanged($(this));
+            }
         });
     }
 }
@@ -372,11 +404,11 @@ function weightChanged(weightInputReference) {
 
     $(weightInputReference).parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
-        $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).val((parseFloat(old) * ratio).toFixed(0)).effect("highlight", { color: '#84b1f9'}, 3000);
     });
 
     $(weightInputReference).parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
-        $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).val((parseFloat(old) * ratio).toFixed(0)).effect("highlight", { color: '#84b1f9'}, 3000);
     });
 }
