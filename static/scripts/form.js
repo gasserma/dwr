@@ -219,6 +219,7 @@ function runSimulationAvailable(){
 }
 
 var strategies = [[],[]]
+var stratId = 0;
 function addStrategy(c, t, create, strategyIndex){
     var ratio;
     $(create).find('input[name=initial_portfolio_value]').each(function() {
@@ -237,6 +238,8 @@ function addStrategy(c, t, create, strategyIndex){
                                           .show();
     }
 
+    stratId++;
+    newStratDiv.data("stratId", stratId);
     strategies[strategyIndex].push(newStratDiv);
     $(newStratDiv).data("type", t);
     $(newStratDiv).data("strategyIndex", strategyIndex);
@@ -257,7 +260,15 @@ function addStrategy(c, t, create, strategyIndex){
     }
 
     $(newStrat).appendTo(newStratDiv.find('.stratFieldset')).show();
+
+    var id = stratId;
     $(newStratDiv).find(".removeStrategyButt").click(function(){
+        for (var i = 0; i < strategies[strategyIndex].length; i++){
+            if (strategies[strategyIndex][i].data("stratId") == id){
+                strategies[strategyIndex].splice(i, 1);
+            }
+        }
+
         $(this).parent().parent().parent().remove()
         balanceWeights();
 
