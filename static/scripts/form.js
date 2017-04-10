@@ -142,6 +142,7 @@ $(document).ready(function () {
                 sim.showSimulation(result1[0], result2[0]);
             } else {
                 sim.showSimulation(result1);
+                displayResults(result1);
             }
             $(".reAnimateButt").show();
         }
@@ -185,7 +186,7 @@ $(document).ready(function () {
 
 function displayResults(results){
     var body = $("#actualBody");
-    $('#Results').html(results.success_rate.toString()).appendTo(body).show();
+    $('#Results').html(results.stats.success_rate.toString() + " " + JSON.stringify(results.stats)).appendTo(body).show();
 }
 
 var comparing = false;
@@ -316,11 +317,8 @@ function addStrategy(c, t, create, strategyIndex){
     if (runSimulationAvailable()){
         $(".runSimButt").show();
     }
-    $(".compareButt").show();
 
-    /*$(newStratDiv).find(".weight").each(function (){
-        $(this).data('oldVal', parseFloat($(this).val()));
-    });*/
+    $(".compareButt").show();
 
     $(newStratDiv).find(".weight").change(function (){
         $(this).data('manualChange', true);

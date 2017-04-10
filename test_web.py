@@ -110,7 +110,7 @@ class TestWeb(unittest.TestCase):
             data=jsonString,
             content_type="application/json")
         response = json.loads(rv.data)
-        self.assertAlmostEqual(.96, float(response["success_rate"]), delta=.005)
+        self.assertAlmostEqual(.96, float(response["stats"]["success_rate"]), delta=.005)
 
     def test_simulations(self):
         initial_portfolio_value = 1 * 1000 * 1000
@@ -161,5 +161,5 @@ class TestWeb(unittest.TestCase):
 
         # not a precise assertion, we just want some reasonable regressions guards on the json shapes.
         # as of now the rate is like .96
-        self.assertTrue(.90 < float(response["success_rate"]))
+        self.assertTrue(.90 < float(response["stats"]["success_rate"]))
 

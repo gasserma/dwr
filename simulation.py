@@ -110,6 +110,15 @@ class Simulation:
             results.append({"portfolio_values" : ps, "withdrawals" : ws})
         return results
 
+    def getStats(self):
+        stats = {
+            "success_rate": self.getSuccessRate(),
+            "underflow": gatherWebResponseData(self.underflow),
+            "overflow": gatherWebResponseData(self.overflow),
+            "legacy": gatherWebResponseData(self.endPortfolioValue)
+        }
+        return stats
+
     def recordData(self, simIteration, year, month, withdrawal, portfolioValue):
         if len(self.recordedData) < simIteration + 1:
             self.recordedData.append([])
@@ -134,45 +143,6 @@ class Simulation:
             raise RuntimeError
         if self.iterations != len(self.endRelativeInflation):
             raise RuntimeError
-
-    # who knows where this is going, right now just plot the first iteration.
-    '''
-    def drawMe(self, simIteration):
-        fig, ax1 = plt.subplots()
-        x = []
-        for i in range(0, len(self.recordedData[simIteration])):
-            x.append(i)
-        withdrawals = []
-        portfolio = []
-        initialPortfolio = []
-        initialRate = []
-        irActual = self.recordedData[simIteration][0][2]
-        ipActual = self.recordedData[simIteration][0][3]
-        for d in self.recordedData[simIteration]:
-            withdrawals.append(d[2])
-            portfolio.append(d[3])
-            initialRate.append(irActual)
-            initialPortfolio.append(ipActual)
-        ax1.plot(x, withdrawals, 'rs', x, initialRate, 'r--')
-        ax1.set_xlabel("Months")
-        ax1.set_ylabel("Withdraw Dollars (red)")
-
-        ax2 = ax1.twinx()
-        ax2.plot(x, portfolio, 'bs', x, initialPortfolio, 'b--')
-        ax2.set_ylabel("Portfolio Dollars (blue)")
-
-        #plt.xlabel("Months")
-        #plt.ylabel("Dollars")
-        #plt.plot(x, y, 'r--', x, y2, 'bs')
-        #plt.show()
-
-        fig.suptitle("Simulation Starting in {0}".format(self.minYear + simIteration))
-        fig.tight_layout()
-        plt.show()
-    '''
-
-    def toJson(self): # eventually this should take over __str__()
-        return json.dumps(self.__dict__)
 
     def __str__(self):
         output = []
@@ -211,3 +181,13 @@ def getPercentile(iter, percentile):
     length = len(iter) - 1
     index = int(round(percentile * length))
     return sort[index]
+
+
+def gatherWebResponseData(iter):
+    return {
+        "mean": getMean(iter),
+        "min": min(iter),
+        "max": max(iter),
+        "fifth_percentile": getPercentile(iter, .05),
+        "nintey_fifth_percentile": getPercentile(iter, .95)
+    }

@@ -25,7 +25,6 @@ from assets import Assets
 # TODO standardize logging and exception handling here.
 # TODO test these erro handlings
 # TODO handle more than these...404 at least
-# TODO, test this. It seems like it is returning a 200...
 @app.errorhandler(500)
 def topLevel500(e):
     return flask.jsonify(exception=e.__str__(), trace=traceback.format_exc()), 500
@@ -90,75 +89,16 @@ def simulations():
     results = result.getSimResults()
     initialWithdrawal = results[0]["withdrawals"][0]
     if type.lower() == "const_percent":
-        initialWithdrawal = initialPortfolioValue * float(args["percent"]);
+        initialWithdrawal = initialPortfolioValue * float(args["percent"])
+    if type.lower() == "guyton_klinger":
+        initialWithdrawal = float(args.get("initial_amount"))
 
     return flask.jsonify(
-        success_rate=result.getSuccessRate(),
         initial_withdrawal_amt=initialWithdrawal,
         simulation_start=minYear,
         simulation_end=maxYear,
-        results=results
-    )
-
-@app.route('/dbg/calc')
-def dbgCalc():
-    retirementLength = 30
-    initialPortfolio = 2 * 1000 * 1000
-
-    try:
-        from simulation import runSimulation
-        from strategies.guyton_klinger import GuytonKlinger
-        from assets import Assets
-        result = runSimulation(
-            retirementLength,
-            initialPortfolio,
-            .055 * initialPortfolio * .5,
-            (
-                (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
-            ),
-            1926,
-            2010
-        )
-        return flask.jsonify(success_rate=result.getSuccessRate())
-    except ImportError:
-        return "ie"
-    except Exception:
-        return "e"
-
-@app.route("/dbg/posttest", methods=["POST"])
-def dbgPostTest():
-    amt = request.json["amount"]
-    return flask.jsonify(some_value=int(amt)-1)
-
-@app.route("/dbg/gk")
-def dbgGk():
-    return render_template(
-        'gksim.html'
-    )
-
-@app.route("/dbg/gkexample")
-def dbgGkExample():
-    retirementLength = 30
-    initialPortfolio = 1 * 1000 * 1000
-    from simulation import runSimulation
-    from strategies.guyton_klinger import GuytonKlinger
-    from assets import Assets
-    result = runSimulation(
-        retirementLength,
-        initialPortfolio,
-        .055 * initialPortfolio * .5,
-        (
-            (GuytonKlinger(.055 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
-        ),
-        1926,
-        2010
-    )
-    return flask.jsonify(
-        success_rate=result.getSuccessRate(),
-        initial_withdrawal_amt=55000,
-        simulation_start=1926,
-        simulation_end=2010,
-        results=result.getSimResults()
+        results=results,
+        stats=result.getStats()
     )
 
 @app.route('/dbg/log')

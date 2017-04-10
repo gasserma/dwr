@@ -36,6 +36,9 @@ var sim = new function(){
 
         return .9;
     };
+    var tooltip = function(sr) {
+        return "$" + Number(sr.withdrawal.toFixed(0)).toLocaleString('en-US', {currency: 'USD'});
+    }
 
     // This has the potential to fail if we ever get market data for the year 926 or earlier
     var key = function(sr) { return sr.year - (sr.resultSet * 1000)};
@@ -72,11 +75,15 @@ var sim = new function(){
     };
 
     var displaySimulationStartYear = function(simulationStartYear) {
+        dot.selectAll("title").remove();
+
         dot.data(getSingleSimulation(simulationStartYear), key)
            .call(position)
            .style("opacity", function(sr) { return opacity(sr); })
            .style("fill", function(sr) { return color(sr); })
-           .sort(order);
+           .sort(order)
+           .append("svg:title")
+           .text(function(sr) { return tooltip(sr); });
         label.text(Math.round(simulationStartYear));
     };
 
