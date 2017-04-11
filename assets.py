@@ -1,6 +1,6 @@
 import math
 
-from market_data import getSP500TotalReturn, getLongTermCorpBondsReturn, getBondReturn, getStockReturn
+from market_data import getSP500TotalReturn, getLongTermCorpBondsReturn
 
 '''
 The point of this class is to stop you from having to write .stocks/.bonds/.gold etc everywhere
@@ -106,12 +106,6 @@ class Assets(tuple):
         for i in range(0, len(a)):
             seq.append(math.pow(a[i], 1.0/periods))
         return Assets(seq)
-
-    def getMarketReturns(year):
-        return Assets(
-            getStockReturn(year),
-            getBondReturn(year)
-        )
 
     def getMarketReturns(year, month):
         return Assets(
