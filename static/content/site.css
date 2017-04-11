@@ -142,3 +142,13 @@ label[type=submit], select {
     opacity: 0.85;
 }
 #tooltip h3, #tooltip div { margin: 0; }
+
+.Results {
+    float: right;
+}
+.Key {
+    float: right;
+}
+table, th, td {
+   border: 1px solid black;
+}

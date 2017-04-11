@@ -96,6 +96,8 @@ $(document).ready(function () {
         $("#simgraph").remove();
         $(".showParamsButt").remove();
         $(".reAnimateButt").remove();
+        $(".Key:visible").remove();
+        $(".Results:visible").remove();
 
         $(".runSimButt").hide(350); // This is so you don't notice how long the web calls take :)
         $(".compareButt").hide(350);
@@ -133,6 +135,7 @@ $(document).ready(function () {
             // On double ajax call we get the data at result1[0] and result2[0]
             // Not sure why, but its working for now...so TODO figure this out.
             console.log(JSON.stringify(result1));
+            $("#keyClone").clone().removeAttr('id').insertAfter("#simgraph").show();
             sim.init(
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
@@ -140,10 +143,16 @@ $(document).ready(function () {
                 Number(requests[0].max_year));
             if (requests.length == 2) {
                 sim.showSimulation(result1[0], result2[0]);
+                var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
+                results.find('table').append("<tr><td>S1 Success Rate</td><td>" + (result1[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
+                results.find('table').append("<tr><td>S2 Success Rate</td><td>" + (result2[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             } else {
+                $(".secondStrategyKey").hide();
                 sim.showSimulation(result1);
-                displayResults(result1);
+                var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
+                results.find('table').append("<tr><td>Success Rate</td><td>" + (result1.stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             }
+
             $(".reAnimateButt").show();
         }
         function failure(response) {
@@ -183,11 +192,6 @@ $(document).ready(function () {
         hideInputs();
     });
 });
-
-function displayResults(results){
-    var body = $("#actualBody");
-    $('#Results').html(results.stats.success_rate.toString() + " " + JSON.stringify(results.stats)).appendTo(body).show();
-}
 
 var comparing = false;
 $(document).ready(function () {
