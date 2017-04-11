@@ -94,13 +94,11 @@ cpi = {
 # Keeping all the keys of this dict as strings because that way we can steal the data effortlessly from cFIREsim
 # We will optimize all this later...it probably needs it if we ever do monte carlo on top of this.
 def getCPI(year):
-    if int(year) > 2014 or int(year) < 1871:
+    if int(year) > 2011 or int(year) < 1924:
         raise IndexError
     return cpi[int(year)]
 
 def getInflation(baseYear, currentYear):
-    if int(currentYear) == 1871:
-        return 1.0
     # turns out these CPI numbers are january numbers for the given year, so we subtract 1
     # because thats really like december of the previous year.
     startCpi = getCPI(baseYear - 1)
