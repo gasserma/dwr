@@ -40,7 +40,7 @@ function getJsonRequest(createDiv) {
             var assets = [];
             $(this).find(".input_strat").each(function() {
                 strat['args'] = {};
-                if (this.name.includes("percent")){
+                if (this.name.indexOf("percent") != -1){
                     strat['args'][this.name] = parseFloat(this.value)/100.0;
                 } else {
                     strat['args'][this.name] = this.value;
@@ -123,7 +123,11 @@ $(document).ready(function () {
         });
 
         $("<label type=\"submit\" class=\"reAnimateButt\">Restart Animation</label>").hide().appendTo(body).click(function() {
-            sim.animate();
+            var body = $("#actualBody");
+            $("#simgraph").remove();
+            $("<p id=\"simgraph\"></p>").appendTo(body);
+            sim.reInit();
+            sim.reShowSimulation();
         });
 
         $("<p id=\"simgraph\"></p>").appendTo(body);

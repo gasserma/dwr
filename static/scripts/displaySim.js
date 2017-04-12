@@ -143,13 +143,18 @@ var sim = new function(){
         startYear = start;
         endYear = end;
 
+        this.reInit();
+    }
+
+    this.reInit = function reInit() {
+
         // TODO, this is all rather arbirtrary...and we should either be okay with that or not.
         var margins = {top: 10, right: 100, bottom: 50, left: 100};
         w = 1000 - margins.right;
         h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 
 
-        xScale = d3.scaleLinear().domain([0, length]).range([0, w]);
+        xScale = d3.scaleLinear().domain([0, retirementLength]).range([0, w]);
         yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([h, 0]);
         rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, 35]);
 
@@ -199,6 +204,10 @@ var sim = new function(){
         simResults = results;
         secondSimResults = secondResults;
 
+        this.reShowSimulation();
+    }
+
+    this.reShowSimulation = function reShowSimulation(){
         // Actually do our animation and initialize the rest.
         dot = svg.append("g")
                  .attr("class", "dots")
@@ -221,10 +230,10 @@ var sim = new function(){
                      .attr("height", box.height)
                      .on("mouseover", manualScroll);
 
-        this.animate();
+        animate();
     };
 
-    this.animate = function animate(){
+    var animate = function animate(){
         svg.transition()
            .duration(retirementLength * 1000) // one second per year
            .ease(d3.easeLinear)
