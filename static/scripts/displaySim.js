@@ -74,6 +74,7 @@ var sim = new function(){
         return data;
     };
 
+    var currentYear = null;
     var displaySimulationStartYear = function(simulationStartYear) {
         dot.selectAll("title").remove();
 
@@ -84,12 +85,13 @@ var sim = new function(){
            .sort(order)
            .append("svg:title")
            .text(function(sr) { return tooltip(sr); });
-        label.text(Math.round(simulationStartYear));
+        currentYear = Math.round(simulationStartYear);
+        label.text(currentYear);
     };
 
     var manualScroll = function() {
         var yearScale = d3.scaleLinear()
-                          .domain([startYear, endYear - retirementLength])
+                          .domain([startYear, endYear - retirementLength + 1])
                           .range([box.x + 10, box.x + box.width - 10])
                           .clamp(true);
 
@@ -200,7 +202,7 @@ var sim = new function(){
                    .text(startYear.toString());
     };
 
-    this.showSimulation = function showSimulation(results, secondResults=null){
+    this.showSimulation = function showSimulation(results, secondResults){
         simResults = results;
         secondSimResults = secondResults;
 
@@ -208,6 +210,8 @@ var sim = new function(){
     }
 
     this.reShowSimulation = function reShowSimulation(){
+        box = label.node().getBBox();
+
         // Actually do our animation and initialize the rest.
         dot = svg.append("g")
                  .attr("class", "dots")
@@ -221,7 +225,44 @@ var sim = new function(){
                      .call(position)
                      .sort(order);
 
-        box = label.node().getBBox();
+        var buttSize = 56;
+        back = svg.append("svg:image")
+                       .attr("class", "backButt")
+                       .attr("x", box.x)
+                       .attr("y", box.y+box.height)
+                       .attr("width", buttSize)
+                       .attr("height", buttSize)
+                       .attr("xlink:href", "/static/content/back.png")
+                       .on("click", function() {
+                            svg.transition().duration(0);
+                            displaySimulationStartYear((currentYear == startYear) ? startYear : currentYear - 1);
+                        });
+
+        reanimate = svg.append("svg:image")
+                       .attr("class", "reanimateButt")
+                       .attr("x", box.x + buttSize)
+                       .attr("y", box.y+box.height)
+                       .attr("width", buttSize)
+                       .attr("height", buttSize)
+                       .attr("xlink:href", "/static/content/refresh.png")
+                       .on("click", function() {
+                            d3.select("svg").remove();
+                            sim.reInit();
+                            reShowSimulation();
+                        });
+
+        fwd = svg.append("svg:image")
+                       .attr("class", "fwdButt")
+                       .attr("x", box.x + buttSize + buttSize)
+                       .attr("y", box.y+box.height)
+                       .attr("width", buttSize)
+                       .attr("height", buttSize)
+                       .attr("xlink:href", "/static/content/fwd.png")
+                       .on("click", function() {
+                            svg.transition().duration(0);
+                            displaySimulationStartYear((currentYear == endYear) ? endYear : currentYear + 1);
+                        });
+
         overlay = svg.append("rect")
                      .attr("class", "overlay")
                      .attr("x", box.x)

@@ -95,7 +95,6 @@ $(document).ready(function () {
         }
         $("#simgraph").remove();
         $(".showParamsButt").remove();
-        $(".reAnimateButt").remove();
         $(".Key:visible").remove();
         $(".Results:visible").remove();
 
@@ -122,14 +121,6 @@ $(document).ready(function () {
             }
         });
 
-        $("<label type=\"submit\" class=\"reAnimateButt\">Restart Animation</label>").hide().appendTo(body).click(function() {
-            var body = $("#actualBody");
-            $("#simgraph").remove();
-            $("<p id=\"simgraph\"></p>").appendTo(body);
-            sim.reInit();
-            sim.reShowSimulation();
-        });
-
         $("<p id=\"simgraph\"></p>").appendTo(body);
 
 
@@ -146,18 +137,17 @@ $(document).ready(function () {
                 Number(requests[0].min_year),
                 Number(requests[0].max_year));
             if (requests.length == 2) {
+                $(".secondStrategyKey").show();
                 sim.showSimulation(result1[0], result2[0]);
                 var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
                 results.find('table').append("<tr><td>S1 Success Rate</td><td>" + (result1[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
                 results.find('table').append("<tr><td>S2 Success Rate</td><td>" + (result2[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             } else {
                 $(".secondStrategyKey").hide();
-                sim.showSimulation(result1);
+                sim.showSimulation(result1, null);
                 var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
                 results.find('table').append("<tr><td>Success Rate</td><td>" + (result1.stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             }
-
-            $(".reAnimateButt").show();
         }
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions
