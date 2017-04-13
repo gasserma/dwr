@@ -19,6 +19,19 @@ function validateForm(){
             return false;
         }
     }
+
+    var foundBad = false;
+    $('input[name=retirement_length]').each(function() {
+        if ($(this).val() > 80){ // Very arbitrary. We should probably cap somewhere around 50. 83 is the actual limit right now.
+            $(this).effect("highlight", { color: "red" }, 1000);
+            foundBad = true;
+        }
+    });
+
+    if (foundBad){
+        return false;
+    }
+
     return true;
 }
 
@@ -211,6 +224,13 @@ $(document).ready(function () {
                 $(this).data('oldVal', parseFloat($(this).val()));
             });
 
+            newCreateDiv.find('input[name=retirement_length]').change(function () {
+                var value = Math.floor(parseFloat($(this).val()));
+                $(document).find('.CreateSimulation').first().find('input[name=retirement_length]').each(function (){
+                    $(this).val(value).effect("highlight", { color: '#84b1f9'}, 3000);
+                });
+            });
+
             $(this).text("Remove Second Strategy");
         } else {
             $(".runSimButt").show();
@@ -324,24 +344,24 @@ function addStrategy(c, t, create, strategyIndex){
     });
 
     $(newStratDiv).find(".stocks").change(function (){
-        var newVal = parseFloat($(this).val());
-        $(this).val(newVal.toFixed(0) + " %");
+        var newVal = Math.floor(parseFloat($(this).val()));
+        $(this).val(newVal);
 
         var bondVal = 100 - newVal;
-        $(this).parent()
+        $(this).parent().parent()
         .find(".bonds")
-        .val(bondVal.toFixed(0) + " %")
+        .val(bondVal.toFixed(0))
         .effect("highlight", { color: '#84b1f9'}, 3000); // Thats like a lightish blueish color.
     });
 
     $(newStratDiv).find(".bonds").change(function (){
-        var newVal = parseFloat($(this).val());
-        $(this).val(newVal.toFixed(0) + " %");
+        var newVal = Math.floor(parseFloat($(this).val()));
+        $(this).val(newVal);
 
-        var bondVal = 100 - newVal;
-        $(this).parent()
+        var stockVal = 100 - newVal;
+        $(this).parent().parent()
         .find(".stocks")
-        .val(bondVal.toFixed(0) + " %")
+        .val(stockVal.toFixed(0))
         .effect("highlight", { color: '#84b1f9'}, 3000); // Thats like a lightish blueish color.
     });
 
@@ -376,6 +396,17 @@ $(document).ready(function (e) {
     });
 });
 
+$(document).ready(function (e) {
+    $('.CreateSimulation').find('input[name=retirement_length]').change(function () {
+        if ($(document).find('.CreateSimulation').length > 1){
+            var value = Math.floor(parseFloat($(this).val()));
+            $(document).find('.CreateSimulation').last().find('input[name=retirement_length]').each(function (){
+                $(this).val(value).effect("highlight", { color: '#84b1f9'}, 3000);
+            });
+        }
+    });
+});
+
 function portfolioChange(inputDiv, strategyIndex){
     var oldVal = parseFloat(inputDiv.data('oldVal'));
     var newVal = parseFloat($(inputDiv).val());
@@ -399,6 +430,18 @@ function portfolioChange(inputDiv, strategyIndex){
             });
         }
     });
+
+    if (strategyIndex == 0){
+        $('.CreateSimulation').first().find('input[name=failure_threshhold]').each(function () {
+            var old = $(this).val();
+            $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+        });
+    } else {
+        $('.CreateSimulation').last().find('input[name=failure_threshhold]').each(function () {
+            var old = $(this).val();
+            $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+        });
+    }
 }
 
 function balanceWeights() {
@@ -409,9 +452,9 @@ function balanceWeights() {
         var accountedFor = 0.0;
 
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
                 if ($(this).data("manualChange")){
-                    accountedFor += parseFloat($(this).val());
+                    accountedFor += Math.floor(parseFloat($(this).val()));
                 } else {
                     weightCount++;
                 }
@@ -421,7 +464,7 @@ function balanceWeights() {
         if (accountedFor > 100.0){
             accountedFor = 0.0;
             $('.weight').each(function (){
-                if (Number($(this).parent().parent().data("strategyIndex")) == i){
+                if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
                     $(this).data("manualChange", false)
                 }
             });
@@ -429,27 +472,27 @@ function balanceWeights() {
 
         var lastWeightChanged = null;
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
                 if (!$(this).data("manualChange")){
-                    var newString = ((100.0-accountedFor)/weightCount).toFixed(0) + " %";
+                    var newString = Math.floor((100.0-accountedFor)/weightCount);
                     if ($(this).val() != newString){
                         $(this).val(newString);
                        lastWeightChanged = $(this);
                     }
                 }
 
-                roundingError -= parseFloat($(this).val());
+                roundingError -= Math.floor(parseFloat($(this).val()));
            }
         });
 
         if (lastWeightChanged != null){
             var newVal = parseFloat(lastWeightChanged.val());
             newVal += roundingError;
-            lastWeightChanged.val(newVal.toFixed(0) + " %");
+            lastWeightChanged.val(Math.floor(newVal));
         }
 
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
                 weightChanged($(this));
             }
         });
@@ -457,9 +500,10 @@ function balanceWeights() {
 }
 
 function weightChanged(weightInputReference) {
-    var oldVal = parseFloat(weightInputReference.data('oldVal'));
-    var newVal = parseFloat($(weightInputReference).val());
+    var oldVal = Math.floor(parseFloat(weightInputReference.data('oldVal')));
+    var newVal = Math.floor(parseFloat($(weightInputReference).val()));
     $(weightInputReference).data('oldVal', newVal);
+    $(weightInputReference).val(newVal);
 
     if (newVal == oldVal){
         return;
@@ -479,17 +523,17 @@ function weightChanged(weightInputReference) {
         $(weightInputReference).effect("highlight", { color: '#84b1f9'}, 3000);
     }
 
-    $(weightInputReference).parent().parent().find('.GuytonKlinger :input').each(function (){
+    $(weightInputReference).parent().parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
-        $(this).val((parseFloat(old) * ratio).toFixed(0));
+        $(this).val(Math.floor(parseFloat(old) * ratio));
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }
     });
 
-    $(weightInputReference).parent().parent().find('.ConstAmount :input').each(function (){
+    $(weightInputReference).parent().parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
-        $(this).val((parseFloat(old) * ratio).toFixed(0));
+        $(this).val(Math.floor(parseFloat(old) * ratio));
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }

@@ -46,26 +46,6 @@ legend {
     padding: 2px;
 }
 
-input[type=text], select {
-    width: 100%;
-    padding: 6px 10px;
-    margin: 4px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: px;
-    box-sizing: border-box;
-}
-
-label[type=submit], select {
-    width: 100%;
-    padding: 6px 10px;
-    margin: 4px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    box-sizing: border-box;
-    background: #aaaaaa;
-}
 
 .removeStrategyButt:hover {
     background: red;
@@ -151,4 +131,52 @@ label[type=submit], select {
 }
 table, th, td {
    border: 1px solid black;
+}
+
+/*input[type=text], select {
+    width: 100%;
+    padding: 6px 10px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: px;
+    box-sizing: border-box;
+}*/
+
+label[type=submit], select {
+    width: 100%;
+    padding: 6px 10px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    box-sizing: border-box;
+    background: #aaaaaa;
+}
+
+.inputspan {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 100%;
+    padding: 6px 10px;
+    margin: 4px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.inputspan input {
+    border: 0;
+    display: inline-block;
+    width: 100%;
+}
+
+*:focus {
+    outline: none;
 }
