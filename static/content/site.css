@@ -1,5 +1,6 @@
 html * {
     font-family: Arial;
+    font-weight: bold;
 }
 
 body {
@@ -139,15 +140,23 @@ table, th, td {
    border: 1px solid black;
 }
 
-/*input[type=text], select {
-    width: 100%;
-    padding: 6px 10px;
-    margin: 4px 0;
-    display: inline-block;
-    border: 1px solid #ccc;
-    border-radius: px;
-    box-sizing: border-box;
-}*/
+label {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+legend {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 label[type=submit], select {
     width: 100%;
@@ -176,14 +185,17 @@ label[type=submit], select {
     box-sizing: border-box;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 105%;
 }
 .inputspan input {
     border: 0;
     display: inline-block;
     width: 95%;
+    font-size: 105%;
+    font-weight: normal;
 }
 
 /* indicating a clear lack of understanding of css... */
 input[name=retirement_length] {
-    width: 80%
+    width: 79%
 }
