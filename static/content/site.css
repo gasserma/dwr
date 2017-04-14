@@ -182,3 +182,8 @@ label[type=submit], select {
     display: inline-block;
     width: 95%;
 }
+
+/* indicating a clear lack of understanding of css... */
+input[name=retirement_length] {
+    width: 80%
+}
