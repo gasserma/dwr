@@ -1,4 +1,10 @@
-body {margin:0;}
+html * {
+    font-family: Arial;
+}
+
+body {
+    margin:0;
+}
 
 /* HEADER */
 ul {
@@ -174,9 +180,5 @@ label[type=submit], select {
 .inputspan input {
     border: 0;
     display: inline-block;
-    width: 100%;
-}
-
-*:focus {
-    outline: none;
+    width: 95%;
 }
