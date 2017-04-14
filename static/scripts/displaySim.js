@@ -155,7 +155,6 @@ var sim = new function(){
         w = 1000 - margins.right;
         h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
 
-
         xScale = d3.scaleLinear().domain([0, retirementLength]).range([0, w]);
         yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([h, 0]);
         rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, 35]);
@@ -199,7 +198,7 @@ var sim = new function(){
                    .attr("class", "year label")
                    .attr("text-anchor", "end")
                    .attr("y", 80)
-                   .attr("x", w)
+                   .attr("x", margins.left + 160)
                    .text(startYear.toString());
     };
 
@@ -247,6 +246,7 @@ var sim = new function(){
                        .attr("height", buttSize)
                        .attr("xlink:href", "/static/content/refresh.png")
                        .on("click", function() {
+                            svg.transition().duration(0);
                             d3.select("svg").remove();
                             sim.reInit();
                             reShowSimulation();
