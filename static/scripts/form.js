@@ -51,8 +51,8 @@ function getJsonRequest(createDiv) {
         if ($(this).is(":visible") && $(this).attr('class') == "Strategy") { //There is certainly a jquery'er way to do this.
             var strat = {};
             var assets = [];
+            strat['args'] = {};
             $(this).find(".input_strat").each(function() {
-                strat['args'] = {};
                 if (this.name.indexOf("percent") != -1){
                     strat['args'][this.name] = parseFloat(this.value)/100.0;
                 } else {
@@ -220,6 +220,12 @@ $(document).ready(function () {
             newCreateDiv.find('.gkSelect').click(function () {
                 addStrategy("GuytonKlinger", "guyton_klinger", $(".CreateSimulation").last(), 1);
             });
+            newCreateDiv.find(".hebelerSelect").click(function () {
+                addStrategy("HebelerAutopilot", "hebeler_autopilot", $(".CreateSimulation").last(), 1);
+            });
+            newCreateDiv.find('.gkSelect').click(function () {
+                addStrategy("VPW", "vpw", $(".CreateSimulation").last(), 1);
+            });
             newCreateDiv.find('input[name=initial_portfolio_value]').change(function () {
                 portfolioChange($(this), 1);
             });
@@ -317,6 +323,14 @@ function addStrategy(c, t, create, strategyIndex){
         $("<legend>Constant Percent</legend>").appendTo(newStratDiv.find('.stratFieldset'));
     }
 
+    if (c == "HebelerAutopilot") {
+        $("<legend>Hebeler Autopilot</legend>").appendTo(newStratDiv.find('.stratFieldset'));
+    }
+
+    if (c == "VPW") {
+        $("<legend>VPW</legend>").appendTo(newStratDiv.find('.stratFieldset'));
+    }
+
     $(newStrat).appendTo(newStratDiv.find('.stratFieldset')).show();
 
     var id = stratId;
@@ -375,17 +389,21 @@ $(document).ready(function (e) {
     $('.caSelect').click(function () {
         addStrategy("ConstAmount", "const_amount", $(".CreateSimulation").first(), 0);
     });
-});
 
-$(document).ready(function (e) {
     $('.cpSelect').click(function () {
         addStrategy("ConstPercent", "const_percent", $(".CreateSimulation").first(), 0);
     });
-});
 
-$(document).ready(function (e) {
     $('.gkSelect').click(function () {
         addStrategy("GuytonKlinger", "guyton_klinger", $(".CreateSimulation").first(), 0);
+    });
+
+    $('.hebelerSelect').click(function () {
+        addStrategy("HebelerAutopilot", "hebeler_autopilot", $(".CreateSimulation").first(), 0);
+    });
+
+    $('.vpwSelect').click(function () {
+        addStrategy("VPW", "vpw", $(".CreateSimulation").first(), 0);
     });
 });
 

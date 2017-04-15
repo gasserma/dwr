@@ -20,6 +20,8 @@ from simulation import runSimulation
 from strategies.guyton_klinger import GuytonKlinger
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 from strategies.constant_percent import ConstantPercentWithdrawalStrategy
+from strategies.hebeler_autopilot import HebelerAuto
+from strategies.vpw import Vpw
 from assets import Assets
 
 # TODO standardize logging and exception handling here.
@@ -70,6 +72,10 @@ def simulations():
             strategy = ConstantWithdrawalAmountStrategy(float(args["amount"]))
         elif type.lower() == "const_percent":
             strategy = ConstantPercentWithdrawalStrategy(float(args["percent"]))
+        elif type.lower() == "hebeler_autopilot":
+            strategy = HebelerAuto(int(args["age"]))
+        elif type.lower() == "vpw":
+            strategy = Vpw(float(args["expected_return_percent"]), int(retirementLength), float(args["drawdown_percent"]))
         else:
             raise NotImplemented("Unrecognized strategy: {0}".format(type))
 

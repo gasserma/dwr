@@ -44,6 +44,8 @@
                     <a value="const_amount", class="caSelect">Constant Amount</a>
                     <a value="const_percent", class="cpSelect">Constant Percent</a>
                     <a value="guyton_klinger", class="gkSelect">Guyton-Klinger</a>
+                    <a value="hebeler_autopilot", class="hebelerSelect">Hebeler Autopilot (beta)</a>
+                    <a value="vpw", class="vpwSelect">VPW (beta)</a>
                   </div>
                 </div>
             </fieldset>
@@ -86,6 +88,24 @@
             <label for="const_percent">Percent</label>
             <span class="inputspan">
                 <input type="text" name="percent" id="const_percent" value="4" class="input_strat"/> %
+            </span>
+            <label type="submit" class="removeStrategyButt">Click To Remove</label>
+        </div>
+        <div class="HebelerAutopilot" style="display: none;">
+            <label for="hebeler_autopilot">Age</label>
+            <span class="inputspan">
+                <input type="text" name="age" id="hebeler_autopilot" value="55" class="input_strat"/>
+            </span>
+            <label type="submit" class="removeStrategyButt">Click To Remove</label>
+        </div>
+        <div class="VPW" style="display: none;">
+            <label for="vpw_1">Expected Return</label>
+            <span class="inputspan">
+                <input type="text" name="expected_return_percent" id="vpw_1" value="4" class="input_strat"/> %
+            </span>
+            <label for="vpw_2">Draw Down</label>
+            <span class="inputspan">
+                <input type="text" name="drawdown_percent" id="vpw_2" value="100" class="input_strat"/> %
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>

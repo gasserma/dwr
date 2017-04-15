@@ -1,6 +1,7 @@
 
 '''
 This is the implementation of the guyton klinger strategy
+http://cornerstonewealthadvisors.com/wp-content/uploads/2014/09/08-06_WebsiteArticle.pdf
 '''
 from assets import Assets
 from strategies.strategy_base import YearlyStrategyBase
