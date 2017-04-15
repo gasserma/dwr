@@ -40,6 +40,28 @@ var sim = new function(){
         return "$" + Number(sr.withdrawal.toFixed(0)).toLocaleString('en-US', {currency: 'USD'});
     }
 
+    // Turns out this looks like shit, but I will leave it in while I brainstorm.
+    var backgroundColor = function(sr){
+        return "transparent"
+        /*
+        if (sr.length == 1){
+            if (!sr[0]) {
+                return "#ffbfbf"; // light red
+            }
+        } else {
+            if (!sr[0] && !sr[1]){
+                return "#ffbd6d"; // light orange, duh
+            } else if (!sr[0]) {
+                return "#ffbfbf"; // light red
+            } else if (!sr[1]) {
+                return "#ffff72"; // light yellow
+            }
+        }
+
+        return "transparent"
+        */
+    }
+
     // This has the potential to fail if we ever get market data for the year 926 or earlier
     var key = function(sr) { return sr.year - (sr.resultSet * 1000)};
     var comparing = function() { return secondSimResults != null }
@@ -47,44 +69,65 @@ var sim = new function(){
     var getSingleSimulation = function(simulationStartYear) {
         simulationStartYear = Math.round(simulationStartYear);
         var index = simulationStartYear - simResults.simulation_start;
-        var data = [];
+        var retVal = {};
+        retVal.data = [];
+        retVal.success = [];
+        retVal.success.push(true);
+        if (comparing()){
+            retVal.success.push(true);
+        }
+
         for(simYear=0; simYear < retirementLength + 1; simYear++){
             // These * 1.000001 are ghetto floating point comparisons.
             var ex = simResults.results[index].withdrawals[simYear] * 1.000001 >= simResults.initial_withdrawal_amt;
-            data.push({
+            var w = simResults.results[index].withdrawals[simYear];
+            retVal.data.push({
                 portfolio_amt : simResults.results[index].portfolio_values[simYear],
-                withdrawal : simResults.results[index].withdrawals[simYear],
+                withdrawal : w,
                 exceeded : ex, //TODO we should name this something to reflect the "or =" part
                 year : simYear,
                 resultSet : 0
             });
 
+            if (w < failureThreshholds[0]){
+                retVal.success[0] = false;
+            }
+
             if (comparing()) {
                 ex = secondSimResults.results[index].withdrawals[simYear] * 1.000001 >= secondSimResults.initial_withdrawal_amt;
-                data.push({
+                var w2 = secondSimResults.results[index].withdrawals[simYear];
+                retVal.data.push({
                     portfolio_amt : secondSimResults.results[index].portfolio_values[simYear],
-                    withdrawal : secondSimResults.results[index].withdrawals[simYear],
+                    withdrawal : w2,
                     exceeded : ex,
                     year : simYear,
                     resultSet : 1
                 });
+
+                if (w2 < failureThreshholds[1]){
+                    retVal.success[1] = false;
+                }
             }
         }
 
-        return data;
+        return retVal;
     };
 
     var currentYear = null;
     var displaySimulationStartYear = function(simulationStartYear) {
         dot.selectAll("title").remove();
 
-        dot.data(getSingleSimulation(simulationStartYear), key)
+        var singleStartYear = getSingleSimulation(simulationStartYear);
+        dot.data(singleStartYear.data, key)
            .call(position)
            .style("opacity", function(sr) { return opacity(sr); })
            .style("fill", function(sr) { return color(sr); })
            .sort(order)
            .append("svg:title")
            .text(function(sr) { return tooltip(sr); });
+
+        //d3.select("rect").style("fill", backgroundColor(singleStartYear.success))
+        d3.select("#simgraph").style("background-color", backgroundColor(singleStartYear.success))
         currentYear = Math.round(simulationStartYear);
         label.text(currentYear);
     };
@@ -134,16 +177,17 @@ var sim = new function(){
     };
 
     var svg, xScale, yScale, rScale, xAxis, yAxis, label, w, h,
-        retirementLength, initialPortfolio, startYear, endYear,
+        retirementLength, initialPortfolio, startYear, endYear, failureThreshholds,
         simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
         dot, box, overlay;
 
     // Init all the svg stuffs
-    this.init = function init(length, initPortfolio, start, end) {
+    this.init = function init(length, initPortfolio, start, end, failureLimits) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
         endYear = end;
+        failureThreshholds = failureLimits;
 
         this.reInit();
     }
@@ -216,7 +260,7 @@ var sim = new function(){
         dot = svg.append("g")
                  .attr("class", "dots")
                  .selectAll(".dot")
-                 .data(getSingleSimulation(startYear))
+                 .data(getSingleSimulation(startYear).data)
                  .enter()
                      .append("circle")
                      .attr("class", "dot")

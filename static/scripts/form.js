@@ -120,8 +120,10 @@ $(document).ready(function () {
 
 
         requests = [];
+        failureThreshholds = [];
         $(document).find(".CreateSimulation").each(function (){
             requests.push(getJsonRequest($(this)));
+            failureThreshholds.push(Number(requests[requests.length-1].failure_threshhold))
         });
 
         $("<label type=\"submit\" class=\"showParamsButt\">+</label>").appendTo(body).click(function() {
@@ -148,7 +150,8 @@ $(document).ready(function () {
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
                 Number(requests[0].min_year),
-                Number(requests[0].max_year));
+                Number(requests[0].max_year),
+                failureThreshholds);
             if (requests.length == 2) {
                 $(".secondStrategyKey").show();
                 sim.showSimulation(result1[0], result2[0]);

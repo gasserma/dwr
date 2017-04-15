@@ -47,8 +47,6 @@ def home():
 
 @app.route('/about')
 @app.route('/faq')
-@app.route('/eli5')
-@app.route('/playground')
 def about():
     return "TODO"
 

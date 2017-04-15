@@ -28,14 +28,6 @@ class TestWeb(unittest.TestCase):
         rv = self.app.get('/about')
         self.assertEqual(rv._status_code, 200)
 
-    def test_eli5Exists(self):
-        rv = self.app.get('/eli5')
-        self.assertEqual(rv._status_code, 200)
-
-    def test_playgroundExists(self):
-        rv = self.app.get('/playground')
-        self.assertEqual(rv._status_code, 200)
-
     def test_doesntExist(self):
         rv = self.app.get('/notarealpage')
         self.assertEqual(rv._status_code, 404)
