@@ -48,9 +48,18 @@ def home():
     )
 
 @app.route('/about')
-@app.route('/faq')
 def about():
-    return "TODO"
+    return render_template(
+        'about.html',
+        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
+    )
+
+@app.route('/faq')
+def faq():
+    return render_template(
+        'faq.html',
+        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
+    )
 
 @app.route("/simulations", methods=["POST"])
 def simulations():
