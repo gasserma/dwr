@@ -114,6 +114,20 @@ function showInputs(){
     $(".compareButt").show();
 }
 
+var currentYear;
+function displayYearCallback(year){
+    currentYear = year;
+}
+
+function showStats(){
+    $(".Stats").html("Number of statistics implemented: a self referential 1");
+    $(".Stats").show(200);
+}
+
+function hideStats(){
+    $(".Stats").hide(200);
+}
+
 $(document).ready(function () {
     $('.runSimButt').click(function () {
         if (!validateForm()){
@@ -160,24 +174,55 @@ $(document).ready(function () {
             // Not sure why, but its working for now...so TODO figure this out.
             console.log(JSON.stringify(result1));
             $("#keyClone").clone().removeAttr('id').insertAfter("#simgraph").show();
+            $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
             sim.init(
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
                 Number(requests[0].min_year),
                 Number(requests[0].max_year),
-                failureThreshholds);
+                failureThreshholds,
+                displayYearCallback);
             if (requests.length == 2) {
-                $(".secondStrategyKey").show();
+                $(".keyLabel1").find("circle").each(function (){
+                    $(this).css('opacity', '0.5');
+                });
+                $(".keyLabel2").find("circle").each(function (){
+                    $(this).css('opacity', '0.5');
+                });
+                $(".keyLabel2").show();
+                
+                $("label.successRate1").each(function (){
+                    $(this).html((result1[0].stats.success_rate * 100).toFixed(0) + " % (Strategy 1)");
+                });
+                
+                $("label.successRate2").each(function (){
+                    $(this).html((result2[0].stats.success_rate * 100).toFixed(0) + " % (Strategy 2)");
+                });                
+                
                 sim.showSimulation(result1[0], result2[0]);
-                var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
-                results.find('table').append("<tr><td>S1 Success Rate</td><td>" + (result1[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
-                results.find('table').append("<tr><td>S2 Success Rate</td><td>" + (result2[0].stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             } else {
-                $(".secondStrategyKey").hide();
+                $(".keyLabel1").find("circle").each(function (){
+                    $(this).css('opacity', '0.9');
+                });
+                $(".keyLabel2").hide();
+                $("label.successRate1").each(function (){
+                    $(this).html((result1.stats.success_rate * 100).toFixed(0) + " %");
+                });
+                $("label.successRate2").hide();
                 sim.showSimulation(result1, null);
-                var results = $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
-                results.find('table').append("<tr><td>Success Rate</td><td>" + (result1.stats.success_rate * 100).toFixed(0) + " %</td></tr>").show();
             }
+            
+            $(".displayStatsButt").appendTo($("#actualBody")).html("Show Statistics").show();
+            $(".Stats").appendTo($("#actualBody")).hide();
+            $(".displayStatsButt").click(function() {
+                if ($(".displayStatsButt").text() == "Show Statistics"){
+                    $(".displayStatsButt").text("Hide Statistics");
+                    showStats();
+                } else {
+                    $(".displayStatsButt").text("Show Statistics");
+                    hideStats();
+                }
+            });
         }
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions

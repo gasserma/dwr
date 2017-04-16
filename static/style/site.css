@@ -172,6 +172,21 @@ label[type=submit], select {
     background: #aaaaaa;
 }
 
+label[type=key], select {
+    padding-bottom: 1px;
+    display: inline-block;
+    border-bottom: 1px;
+    font-size: 20px;
+}
+
+.successRate1 {
+    font-size: 300%;
+}
+
+.successRate2 {
+    font-size: 300%;
+}
+
 .inputspan {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

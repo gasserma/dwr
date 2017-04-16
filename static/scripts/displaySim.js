@@ -130,6 +130,7 @@ var sim = new function(){
         d3.select("#simgraph").style("background-color", backgroundColor(singleStartYear.success))
         currentYear = Math.round(simulationStartYear);
         label.text(currentYear);
+        displayYearCallback(currentYear);
     };
 
     var manualScroll = function() {
@@ -177,17 +178,18 @@ var sim = new function(){
     };
 
     var svg, xScale, yScale, rScale, xAxis, yAxis, label, w, h,
-        retirementLength, initialPortfolio, startYear, endYear, failureThreshholds,
+        retirementLength, initialPortfolio, startYear, endYear, failureThreshholds, displayYearCallback,
         simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
         dot, box, overlay;
 
     // Init all the svg stuffs
-    this.init = function init(length, initPortfolio, start, end, failureLimits) {
+    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
         endYear = end;
         failureThreshholds = failureLimits;
+        displayYearCallback = yearCallback;
 
         this.reInit();
     }

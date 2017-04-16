@@ -111,40 +111,40 @@
         </div>
         <p id="simgraph"></p>
         <div class="Key" id="keyClone" style="display: none;">
-            <table>
-                <tr>
-                    <th></th>
-                    <th>Meaning</th>
-                </tr>
-                <tr>
-                    <td>Circle Radius</td>
-                    <td>Proportional to Withdrawal</td>
-                </tr>
-                <tr>
-                    <td bgcolor="blue">Blue</td>
-                    <td>Withdrawal Greater or Equal to Initial Withdrawal</td>
-                </tr>
-                <tr>
-                    <td bgcolor="red">Red</td>
-                    <td>Withdrawal Less Than Initial Withdrawal</td>
-                </tr>
-                <tr>
-                    <td bgcolor="green" class="secondStrategyKey">Green</td>
-                    <td class="secondStrategyKey">Strategy 2 Withdrawal Greater or Equal to Initial Withdrawal</td>
-                </tr>
-                <tr>
-                    <td bgcolor="yellow" class="secondStrategyKey">Yellow</td>
-                    <td class="secondStrategyKey">Strategy 2 Withdrawal Less Than Initial Withdrawal</td>
-                </tr>
-            </table>
+            <fieldset>
+                <legend>Key</legend>                
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
+                    <circle cx="10" cy="10" r="10" fill="blue"></circle>
+                </svg>
+                <label type="key" class="keyLabel1">&gt; Initial Withdrawal Amount</label>
+                <br>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
+                    <circle cx="10" cy="10" r="10" fill="red"></circle>
+                </svg>
+                <label type="key" class="keyLabel1">&lt; Initial Withdrawal Amount</label>
+                <br class="keyLabel2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
+                    <circle cx="10" cy="10" r="10" fill="green"></circle>
+                </svg>
+                <label type="key" class="keyLabel2">&gt; Initial Withdrawal Amount (Strategy 2)</label>
+                <br class="keyLabel2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
+                    <circle cx="10" cy="10" r="10" fill="yellow"></circle>
+                </svg>
+                <label type="key" class="keyLabel2">&lt; Initial Withdrawal Amount (Strategy 2)</label>
+                <br class="keyLabel1">
+            </fieldset>
         </div>
         <div class="Results" id="resultsClone" style="display: none;">
-            <table>
-                <tr>
-                    <th>Metric</th>
-                    <th>Value</th>
-                </tr>
-            </table>
+            <fieldset>
+                <legend>Success Rate</legend>
+                <label class="successRate1"></label>
+                <br class="successRate2">
+                <label class="successRate2"></label>
+            </fieldset>
         </div>
+        
+        <label type="submit" class="displayStatsButt" style="display: none;"></label>
+        <div class="Stats" style="display: none;">NEEERRRRD</div>
     </div>
 </body>
