@@ -16,6 +16,8 @@ app = Flask(__name__)
 #app.logger.addHandler(handler)
 
 from flask import render_template
+import markdown
+from flask import Markup
 from simulation import runSimulation
 from strategies.guyton_klinger import GuytonKlinger
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
@@ -49,16 +51,26 @@ def home():
 
 @app.route('/about')
 def about():
+    script = os.path.dirname(__file__)
+    path = os.path.join(script, "./templates/about.md")
+    f = open(path, mode="r").read()
+
     return render_template(
         'about.html',
-        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
+        title='Hi Emily',
+        content=Markup(markdown.markdown(f))
     )
 
 @app.route('/faq')
 def faq():
+    script = os.path.dirname(__file__)
+    path = os.path.join(script, "./templates/faq.md")
+    f = open(path, mode="r").read()
+
     return render_template(
         'faq.html',
-        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
+        title='Hi Emily',
+        content=Markup(markdown.markdown(f))
     )
 
 @app.route("/simulations", methods=["POST"])
