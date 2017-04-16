@@ -71,6 +71,7 @@ root\\
 &nbsp;&nbsp;&nbsp;&nbsp;style\\  -*all the .css files you could ever want*  
 &nbsp;&nbsp;data\\  -*various market data text files*  
 &nbsp;&nbsp;web.config -*Azure needs this for hosting. It doesn't matter locally.*  
+&nbsp;&nbsp;ptvs_virtualenv_proxy.py -*Azure needs this for hosting. It doesn't matter locally.*  
 &nbsp;&nbsp;requirements.txt -*Azure needs this for installing requirements. It doesn't matter locally.*  
 &nbsp;&nbsp;simulation.py -*the simulation engine*  
 &nbsp;&nbsp;runserver.py -*run a local flask server*  
