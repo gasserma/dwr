@@ -1,10 +1,24 @@
+$.fn.digits = function(){ 
+    return this.each(function(){ 
+        $(this).val( $(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") ); 
+    })
+}
+
+function myFloatParse(s){
+    if (typeof s == "string"){
+        s = s.replace(new RegExp(',', 'g'), '');    
+    }
+    
+    return parseFloat(s);
+}
+
 function validateForm(){
     for (var i = 0; i < 2; i++){
         var totalWeight = 0.0;
         var strats = false;
         for (var s = 0; s < strategies[i].length; s++){
             $(strategies[i][s]).find(".weight").each(function() {
-                totalWeight += parseFloat(this.value)/100.0;
+                totalWeight += myFloatParse(this.value)/100.0;
                 strats = true;
             });
         }
@@ -39,7 +53,7 @@ function getJsonRequest(createDiv) {
     var data = {}
 
     createDiv.find(".input_main").each(function () {
-        data[this.name] = this.value
+        data[this.name] = myFloatParse(this.value);
     });
 
     // Hardcoded for now...
@@ -54,24 +68,24 @@ function getJsonRequest(createDiv) {
             strat['args'] = {};
             $(this).find(".input_strat").each(function() {
                 if (this.name.indexOf("percent") != -1){
-                    strat['args'][this.name] = parseFloat(this.value)/100.0;
+                    strat['args'][this.name] = myFloatParse(this.value)/100.0;
                 } else {
-                    strat['args'][this.name] = this.value;
+                    strat['args'][this.name] = myFloatParse(this.value);
                 }
 
                 strat["type"] = $(this).data("type");
             });
 
             $(this).find(".weight").each(function() {
-                strat["weight"] = parseFloat(this.value)/100.0;
+                strat["weight"] = myFloatParse(this.value)/100.0;
             });
 
             $(this).find(".stocks").each(function() {
-                assets.push(parseFloat(this.value)/100.0);
+                assets.push(myFloatParse(this.value)/100.0);
             });
 
             $(this).find(".bonds").each(function() {
-                assets.push(parseFloat(this.value)/100.0);
+                assets.push(myFloatParse(this.value)/100.0);
             });
 
             strat["asset_allocation"] = assets;
@@ -223,20 +237,20 @@ $(document).ready(function () {
             newCreateDiv.find(".hebelerSelect").click(function () {
                 addStrategy("HebelerAutopilot", "hebeler_autopilot", $(".CreateSimulation").last(), 1);
             });
-            newCreateDiv.find('.gkSelect').click(function () {
+            newCreateDiv.find('.vpwSelect').click(function () {
                 addStrategy("VPW", "vpw", $(".CreateSimulation").last(), 1);
             });
             newCreateDiv.find('input[name=initial_portfolio_value]').change(function () {
                 portfolioChange($(this), 1);
             });
             newCreateDiv.find('input[name=initial_portfolio_value]').focus(function () {
-                $(this).data('oldVal', parseFloat($(this).val()));
+                $(this).data('oldVal', myFloatParse($(this).val()));
             });
 
             newCreateDiv.find('input[name=retirement_length]').change(function () {
-                var value = Math.floor(parseFloat($(this).val()));
+                var value = Math.floor(myFloatParse($(this).val()));
                 $(document).find('.CreateSimulation').first().find('input[name=retirement_length]').each(function (){
-                    $(this).val(value).effect("highlight", { color: '#84b1f9'}, 3000);
+                    $(this).val(value).digits().effect("highlight", { color: '#84b1f9'}, 3000);
                 });
             });
 
@@ -282,7 +296,7 @@ var stratId = 0;
 function addStrategy(c, t, create, strategyIndex){
     var ratio;
     $(create).find('input[name=initial_portfolio_value]').each(function() {
-        ratio = $(this).val() / 1000000.0;
+        ratio = myFloatParse($(this).val()) / 1000000.0;
     });
 
     if (strategies[strategyIndex].length == 0){
@@ -306,16 +320,16 @@ function addStrategy(c, t, create, strategyIndex){
     if (c == "GuytonKlinger"){
         $("<legend>Guyton Klinger</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=initial_amount]').each(function() {
-            var defaultVal = $(this).val();
-            $(this).val(defaultVal * ratio);
+            var defaultVal = myFloatParse($(this).val());
+            $(this).val(defaultVal * ratio).digits();
         });
     }
 
     if (c == "ConstAmount"){
         $("<legend>Constant Amount</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=amount]').each(function() {
-            var defaultVal = $(this).val();
-            $(this).val(defaultVal * ratio);
+            var defaultVal = myFloatParse($(this).val());
+            $(this).val(defaultVal * ratio).digits();
         });
     }
 
@@ -361,7 +375,7 @@ function addStrategy(c, t, create, strategyIndex){
     });
 
     $(newStratDiv).find(".stocks").change(function (){
-        var newVal = Math.floor(parseFloat($(this).val()));
+        var newVal = Math.floor(myFloatParse($(this).val()));
         $(this).val(newVal);
 
         var bondVal = 100 - newVal;
@@ -372,7 +386,7 @@ function addStrategy(c, t, create, strategyIndex){
     });
 
     $(newStratDiv).find(".bonds").change(function (){
-        var newVal = Math.floor(parseFloat($(this).val()));
+        var newVal = Math.floor(myFloatParse($(this).val()));
         $(this).val(newVal);
 
         var stockVal = 100 - newVal;
@@ -411,16 +425,18 @@ $(document).ready(function (e) {
     $('.CreateSimulation').find('input[name=initial_portfolio_value]').change(function () {
         portfolioChange($(this), 0);
     });
+    
+    
 
     $('.CreateSimulation').find('input[name=initial_portfolio_value]').focus(function () {
-        $(this).data('oldVal', parseFloat($(this).val()));
+        $(this).data('oldVal', myFloatParse($(this).val()));
     });
 });
 
 $(document).ready(function (e) {
     $('.CreateSimulation').find('input[name=retirement_length]').change(function () {
         if ($(document).find('.CreateSimulation').length > 1){
-            var value = Math.floor(parseFloat($(this).val()));
+            var value = Math.floor(myFloatParse($(this).val()));
             $(document).find('.CreateSimulation').last().find('input[name=retirement_length]').each(function (){
                 $(this).val(value).effect("highlight", { color: '#84b1f9'}, 3000);
             });
@@ -429,8 +445,9 @@ $(document).ready(function (e) {
 });
 
 function portfolioChange(inputDiv, strategyIndex){
-    var oldVal = parseFloat(inputDiv.data('oldVal'));
-    var newVal = parseFloat($(inputDiv).val());
+    $(inputDiv).digits();
+    var oldVal = myFloatParse(inputDiv.data('oldVal'));
+    var newVal = myFloatParse($(inputDiv).val());
 
     if (newVal == oldVal){
         return;
@@ -442,12 +459,12 @@ function portfolioChange(inputDiv, strategyIndex){
         if (Number($(this).data("strategyIndex")) == strategyIndex){
             $(this).find('.GuytonKlinger :input').each(function (){
                 var old = $(this).val();
-                $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+                $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
             });
 
             $(this).find('.ConstAmount :input').each(function (){
                 var old = $(this).val();
-                $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+                $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
             });
         }
     });
@@ -455,12 +472,12 @@ function portfolioChange(inputDiv, strategyIndex){
     if (strategyIndex == 0){
         $('.CreateSimulation').first().find('input[name=failure_threshhold]').each(function () {
             var old = $(this).val();
-            $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+            $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
     } else {
         $('.CreateSimulation').last().find('input[name=failure_threshhold]').each(function () {
             var old = $(this).val();
-            $(this).val(parseFloat(old) * ratio).effect("highlight", { color: '#84b1f9'}, 3000);
+            $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
     }
 }
@@ -475,7 +492,7 @@ function balanceWeights() {
         $('.weight').each(function (){
             if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
                 if ($(this).data("manualChange")){
-                    accountedFor += Math.floor(parseFloat($(this).val()));
+                    accountedFor += Math.floor(myFloatParse($(this).val()));
                 } else {
                     weightCount++;
                 }
@@ -502,14 +519,14 @@ function balanceWeights() {
                     }
                 }
 
-                roundingError -= Math.floor(parseFloat($(this).val()));
+                roundingError -= Math.floor(myFloatParse($(this).val()));
            }
         });
 
         if (lastWeightChanged != null){
-            var newVal = parseFloat(lastWeightChanged.val());
+            var newVal = myFloatParse(lastWeightChanged.val());
             newVal += roundingError;
-            lastWeightChanged.val(Math.floor(newVal));
+            lastWeightChanged.val(Math.floor(newVal)).digits();
         }
 
         $('.weight').each(function (){
@@ -521,8 +538,8 @@ function balanceWeights() {
 }
 
 function weightChanged(weightInputReference) {
-    var oldVal = Math.floor(parseFloat(weightInputReference.data('oldVal')));
-    var newVal = Math.floor(parseFloat($(weightInputReference).val()));
+    var oldVal = Math.floor(myFloatParse(weightInputReference.data('oldVal')));
+    var newVal = Math.floor(myFloatParse($(weightInputReference).val()));
     $(weightInputReference).data('oldVal', newVal);
     $(weightInputReference).val(newVal);
 
@@ -546,7 +563,7 @@ function weightChanged(weightInputReference) {
 
     $(weightInputReference).parent().parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
-        $(this).val(Math.floor(parseFloat(old) * ratio));
+        $(this).val(Math.floor(myFloatParse(old) * ratio)).digits();
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }
@@ -554,7 +571,7 @@ function weightChanged(weightInputReference) {
 
     $(weightInputReference).parent().parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
-        $(this).val(Math.floor(parseFloat(old) * ratio));
+        $(this).val(Math.floor(myFloatParse(old) * ratio)).digits();
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }

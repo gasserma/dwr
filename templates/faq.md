@@ -3,6 +3,13 @@
 Well...right now every question has been asked with a frequency of 0.
 So instead, these are questions I imagine people will ask.
 
+## Why does it say ALPHA?
+Because it isn't finished and it isn't ready to be used broadly.
+I'm still fixing bugs and writing tests.
+You shouldn't use this as your only source for retirement planning now.
+That said, some things are highly tested and working well.
+Feel free to trust that the constant amount and constant percentage strategies are showing you the right thing.
+
 ## Stocks and Bonds can mean many different things. What do you mean?
 Right now stocks means SP 500 data. 
 Bonds means Ibbotson's Long Term Corporate Bonds.

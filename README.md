@@ -90,6 +90,9 @@ I usually just let pycharm do this for me.
 6. Visit that address in a web browser.
 7. At this point if you modify any of the code it should almost immediately show up on the site. Don't forget to force refresh the browser (ctrl+f5 for me).
 
+### Licensing
+I am not an expert on software licensing. 
+If you feel prohibited by the current license, or you think i have made a poor licensing choice, please reach out to me.
 
 ### My Other Interesting Contribution
 This is, to my knowledge, the only open source place that attempts to strictly replicate the trinity studies results, both their 1997 and 2010 results.
