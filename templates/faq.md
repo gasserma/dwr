@@ -47,6 +47,3 @@ Just assume 0% success rate on everything.
 
 ## How do I start developing code against this?
 Great question. See the [github readme](https://github.com/gasserma/dwr/blob/master/README.md).
-
-## What is up with this terrible bold font?
-Calm down. The next commit will fix it. I need to go to bed though.
