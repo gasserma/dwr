@@ -4,30 +4,30 @@ Well...right now every question has been asked with a frequency of 0.
 So instead, these are questions I imagine people will ask.
 
 ## Why does it say ALPHA?
-Because it isn't finished and it isn't ready to be used broadly.
+Because it isn't finished and isn't ready to be used broadly.
 I'm still fixing bugs and writing tests.
 You shouldn't use this as your only source for retirement planning now.
 That said, some things are highly tested and working well.
-Feel free to trust that the constant amount and constant percentage strategies are showing you the right thing.
+Feel free to trust that the constant amount and constant percentage strategies are giving you the correct result.
 
-## Stocks and Bonds can mean many different things. What do you mean?
-Right now stocks means SP 500 data. 
+## Stocks and Bonds can mean many different things. What do they mean on this site?
+Currently, stocks means SP 500 data. 
 Bonds means Ibbotson's Long Term Corporate Bonds.
 This is what the famous Trinity study used, so it is what I used.
 
 ## Inflation. What's the story?
 Don't ever think about inflation when you look at results here.
 The visualizations and simulations intend to completely abstract that away from you.
-When you see a withdrawal of $40k in year 2 and withdrawal of $40k in year 27 they are both $40k in purchasing power.
+When you see a withdrawal of $40k in year 2 and withdrawal of $40k in year 27, they are both $40k in purchasing power.
 They are actually quite different in "nominal" dollar amount though.
 But there is no reason to think in anything other than "real" dollars.
 The portfolio values, are the same way.
-When the graph tells you your portfolio has the same value 20 years apart, what it means is that you can buy the same number of hamburgers.
+When the graph shows your portfolio with the same value 20 years apart, it means that you can buy the same number of hamburgers each of those years.
 
-## Wait, the inflation calculations seem a little off though.
+## Wait, the inflation calculations seem a little off.
 What is actually happening is that inflation is applied one year late.
 (Using the January CPI for Urban Consumers from the previous year)
-This again is a trinity study convention.
+This again is a Trinity study convention.
 Their idea seems to have been that you would wait a year to actually see what inflation was before adjusting your withdrawal.
 
 ## Why do you auto-populate stocks and bonds with 50% each?
@@ -41,10 +41,10 @@ In the end, making the UI easy to use was more important to me than avoiding any
 Yes.
 I've tried to stay true to the sources for the various strategies in the context of how people have taken them.
 For example, the Constant Amount withdrawal strategy populates with a 4% initial withdrawal, which seems to be the main takeaway from the Trinity study.
-I don't mean to suggest that any of the pre-populated values are the right ones.
+I don't mean to suggest that any of the pre-populated values are the recommended ones.
 
 ## My retirement length was set to 30 years. Why do I see 31 dots?
-This is a trinity study convention. 
+This is a Trinity study convention. 
 X periods is X portfolio growths and X + 1 portfolio withdrawals.
 This imbues pessimism into the system, which is good.
 
