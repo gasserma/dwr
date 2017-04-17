@@ -112,12 +112,44 @@ class Simulation:
 
     def getStats(self):
         stats = {
-            "success_rate": self.getSuccessRate(),
-            "underflow": gatherWebResponseData(self.underflow),
-            "overflow": gatherWebResponseData(self.overflow),
-            "legacy": gatherWebResponseData(self.endPortfolioValue)
+            "grew_rate": self.getPortfolioGrewRate(),
+            "success_rate": self.getSuccessRate()
         }
         return stats
+    
+    def getDistStats(self):
+        stats = [
+            gatherWebResponseData(self.underflow, "underflow"),
+            gatherWebResponseData(self.overflow, "overflow"),
+            gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value")
+        ]
+        return stats
+    
+    def getYearlyStats(self):
+        epv = []
+        for i in range(0, self.iterations):
+            epv.append(self.recordedData[i][-1][3])
+
+        pg = []
+        for i in range(0, self.iterations):
+            pg.append(self.recordedData[i][-1][3] > self.initialPortfolio)
+            
+        stats = {
+            "ending_portfolio_value": epv,
+            "portfolio_grew": pg
+        }
+        
+        return stats
+    
+    def getPortfolioGrewRate(self):
+        total = 0
+        grew = 0
+        for i in range(0, self.iterations):
+            total += 1
+            if self.recordedData[i][-1][3] > self.initialPortfolio:
+                grew +=1
+                
+        return grew / total
 
     def recordData(self, simIteration, year, month, withdrawal, portfolioValue):
         if len(self.recordedData) < simIteration + 1:
@@ -183,8 +215,9 @@ def getPercentile(iter, percentile):
     return sort[index]
 
 
-def gatherWebResponseData(iter):
+def gatherWebResponseData(iter, name):
     return {
+        "name": name,
         "mean": getMean(iter),
         "min": min(iter),
         "max": max(iter),

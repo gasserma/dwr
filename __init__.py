@@ -123,7 +123,9 @@ def simulations():
         simulation_start=minYear,
         simulation_end=maxYear,
         results=results,
-        stats=result.getStats()
+        stats=result.getStats(),
+        dist_stats=result.getDistStats(),
+        yearly_stats=result.getYearlyStats()
     )
 
 @app.route('/dbg/log')

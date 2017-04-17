@@ -49,6 +49,8 @@ function validateForm(){
     return true;
 }
 
+var minYear = 1926;
+var maxYear = 2010;
 function getJsonRequest(createDiv) {
     var data = {}
 
@@ -57,8 +59,8 @@ function getJsonRequest(createDiv) {
     });
 
     // Hardcoded for now...
-    data["min_year"] = 1926;
-    data["max_year"] = 2010;
+    data["min_year"] = minYear;
+    data["max_year"] = maxYear;
 
     data['strategies'] = [];
     createDiv.nextUntil(".CreateSimulation").each(function () {
@@ -117,17 +119,79 @@ function showInputs(){
 var currentYear;
 function displayYearCallback(year){
     currentYear = year;
+    yearIndex = currentYear - minYear;
+    
+    $(".YearlyStats").tabulator({
+        fitColumns:true, //fit columns to width of table (optional)
+        columns:[ //Define Table Columns
+            {title:"Stat", field:"name", sorter:"string", width:150},
+            {title:"Value", field:"stat", sorter:"number", align:"left"}
+        ],
+        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
+            alert("Row " + id + " Clicked!!!!");
+        },
+    });
+    
+    var s = []
+    for (var key in simResult1.yearly_stats) {
+        if (simResult1.yearly_stats.hasOwnProperty(key)) {
+            s.push({name:key, stat:simResult1.yearly_stats[key][yearIndex]});
+        }
+    }
+    
+    $(".YearlyStats").tabulator("setData", s);
 }
 
 function showStats(){
-    $(".Stats").html("Number of statistics implemented: a self referential 1");
-    $(".Stats").show(200);
+    $(".DistStats").tabulator({
+        fitColumns:true, //fit columns to width of table (optional)
+        columns:[ //Define Table Columns
+            {title:"Stat", field:"name", sorter:"string", width:150},
+            {title:"Min", field:"min", sorter:"number", align:"left"},
+            {title:"5th Percentile", field:"fifth_percentile", sorter:"number", align:"left"},
+            {title:"Mean", field:"mean", sorter:"number", align:"left"},
+            {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", align:"left"},
+            {title:"Max", field:"max", sorter:"number", align:"left"},
+        ],
+        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
+            alert("Row " + id + " Clicked!!!!");
+        },
+    });
+    $(".DistStats").tabulator("setData", simResult1.dist_stats);
+    
+    $(".MainStats").tabulator({
+        fitColumns:true, //fit columns to width of table (optional)
+        columns:[ //Define Table Columns
+            {title:"Stat", field:"name", sorter:"string", width:150},
+            {title:"Value", field:"stat", sorter:"number", align:"left"}
+        ],
+        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
+            alert("Row " + id + " Clicked!!!!");
+        },
+    });
+    
+    var stats = []
+    for (var key in simResult1.stats) {
+        if (simResult1.stats.hasOwnProperty(key)) {
+            stats.push({name:key, stat:simResult1.stats[key]});
+        }
+    }
+    
+    $(".MainStats").tabulator("setData", stats);
+    
+    
+    $(".YearlyStats").show(200);
+    $(".MainStats").show(200);
+    $(".DistStats").show(200);
 }
 
 function hideStats(){
-    $(".Stats").hide(200);
+    $(".YearlyStats").hide(200);
+    $(".MainStats").hide(200);
+    $(".DistStats").hide(200);
 }
 
+var simResult1, simResult2;
 $(document).ready(function () {
     $('.runSimButt').click(function () {
         if (!validateForm()){
@@ -153,6 +217,8 @@ $(document).ready(function () {
             requests.push(getJsonRequest($(this)));
             failureThreshholds.push(Number(requests[requests.length-1].failure_threshhold))
         });
+        
+        currentYear = requests[0].min_year;
 
         $("<label type=\"submit\" class=\"showParamsButt\">+</label>").appendTo(body).click(function() {
             if ($(".showParamsButt").text() == "+"){
@@ -183,6 +249,8 @@ $(document).ready(function () {
                 failureThreshholds,
                 displayYearCallback);
             if (requests.length == 2) {
+                simResult1 = result1[0];
+                simResult2 = result2[0];
                 $(".keyLabel1").find("circle").each(function (){
                     $(this).css('opacity', '0.5');
                 });
@@ -201,6 +269,8 @@ $(document).ready(function () {
                 
                 sim.showSimulation(result1[0], result2[0]);
             } else {
+                simResult1 = result1;
+                simResult2 = null;
                 $(".keyLabel1").find("circle").each(function (){
                     $(this).css('opacity', '0.9');
                 });
@@ -213,7 +283,9 @@ $(document).ready(function () {
             }
             
             $(".displayStatsButt").appendTo($("#actualBody")).html("Show Statistics").show();
-            $(".Stats").appendTo($("#actualBody")).hide();
+            $(".YearlyStats").appendTo($("#actualBody")).hide();
+            $(".MainStats").appendTo($("#actualBody")).hide();
+            $(".DistStats").appendTo($("#actualBody")).hide();
             $(".displayStatsButt").click(function() {
                 if ($(".displayStatsButt").text() == "Show Statistics"){
                     $(".displayStatsButt").text("Hide Statistics");

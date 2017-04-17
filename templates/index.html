@@ -11,6 +11,8 @@
     <script src="//d3js.org/d3.v4.min.js" charset="utf-8"></script>
     <script src="/static/scripts/form.js"></script>
     <script src="/static/scripts/displaySim.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/2.11.0/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/2.11.0/tabulator.min.js"></script>    
 </head>
 <ul class="topnav" id="myTopnav">
     <li><a href="/home">Home</a></li>
@@ -116,7 +118,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
                     <circle cx="10" cy="10" r="10" fill="blue"></circle>
                 </svg>
-                <label type="key" class="keyLabel1">&gt; Initial Withdrawal Amount</label>
+                <label type="key" class="keyLabel1">&gt;= Initial Withdrawal Amount</label>
                 <br>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
                     <circle cx="10" cy="10" r="10" fill="red"></circle>
@@ -126,7 +128,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
                     <circle cx="10" cy="10" r="10" fill="green"></circle>
                 </svg>
-                <label type="key" class="keyLabel2">&gt; Initial Withdrawal Amount (Strategy 2)</label>
+                <label type="key" class="keyLabel2">&gt;= Initial Withdrawal Amount (Strategy 2)</label>
                 <br class="keyLabel2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
                     <circle cx="10" cy="10" r="10" fill="yellow"></circle>
@@ -145,6 +147,8 @@
         </div>
         
         <label type="submit" class="displayStatsButt" style="display: none;"></label>
-        <div class="Stats" style="display: none;">NEEERRRRD</div>
+        <div class="YearlyStats" id="YearlyStats" style="display: none;"></div>
+        <div class="MainStats" id="MainStats" style="display: none;"></div>
+        <div class="DistStats" id="DistStats" style="display: none;"></div>
     </div>
 </body>
