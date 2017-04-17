@@ -43,7 +43,7 @@ There is an "explain it like I am five" page in progress for this site.
 ## Bibliography
 
 This is a collection of the influences and sources for this project.
-This is in no specific order.  
+This is in no specific order:     
 [Trinity Study](http://afcpe.org/assets/pdf/vol1014.pdf)  
 [Trinity Study Update](https://www.onefpa.org/journal/Pages/Portfolio%20Success%20Rates%20Where%20to%20Draw%20the%20Line.aspx)  
 [Guyton Klinger](http://cornerstonewealthadvisors.com/wp-content/uploads/2014/09/08-06_WebsiteArticle.pdf)  
