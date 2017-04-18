@@ -1,3 +1,7 @@
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 $.fn.digits = function(){ 
     return this.each(function(){ 
         $(this).val( $(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") ); 
@@ -117,72 +121,164 @@ function showInputs(){
 }
 
 var currentYear;
+var doStatsDisplay = false;
 function displayYearCallback(year){
     currentYear = year;
-    yearIndex = currentYear - minYear;
-    
-    $(".YearlyStats").tabulator({
-        fitColumns:true, //fit columns to width of table (optional)
-        columns:[ //Define Table Columns
-            {title:"Stat", field:"name", sorter:"string", width:150},
-            {title:"Value", field:"stat", sorter:"number", align:"left"}
-        ],
-        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
-            alert("Row " + id + " Clicked!!!!");
-        },
-    });
-    
-    var s = []
-    for (var key in simResult1.yearly_stats) {
-        if (simResult1.yearly_stats.hasOwnProperty(key)) {
-            s.push({name:key, stat:simResult1.yearly_stats[key][yearIndex]});
+    if (doStatsDisplay){
+        yearIndex = currentYear - minYear;
+        
+        var s = []
+        for (var key in simResult1.yearly_stats) {
+            if (simResult1.yearly_stats.hasOwnProperty(key)) {
+                s.push({name:key, stat:simResult1.yearly_stats[key][yearIndex]});
+            }
+        }
+        
+        $("#YearlyStats1").tabulator("setData", s);
+        
+        if (simResult2 != null){
+            var s2 = []
+            for (var key in simResult2.yearly_stats) {
+                if (simResult2.yearly_stats.hasOwnProperty(key)) {
+                    s2.push({name:key, stat:simResult2.yearly_stats[key][yearIndex]});
+                }
+            }
+            
+            $("#YearlyStats2").tabulator("setData", s2);
         }
     }
-    
-    $(".YearlyStats").tabulator("setData", s);
 }
 
-function showStats(){
-    $(".DistStats").tabulator({
-        fitColumns:true, //fit columns to width of table (optional)
-        columns:[ //Define Table Columns
-            {title:"Stat", field:"name", sorter:"string", width:150},
-            {title:"Min", field:"min", sorter:"number", align:"left"},
-            {title:"5th Percentile", field:"fifth_percentile", sorter:"number", align:"left"},
-            {title:"Mean", field:"mean", sorter:"number", align:"left"},
-            {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", align:"left"},
-            {title:"Max", field:"max", sorter:"number", align:"left"},
-        ],
-        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
-            alert("Row " + id + " Clicked!!!!");
-        },
-    });
-    $(".DistStats").tabulator("setData", simResult1.dist_stats);
+// Taken from the tabulator source, since I can't figure out how to actually access this...
+function tickCross(value, data, cell, row, options, formatterParams){
+    var tick = '<svg enable-background="new 0 0 24 24" height="14" width="14" viewBox="0 0 24 24" xml:space="preserve" ><path fill="#2DC214" clip-rule="evenodd" d="M21.652,3.211c-0.293-0.295-0.77-0.295-1.061,0L9.41,14.34  c-0.293,0.297-0.771,0.297-1.062,0L3.449,9.351C3.304,9.203,3.114,9.13,2.923,9.129C2.73,9.128,2.534,9.201,2.387,9.351  l-2.165,1.946C0.078,11.445,0,11.63,0,11.823c0,0.194,0.078,0.397,0.223,0.544l4.94,5.184c0.292,0.296,0.771,0.776,1.062,1.07  l2.124,2.141c0.292,0.293,0.769,0.293,1.062,0l14.366-14.34c0.293-0.294,0.293-0.777,0-1.071L21.652,3.211z" fill-rule="evenodd"/></svg>';
+    var cross = '<svg enable-background="new 0 0 24 24" height="14" width="14"  viewBox="0 0 24 24" xml:space="preserve" ><path fill="#CE1515" d="M22.245,4.015c0.313,0.313,0.313,0.826,0,1.139l-6.276,6.27c-0.313,0.312-0.313,0.826,0,1.14l6.273,6.272  c0.313,0.313,0.313,0.826,0,1.14l-2.285,2.277c-0.314,0.312-0.828,0.312-1.142,0l-6.271-6.271c-0.313-0.313-0.828-0.313-1.141,0  l-6.276,6.267c-0.313,0.313-0.828,0.313-1.141,0l-2.282-2.28c-0.313-0.313-0.313-0.826,0-1.14l6.278-6.269  c0.313-0.312,0.313-0.826,0-1.14L1.709,5.147c-0.314-0.313-0.314-0.827,0-1.14l2.284-2.278C4.308,1.417,4.821,1.417,5.135,1.73  L11.405,8c0.314,0.314,0.828,0.314,1.141,0.001l6.276-6.267c0.312-0.312,0.826-0.312,1.141,0L22.245,4.015z"/></svg>';
+
+    if(value === true || value === "true" || value === "True" || value === 1){
+        cell.attr("aria-checked", true);
+        return tick;
+    }else{
+        cell.attr("aria-checked", false);
+        return cross;
+    }
+}
+
+// Thanks :) http://stackoverflow.com/questions/21792367/replace-underscores-with-spaces-and-capitalize-words
+function humanize(str) {
+    var frags = str.split('_');
+    for (i=0; i<frags.length; i++) {
+        frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join(' ');
+}
+
+function myFormatter(value, data, cell, row, options, formatterParams){
+    var formatAs = "plaintext";
+    if (formatterParams && formatterParams.hasOwnProperty("formatAs")){
+        formatAs = formatterParams.formatAs;
+    } else {
+        var tryParseFloat = parseFloat(value);
+        if (!isNaN(tryParseFloat)){
+            if (tryParseFloat > 2.0 || tryParseFloat < -2.0){ // This is a stupid way to do this...
+                formatAs = "money";
+            } else {
+                formatAs = "percent";
+            }
+        } else {
+            if (value == true || value == false){
+                formatAs = "bool";
+            }
+        }    
+    }
+        
+    switch (formatAs){
+        case "percent":
+            return (tryParseFloat * 100).toFixed(0) + "%";
+        case "money":
+            var result = myFloatParse(value).toFixed(0);
+            return "$" + numberWithCommas(result);
+        case "bool":
+            return tickCross(value, data, cell, row, options);
+        default:
+            return humanize(value);        
+    }
+}
+
+function showStatsForAResult(resultNum){
+    var yearly = "#YearlyStats" + resultNum;
+    var main = "#MainStats" + resultNum;
+    var dist = "#DistStats" + resultNum;
+    var header = "Strategy 1";
+    var simResults = simResult1;
+    if (resultNum == 2) {
+        simResults = simResult2;
+        header = "Strategy 2";
+    }
+
+    $(yearly).show();
+    $(main).show();
+    $(dist).show();
     
-    $(".MainStats").tabulator({
-        fitColumns:true, //fit columns to width of table (optional)
-        columns:[ //Define Table Columns
-            {title:"Stat", field:"name", sorter:"string", width:150},
-            {title:"Value", field:"stat", sorter:"number", align:"left"}
-        ],
-        rowClick:function(e, id, data, row){ //trigger an alert message when the row is clicked
-            alert("Row " + id + " Clicked!!!!");
-        },
+    $(yearly).tabulator({
+        fitColumns:true,
+        columns:[
+            {                
+                title: "Stats For This Year: " + header,
+                columns:[
+                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter, formatterParams:{formatAs:"plaintext"}},
+                    {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
+                ]
+            }
+        ]
+    });
+    doStatsDisplay=true;
+    
+    $(dist).tabulator({
+        fitColumns:true,
+        columns:[ 
+            {
+                title: "Full Simulation Stats: " + header,
+                columns:[
+                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter, formatterParams:{formatAs:"plaintext"}},
+                    {title:"Min", field:"min", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+                    {title:"5th Percentile", field:"fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+                    {title:"Mean", field:"mean", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+                    {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+                    {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
+                ]
+            }
+        ]
+    });
+    $(dist).tabulator("setData", simResults.dist_stats);
+    
+    $(main).tabulator({
+        fitColumns:true,
+        columns:[ 
+            {
+                title: "Full Simulation Stats: " + header,
+                columns:[
+                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+                    {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
+                ]
+            }
+        ]
     });
     
     var stats = []
-    for (var key in simResult1.stats) {
-        if (simResult1.stats.hasOwnProperty(key)) {
-            stats.push({name:key, stat:simResult1.stats[key]});
+    for (var key in simResults.stats) {
+        if (simResults.stats.hasOwnProperty(key)) {
+            stats.push({name:key, stat:simResults.stats[key]});
         }
     }
     
-    $(".MainStats").tabulator("setData", stats);
-    
-    
-    $(".YearlyStats").show(200);
-    $(".MainStats").show(200);
-    $(".DistStats").show(200);
+    $(main).tabulator("setData", stats);
+}
+
+function showStats(numResults){
+    showStatsForAResult(1);
+    if (numResults == 2){
+        showStatsForAResult(2);
+    }
 }
 
 function hideStats(){
@@ -198,8 +294,13 @@ $(document).ready(function () {
             $(this).effect("highlight", { color: "red" }, 1000);
             return;
         }
+        
+        $(".YearlyStats").hide();
+        $(".MainStats").hide();
+        $(".DistStats").hide();
         $("#simgraph").remove();
         $(".showParamsButt").remove();
+        $(".displayStatsButt").remove();
         $(".Key:visible").remove();
         $(".Results:visible").remove();
 
@@ -281,20 +382,19 @@ $(document).ready(function () {
                 $("label.successRate2").hide();
                 sim.showSimulation(result1, null);
             }
+            $("<label type=\"submit\" class=\"displayStatsButt\">Show Statistics</label>").appendTo(body).click(function() {
+                if ($(this).text() == "Show Statistics"){
+                    $(this).text("Hide Statistics");
+                    showStats(requests.length);
+                } else {
+                    $(this).text("Show Statistics");
+                    hideStats();
+                }
+            });           
             
-            $(".displayStatsButt").appendTo($("#actualBody")).html("Show Statistics").show();
             $(".YearlyStats").appendTo($("#actualBody")).hide();
             $(".MainStats").appendTo($("#actualBody")).hide();
             $(".DistStats").appendTo($("#actualBody")).hide();
-            $(".displayStatsButt").click(function() {
-                if ($(".displayStatsButt").text() == "Show Statistics"){
-                    $(".displayStatsButt").text("Hide Statistics");
-                    showStats();
-                } else {
-                    $(".displayStatsButt").text("Show Statistics");
-                    hideStats();
-                }
-            });
         }
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions

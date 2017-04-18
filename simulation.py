@@ -116,7 +116,7 @@ class Simulation:
             "success_rate": self.getSuccessRate()
         }
         return stats
-    
+
     def getDistStats(self):
         stats = [
             gatherWebResponseData(self.underflow, "underflow"),
@@ -124,7 +124,7 @@ class Simulation:
             gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value")
         ]
         return stats
-    
+
     def getYearlyStats(self):
         epv = []
         for i in range(0, self.iterations):
@@ -133,14 +133,14 @@ class Simulation:
         pg = []
         for i in range(0, self.iterations):
             pg.append(self.recordedData[i][-1][3] > self.initialPortfolio)
-            
+
         stats = {
             "ending_portfolio_value": epv,
             "portfolio_grew": pg
         }
-        
+
         return stats
-    
+
     def getPortfolioGrewRate(self):
         total = 0
         grew = 0

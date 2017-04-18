@@ -68,6 +68,10 @@ legend {
     background: yellow;
 }
 
+.displayStatsButt:hover {
+    background: yellow;
+}
+
 /* DROPDOWNS */
 .dropdown {
     width: 100%;

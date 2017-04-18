@@ -294,7 +294,7 @@ var sim = new function(){
                        .attr("xlink:href", "/static/content/refresh.png")
                        .on("click", function() {
                             svg.transition().duration(0);
-                            d3.select("svg").remove();
+                            d3.select("#simgraph").html("");
                             sim.reInit();
                             reShowSimulation();
                         });
