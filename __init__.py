@@ -46,7 +46,7 @@ def topLevelError(e):
 def home():
     return render_template(
         'index.html',
-        title='Hi Emily' #TODO this banjo kazooie stuff is adding nothing
+        title='DWR Home' #TODO this banjo kazooie stuff is adding nothing
     )
 
 @app.route('/about')
@@ -57,7 +57,7 @@ def about():
 
     return render_template(
         'about.html',
-        title='Hi Emily',
+        title='DWR About',
         content=Markup(markdown.markdown(f))
     )
 
@@ -69,7 +69,7 @@ def faq():
 
     return render_template(
         'faq.html',
-        title='Hi Emily',
+        title='DWR FAQ',
         content=Markup(markdown.markdown(f))
     )
 

@@ -259,7 +259,8 @@ function showStats(){
             {title:"5th Percentile", field:"fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
             {title:"Mean", field:"mean", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
             {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
+            {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"Standard Deviation", field:"std_dev", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
         ]
     });
     

@@ -3,6 +3,7 @@
 '''
 This is the meat of this entire project.
 '''
+from statistics import stdev
 from assets import Assets
 from market_data import getInflation
 from portfolio import Portfolio
@@ -222,5 +223,6 @@ def gatherWebResponseData(iter, name):
         "min": min(iter),
         "max": max(iter),
         "fifth_percentile": getPercentile(iter, .05),
-        "nintey_fifth_percentile": getPercentile(iter, .95)
+        "nintey_fifth_percentile": getPercentile(iter, .95),
+        "std_dev": stdev(iter)
     }
