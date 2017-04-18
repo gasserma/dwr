@@ -112,7 +112,7 @@ class Simulation:
 
     def getStats(self):
         stats = {
-            "grew_rate": self.getPortfolioGrewRate(),
+            "end_portfolio_larger_rate": self.getPortfolioGrewRate(),
             "success_rate": self.getSuccessRate()
         }
         return stats
@@ -136,7 +136,7 @@ class Simulation:
 
         stats = {
             "ending_portfolio_value": epv,
-            "portfolio_grew": pg
+            "end_portfolio_larger": pg
         }
 
         return stats

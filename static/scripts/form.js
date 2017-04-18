@@ -130,22 +130,30 @@ function displayYearCallback(year){
         var s = []
         for (var key in simResult1.yearly_stats) {
             if (simResult1.yearly_stats.hasOwnProperty(key)) {
-                s.push({name:key, stat:simResult1.yearly_stats[key][yearIndex]});
-            }
-        }
-        
-        $("#YearlyStats1").tabulator("setData", s);
-        
-        if (simResult2 != null){
-            var s2 = []
-            for (var key in simResult2.yearly_stats) {
-                if (simResult2.yearly_stats.hasOwnProperty(key)) {
-                    s2.push({name:key, stat:simResult2.yearly_stats[key][yearIndex]});
+                var data = { name:key, stat:simResult1.yearly_stats[key][yearIndex] };
+                if (simResult2 != null){
+                    data.stat2 = simResult2.yearly_stats[key][yearIndex];
+                    
+                    var tryParseFloat = parseFloat(simResult1.yearly_stats[key][yearIndex]);
+                    if (!isNaN(tryParseFloat)){
+                        var diff = tryParseFloat - parseFloat(simResult2.yearly_stats[key][yearIndex]);
+                        data.diff = diff;
+                    } else if (simResult1.yearly_stats[key][yearIndex] == true || simResult1.yearly_stats[key][yearIndex] == false) {
+                        if (simResult1.yearly_stats[key][yearIndex] != simResult2.yearly_stats[key][yearIndex]){
+                            data.diff = "different";
+                        } else {
+                            data.diff = "none";                        
+                        }
+                    } else {
+                        data.diff = "";
+                    }        
                 }
-            }
             
-            $("#YearlyStats2").tabulator("setData", s2);
+                s.push(data);
+            }
         }
+        
+        $("#YearlyStats").children().first().tabulator("setData", s);
     }
 }
 
@@ -204,87 +212,125 @@ function myFormatter(value, data, cell, row, options, formatterParams){
     }
 }
 
-function showStatsForAResult(resultNum){
-    var yearly = "#YearlyStats" + resultNum;
-    var main = "#MainStats" + resultNum;
-    var dist = "#DistStats" + resultNum;
-    var header = "Strategy 1";
-    var simResults = simResult1;
-    if (resultNum == 2) {
-        simResults = simResult2;
-        header = "Strategy 2";
+function showStats(){
+    var displayBoth = false;
+    if (simResult2 != null) {
+        displayBoth = true;
     }
-
-    $(yearly).show();
-    $(main).show();
-    $(dist).show();
     
-    $(yearly).tabulator({
-        fitColumns:true,
-        columns:[
-            {                
-                title: "Stats For This Year: " + header,
-                columns:[
-                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter, formatterParams:{formatAs:"plaintext"}},
-                    {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
-                ]
-            }
-        ]
-    });
+    $(".Stats").show().children().show().children().show();
+    
+    if (!displayBoth){    
+        $("#YearlyStats").children().first().tabulator({
+            fitColumns:true,
+            movableCols: true,
+            columns:[
+                {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+                {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
+            ]
+        });
+    } else {
+        $("#YearlyStats").children().first().tabulator({
+            fitColumns:true,
+            movableCols: true,
+            columns:[
+                {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+                {title:"Strategy 1 Value", field:"stat", sorter:"number", formatter:myFormatter},
+                {title:"Strategy 2 Value", field:"stat2", sorter:"number", formatter:myFormatter},
+                {title:"Difference", field:"diff", sorter:"number", formatter:myFormatter}
+            ]
+        });
+    }
     doStatsDisplay=true;
+    displayYearCallback(currentYear);
     
-    $(dist).tabulator({
-        fitColumns:true,
-        columns:[ 
-            {
-                title: "Full Simulation Stats: " + header,
-                columns:[
-                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter, formatterParams:{formatAs:"plaintext"}},
-                    {title:"Min", field:"min", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-                    {title:"5th Percentile", field:"fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-                    {title:"Mean", field:"mean", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-                    {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-                    {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
-                ]
-            }
-        ]
-    });
-    $(dist).tabulator("setData", simResults.dist_stats);
+    var distDisplay = [{ class:"#DistStats1", stats:simResult1.dist_stats }];
     
-    $(main).tabulator({
+    if (displayBoth){
+        distDisplay.push({ class:"#DistStats2", stats:simResult2.dist_stats });
+    }
+    
+    $("#DistStats").children().first().tabulator({
         fitColumns:true,
+        movableCols: true,
         columns:[ 
-            {
-                title: "Full Simulation Stats: " + header,
-                columns:[
-                    {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
-                    {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
-                ]
-            }
+            {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+            {title:"Min", field:"min", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"5th Percentile", field:"fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"Mean", field:"mean", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
         ]
     });
     
-    var stats = []
-    for (var key in simResults.stats) {
-        if (simResults.stats.hasOwnProperty(key)) {
-            stats.push({name:key, stat:simResults.stats[key]});
+    var s = []
+    for (var key in simResult1.dist_stats) {
+        if (simResult1.dist_stats.hasOwnProperty(key)) {
+            s.push(simResult1.dist_stats[key]);
+            
+            if (displayBoth){
+                var stratTwoData = simResult2.dist_stats[key];
+                stratTwoData.name = stratTwoData.name + " (Strategy 2)";
+                s.push(stratTwoData);
+            }
         }
     }
     
-    $(main).tabulator("setData", stats);
-}
-
-function showStats(numResults){
-    showStatsForAResult(1);
-    if (numResults == 2){
-        showStatsForAResult(2);
+    $("#DistStats").children().first().tabulator("setData", s);
+    
+    if (!displayBoth){    
+        $("#MainStats").children().first().tabulator({
+            fitColumns:true,
+            movableCols: true,
+            columns:[
+                {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+                {title:"Value", field:"stat", sorter:"number", formatter:myFormatter}
+            ]
+        });
+    } else {
+        $("#MainStats").children().first().tabulator({
+            fitColumns:true,
+            movableCols: true,
+            columns:[
+                {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
+                {title:"Strategy 1 Value", field:"stat", sorter:"number", formatter:myFormatter},
+                {title:"Strategy 2 Value", field:"stat2", sorter:"number", formatter:myFormatter},
+                {title:"Difference", field:"diff", sorter:"number", formatter:myFormatter}
+            ]
+        });
     }
+    
+    var s = []
+    for (var key in simResult1.stats) {
+        if (simResult1.stats.hasOwnProperty(key)) {
+            var data = { name:key, stat:simResult1.stats[key] };
+            if (simResult2 != null){
+                data.stat2 = simResult2.stats[key];
+                
+                var tryParseFloat = parseFloat(simResult1.stats[key]);
+                if (!isNaN(tryParseFloat)){
+                    var diff = tryParseFloat - parseFloat(simResult2.stats[key]);
+                    data.diff = diff;
+                } else if (simResult2.stats[key] == true || simResult2.stats[key] == false) {
+                    if (simResult2.stats[key] != simResult1.stats[key]){
+                        data.diff = "different";
+                    } else {
+                        data.diff = "none";                        
+                    }
+                } else {
+                    data.diff = "";
+                }
+            }
+        
+            s.push(data);
+        }
+    }
+    
+    $("#MainStats").children().first().tabulator("setData", s);
 }
 
 function hideStats(){
-    $(".YearlyStats").hide(200);
-    $(".MainStats").hide(200);
-    $(".DistStats").hide(200);
+    $(".Stats").children().hide(200);
 }
 
 var simResult1, simResult2;
@@ -295,9 +341,13 @@ $(document).ready(function () {
             return;
         }
         
-        $(".YearlyStats").hide();
-        $(".MainStats").hide();
-        $(".DistStats").hide();
+        $(".Stats").hide();
+        $(".StatsChild").children().remove();
+        $(".StatsChild").each(function (){
+            $("<div class=\"tabulator\"></div>").appendTo($(this));
+        });
+        doStatsDisplay = false;
+        
         $("#simgraph").remove();
         $(".showParamsButt").remove();
         $(".displayStatsButt").remove();
@@ -385,16 +435,14 @@ $(document).ready(function () {
             $("<label type=\"submit\" class=\"displayStatsButt\">Show Statistics</label>").appendTo(body).click(function() {
                 if ($(this).text() == "Show Statistics"){
                     $(this).text("Hide Statistics");
-                    showStats(requests.length);
+                    showStats();
                 } else {
                     $(this).text("Show Statistics");
                     hideStats();
                 }
             });           
             
-            $(".YearlyStats").appendTo($("#actualBody")).hide();
-            $(".MainStats").appendTo($("#actualBody")).hide();
-            $(".DistStats").appendTo($("#actualBody")).hide();
+            $(".Stats").appendTo($("#actualBody")).hide();
         }
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions
