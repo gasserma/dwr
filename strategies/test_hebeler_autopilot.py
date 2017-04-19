@@ -2,11 +2,10 @@ import unittest
 
 from assets import Assets
 from simulation import runSimulation
-from portfolio import Portfolio
 from strategies.hebeler_autopilot import HebelerAuto
 
 '''
-This is a set of tests that cover guyton klinger. They are much more granular given how complicated guyton klinger is.
+This is a big TODO. Right now this just detects runtime errors.
 '''
 class TestHebeler(unittest.TestCase):
     def test_basicWithdrawal(self):

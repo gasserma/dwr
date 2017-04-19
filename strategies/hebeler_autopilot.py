@@ -32,17 +32,20 @@ class HebelerAuto(YearlyStrategyBase):
 
     def yearBaseReset(self, portfolio):
         self.portfolio = portfolio
-        self.initialAmount = portfolio.value * .04
+        self.initialAmount = self.portfolio.value * .04
         self.lastYearsWithdrawal = self.initialAmount
+        self.lastYearsAmount = self.portfolio.value
         self.age = self.resetAge
 
     def yearWithdraw(self, inflationRate):
         withdrawal = .5 * inflationRate * self.getInitialWithDrawal()
-        withdrawal += .5 * self.lastYearsWithdrawal / lifeExpectancy[self.age]
+        withdrawal += .5 * self.lastYearsAmount / lifeExpectancy[self.age]
 
         self.lastYearsWithdrawal = withdrawal
         self.age += 1
-        return self.portfolio.withdraw(withdrawal)
+        w = self.portfolio.withdraw(withdrawal)
+        self.lastYearsAmount = self.getPortfolioValue()
+        return w
 
     def getPortfolioValue(self):
         return self.portfolio.value
