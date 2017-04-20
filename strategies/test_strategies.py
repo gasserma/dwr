@@ -8,7 +8,7 @@ from strategies.constant_percent import ConstantPercentWithdrawalStrategy
 from strategies.guyton_klinger import GuytonKlinger
 from strategies.vpw import Vpw
 from strategies.hebeler_autopilot import HebelerAuto
-from strategies.strategy_base import StrategyBase
+from strategies.strategy_base import StrategyBase, YearlyStrategyBase
 
 '''
 This is a collection of tests that primarily verify the overall engine is functioning correctly.
@@ -79,7 +79,7 @@ class TestStrategies(unittest.TestCase):
             2010
         )
 
-        #it always works because you never run out with a percent withdrwawal strategy
+        # it always works because you never run out with a percent withdrwawal strategy
         self.assertAlmostEqual(result.getSuccessRate(), 1.0, delta=.005)
 
     def test_yearBase(self):
@@ -107,32 +107,6 @@ class TestStrategies(unittest.TestCase):
         self.assertNotAlmostEqual(grownWithdrawal, initialWithdrawal, delta=.00005)
         self.assertNotAlmostEqual(grownPortfolio, initialPortfolio, delta=.00005)
 
-    # Just a copy of the constant percent strategy, where we thrown in extra money on every withdrawal, grow, and portfolio value call
-    # that we have conjured out of nowhere. The only purpose of this class is to give us a negative (wait, is is positive?)
-    # test case for test_notConjuringMoney.
-    # http://harrypotter.wikia.com/wiki/Leprechaun_gold
-    class LepreachaunGoldStrategy(StrategyBase):
-        def __init__(self, percent):
-            self.percent = percent
-
-        def getInitialWithDrawal(self):
-            return self.initialWithdrawal
-
-        def reset(self, portfolio):
-            self.portfolio = portfolio
-            self.initialWithdrawal = portfolio.value * self.percent
-
-        def withdraw(self, inflationRate, numPeriodsPerYear):
-            withdrawal = self.portfolio.value * self.percent / numPeriodsPerYear
-            self.portfolio.withdraw(withdrawal)
-            return withdrawal + 1.0 # The leprechaun gold!
-
-        def getPortfolioValue(self):
-            return self.portfolio.value + 10.0 # More leprechaun gold!
-
-        def grow(self, monthGrowth):
-            self.portfolio.grow(monthGrowth * 1.01) # More gold!
-
     # This is really about the preconditions and postconditions of
     # grow, withdraw, and getPortfolioValue.
     # They happen like this:
@@ -145,20 +119,19 @@ class TestStrategies(unittest.TestCase):
     #
     # We have testhooks (th()) to look at the portfolio values, growths and withdrawals being reported by the strategy
     # on the front, middle, and back of that loop. So we can simply observe that the math works.
-    #
-    #   TODO: This currently does not handle asset allocation changes in strategies.
-    #
     def test_notConjuringMoney(self):
         assets = Assets(.5, .5)
         i = 1000000
         simLength = 30
 
         strategies = [
-            (GuytonKlinger(i * .04, simLength), assets, 1.0),
-            (ConstantWithdrawalAmountStrategy(i * .04), assets, 1.0),
-            (ConstantPercentWithdrawalStrategy(.04), assets, 1.0),
-            (Vpw(.02, simLength, .04), assets, 1.0),
-            (HebelerAuto(55), assets, 1.0)
+            ((GuytonKlinger(i * .04, simLength), assets, 1.0), True),
+            ((ConstantWithdrawalAmountStrategy(i * .04), assets, 1.0), True),
+            ((ConstantPercentWithdrawalStrategy(.04), assets, 1.0), True),
+            ((Vpw(.02, simLength, .04), assets, 1.0), True),
+            ((HebelerAuto(55), assets, 1.0), True),
+            ((LeprechaunGoldStrategy(.04), assets, 1.0), False),
+            ((YearlyLeprechaunGoldStrategy(.04), assets, 1.0), False)
         ]
 
         class mblp:  # stands for "Make better lambdas python"
@@ -180,31 +153,88 @@ class TestStrategies(unittest.TestCase):
             mblp.prePortfolio.value = mblp.prePortfolio.value * mblp.growth
             maxPossible = mblp.prePortfolio.value
             observed = observedPortfolioValue
-            self.assertGreaterEqual(maxPossible + .00001, observed, msg="Leprechauns detected.")
+            if mblp.expectSuccess:
+                self.assertGreaterEqual(maxPossible + .00000001, observed, msg="Leprechauns detected.")
+            else:
+                if maxPossible + .00000001 < observed:
+                    mblp.sawAFailure = True
 
         for s in strategies:
             mblp.prePortfolio = Portfolio(assets, i)
             mblp.growth = None
+            mblp.sawAFailure = False
+            mblp.expectSuccess = s[1]
 
             testhook = {
                 "pre": pre,
                 "post": post
             }
-            
+
             runSimulation(
                 simLength,
                 i,
                 i * 0.02,
                 (
-                    s,
+                    s[0],
                 ),
                 1926,
                 2010,
                 ignoreInflation=True,
                 testCallback=testhook
             )
+            
+            if not mblp.expectSuccess and not mblp.sawAFailure:
+                self.fail("Goblins detected.")
 
 
+# Just a copy of the constant percent strategy, where we thrown in extra money on every withdrawal, grow, and portfolio value call
+# that we have conjured out of nowhere. The only purpose of this class is to give us a negative (wait, is is positive?)
+# test case for test_notConjuringMoney.
+# http://harrypotter.wikia.com/wiki/Leprechaun_gold
+class LeprechaunGoldStrategy(StrategyBase):
+    def __init__(self, percent):
+        self.percent = percent
 
+    def getInitialWithDrawal(self):
+        return self.initialWithdrawal
 
+    def reset(self, portfolio):
+        self.portfolio = portfolio
+        self.initialWithdrawal = portfolio.value * self.percent
 
+    def withdraw(self, inflationRate, numPeriodsPerYear):
+        withdrawal = self.portfolio.value * self.percent / numPeriodsPerYear
+        self.portfolio.withdraw(withdrawal)
+        return withdrawal + 100 # The leprechaun gold!
+
+    def getPortfolioValue(self):
+        return self.portfolio.value
+
+    def grow(self, monthGrowth):
+        self.portfolio.grow(monthGrowth)
+
+# same this as above, but yearly
+class YearlyLeprechaunGoldStrategy(YearlyStrategyBase):
+    def __init__(self, percent):
+        self.percent = percent
+
+    def getInitialWithDrawal(self):
+        return self.initialWithdrawal
+
+    def getCurrentWithdrawalAmount(self):
+        return self.initialWithdrawal / 12.0
+
+    def yearBaseReset(self, portfolio):
+        self.portfolio = portfolio
+        self.initialWithdrawal = portfolio.value * self.percent
+
+    def yearWithdraw(self, inflationRate):
+        withdrawal = self.portfolio.value * self.percent
+        self.portfolio.withdraw(withdrawal)
+        return withdrawal + 100 # The leprechaun gold!
+
+    def yearGetPortfolioValue(self):
+        return self.portfolio.value
+
+    def yearGrow(self, yearGrowth):
+        self.portfolio.grow(yearGrowth)
