@@ -15,9 +15,7 @@ class StrategyBase:
     def getInitialWithDrawal(self): pass
 
     @abstractmethod
-    def reset(self, portfolio):
-        if not isinstance(portfolio, Portfolio):
-            raise RuntimeWarning
+    def reset(self, portfolio): pass
 
     @abstractmethod
     def withdraw(self, inflationRate, numPeriodsPerYear): pass
@@ -26,15 +24,14 @@ class StrategyBase:
     def getPortfolioValue(self): pass
 
     @abstractmethod
-    def grow(self, monthGrowth):
-        if not isinstance(monthGrowth, Assets):
-            raise RuntimeWarning
+    def grow(self, monthGrowth): pass
 
 class YearlyStrategyBase(StrategyBase):
     def reset(self, portfolio):
         self.month = -1
         self.yearBaseReset(portfolio)
         self.yearGrowthAccumulator = Assets.getMultiplicationUnitAssets()
+        self.cash = 0
 
     def grow(self, monthGrowth):
         if self.month % 12 == 0: # Do all this first to get the first iteration right.
@@ -48,9 +45,17 @@ class YearlyStrategyBase(StrategyBase):
             raise RuntimeError
 
         if self.month % 12 == 0:
-            self.yearWithdraw(inflationRate) # inflation rates are already yearly
+            self.cash = self.yearWithdraw(inflationRate) # inflation rates are already yearly
 
-        return self.getCurrentWithdrawalAmount() /12.0
+        currWithdrawal = self.getCurrentWithdrawalAmount() / 12
+        self.cash -= currWithdrawal
+        return currWithdrawal
+
+    def getPortfolioValue(self):
+        return self.yearGetPortfolioValue() + self.cash
+
+    @abstractmethod
+    def yearGetPortfolioValue(self): pass
 
     @abstractmethod
     def yearWithdraw(self, inflationRate): pass
@@ -59,11 +64,7 @@ class YearlyStrategyBase(StrategyBase):
     def getCurrentWithdrawalAmount(self): pass
 
     @abstractmethod
-    def yearGrow(self, yearGrowth):
-        if not isinstance(yearGrowth, Assets):
-            raise RuntimeWarning
+    def yearGrow(self, yearGrowth): pass
 
     @abstractmethod
-    def yearBaseReset(self, portfolio):
-        if not isinstance(portfolio, Portfolio):
-            raise RuntimeWarning
+    def yearBaseReset(self, portfolio): pass

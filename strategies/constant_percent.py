@@ -8,25 +8,20 @@ class ConstantPercentWithdrawalStrategy(StrategyBase):
         self.percent = percent
 
     def getInitialWithDrawal(self):
-        super(ConstantPercentWithdrawalStrategy, self).getInitialWithDrawal()
         return self.initialWithdrawal
 
     def reset(self, portfolio):
-        super(ConstantPercentWithdrawalStrategy, self).reset(portfolio)
         self.portfolio = portfolio
         self.initialWithdrawal = portfolio.value * self.percent
 
     def withdraw(self, inflationRate, numPeriodsPerYear):
-        super(ConstantPercentWithdrawalStrategy, self).withdraw(inflationRate, numPeriodsPerYear)
         withdrawal = self.portfolio.value * self.percent / numPeriodsPerYear
         self.portfolio.withdraw(withdrawal)
         # rebalance is implicit
         return withdrawal
 
     def getPortfolioValue(self):
-        super(ConstantPercentWithdrawalStrategy, self).getPortfolioValue()
         return self.portfolio.value
 
     def grow(self, monthGrowth):
-        super(ConstantPercentWithdrawalStrategy, self).grow(monthGrowth)
         self.portfolio.grow(monthGrowth)

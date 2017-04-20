@@ -23,24 +23,24 @@ class GuytonKlinger(YearlyStrategyBase):
         self.initialRate = self.initialAmount / portfolio.value
         self.cashReserves = 0.0
         self.year = 0.0
-        self.previousValue = self.getPortfolioValue()
+        self.previousValue = self.yearGetPortfolioValue()
         self.initialAllocation = portfolio.allocation
         self.previousInflation = 1.0
         self.currentAmount = self.initialAmount
 
     def currentRate(self):
-        return self.currentAmount / self.getPortfolioValue()
+        return self.currentAmount / self.yearGetPortfolioValue()
 
     def yearWithdraw(self, inflationRate):
         marginalInflation = inflationRate / self.previousInflation
         self.previousInflation = inflationRate
         self.year += 1
 
-        if self.getPortfolioValue() == 0.0:
+        if self.yearGetPortfolioValue() == 0.0:
             return 0.0
 
         # Inflation Rule (IR)
-        if self.getPortfolioValue() > self.previousValue * marginalInflation \
+        if self.yearGetPortfolioValue() > self.previousValue * marginalInflation \
                 or self.currentAmount * min(marginalInflation, 1.06) < self.initialAmount * inflationRate:
             self.currentAmount = self.currentAmount * min(marginalInflation, 1.06)
 
@@ -67,11 +67,10 @@ class GuytonKlinger(YearlyStrategyBase):
         else:
             actualWithdrawal = self.portfolio.withdraw(desiredWithdrawal)
 
-        self.previousValue = self.getPortfolioValue()
+        self.previousValue = self.yearGetPortfolioValue()
         return actualWithdrawal
 
-    def getPortfolioValue(self):
-        super(GuytonKlinger, self).getPortfolioValue()
+    def yearGetPortfolioValue(self):
         return self.portfolio.value + self.cashReserves
 
     def yearGrow(self, yearGrowth):

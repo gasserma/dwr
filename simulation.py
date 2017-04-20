@@ -11,7 +11,7 @@ import json
 from json import encoder
 #encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
-def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False):
+def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False, testCallback=None):
     simulation = Simulation(minSimYear, maxSimYear, length, ignoreInflation, initialPortfolio, failureThreshhold)
     strategies = []
     initPortfolios = []
@@ -42,17 +42,25 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                 if ignoreInflation:
                     inflationRate = 1.0
                 failMin = failureThreshhold * inflationRate
-                numPeriodsPerYear = 12 # 12 == months, etc. Actually it is a farce to pretend anything other than 12 works here.
-                for month in range(1, numPeriodsPerYear + 1):
+                monthsPerYear = 12 
+                for month in range(1, monthsPerYear + 1):
                     monthGrowth = Assets.getMarketReturns(simulationYear, month)
+                    if testCallback:
+                        pv = sum(s.getPortfolioValue() for s in strategies) / inflationRate
+                        testCallback["pre"](pv, monthGrowth, strategies)
+                                        
                     actualWithdrawal = 0.0
                     for i in range(0, len(strategies)):
-                        actualWithdrawal += strategies[i].withdraw(inflationRate, numPeriodsPerYear)
+                        actualWithdrawal += strategies[i].withdraw(inflationRate, monthsPerYear)
                         strategies[i].grow(monthGrowth)
                     currentPortfolioValue = sum(s.getPortfolioValue() for s in strategies) / inflationRate
                     simulation.recordData(simulationIteration, simulationYear, month, actualWithdrawal / inflationRate, currentPortfolioValue)
-                    diff = actualWithdrawal - (sum(s.getInitialWithDrawal() / numPeriodsPerYear for s in strategies) * inflationRate)
-                    if actualWithdrawal <= .99999 * failMin / numPeriodsPerYear:
+                    diff = actualWithdrawal - (sum(s.getInitialWithDrawal() / monthsPerYear for s in strategies) * inflationRate)
+                    
+                    if testCallback:
+                        testCallback["post"](currentPortfolioValue, actualWithdrawal / inflationRate)
+                    
+                    if actualWithdrawal <= .99999 * failMin / monthsPerYear:
                         raise StopIteration
                     if diff < 0:
                         underflow += diff / inflationRate

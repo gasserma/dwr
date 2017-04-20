@@ -18,20 +18,20 @@ class Vpw(YearlyStrategyBase):
 
     def yearBaseReset(self, portfolio):
         self.portfolio = portfolio
-        self.initialAmount = self.getPortfolioValue() * .049533
-        self.initialPortfolio = self.getPortfolioValue()
-        self.initialRate = self.initialAmount / self.getPortfolioValue()
+        self.initialAmount = self.yearGetPortfolioValue() * .049533
+        self.initialPortfolio = self.yearGetPortfolioValue()
+        self.initialRate = self.initialAmount / self.yearGetPortfolioValue()
         self.year = 0
 
     def yearWithdraw(self, inflationRate):
         withdrawal = self.annuityPayment()
-        candidateWithdrawalRate = withdrawal / self.getPortfolioValue()
+        candidateWithdrawalRate = withdrawal / self.yearGetPortfolioValue()
 
         # This is the increasing cap
         withdrawalRate = min(candidateWithdrawalRate, self.initialRate * 1.20)
 
-        actualWithdrawal = withdrawalRate * self.getPortfolioValue() * self.drawDownPercentage
-        actualWithdrawal += (1.0 - self.drawDownPercentage) * self.expectedRealReturn * self.getPortfolioValue()
+        actualWithdrawal = withdrawalRate * self.yearGetPortfolioValue() * self.drawDownPercentage
+        actualWithdrawal += (1.0 - self.drawDownPercentage) * self.expectedRealReturn * self.yearGetPortfolioValue()
 
         self.year += 1
         self.currentAmount = actualWithdrawal
@@ -44,7 +44,7 @@ class Vpw(YearlyStrategyBase):
         payment = numerator / denominator
         return payment
 
-    def getPortfolioValue(self):
+    def yearGetPortfolioValue(self):
         return self.portfolio.value
 
     def yearGrow(self, yearGrowth):

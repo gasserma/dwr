@@ -44,10 +44,10 @@ class HebelerAuto(YearlyStrategyBase):
         self.lastYearsWithdrawal = withdrawal
         self.age += 1
         w = self.portfolio.withdraw(withdrawal)
-        self.lastYearsAmount = self.getPortfolioValue()
+        self.lastYearsAmount = self.yearGetPortfolioValue()
         return w
 
-    def getPortfolioValue(self):
+    def yearGetPortfolioValue(self):
         return self.portfolio.value
 
     def yearGrow(self, yearGrowth):
