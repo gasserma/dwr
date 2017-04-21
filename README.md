@@ -1,6 +1,6 @@
 This document sets out to explain the technical aspects of this site/tool.
 
-Everything else should be [self explanatory](dwr.azurewebsites.net)
+Everything else should be [self explanatory](http://dwr.azurewebsites.net)
 
 ## Stack
 The code is hosted on **github**...which ought to be obvious if you are seeing this page.
