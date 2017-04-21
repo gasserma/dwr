@@ -60,54 +60,54 @@
             <fieldset class="stratFieldset">
                 <label for="weight">Weight</label>
                 <span class="inputspan">
-                    <input type="number" name="weight" id="weight" value="100" class="weight"/> %
+                    <input type="numeric" name="weight" id="weight" value="100" class="weight" formnovalidate pattern="[0-9]*"/> %
                 </span>
                 <label for="stocks">Stocks</label>
                 <span class="inputspan">
-                    <input type="number" name="weight" id="stocks" value="50" class="stocks"/> %
+                    <input type="numeric" name="weight" id="stocks" value="50" class="stocks" formnovalidate pattern="[0-9]*"/> %
                 </span>
                 <label for="bonds">Bonds</label>
                 <span class="inputspan">
-                    <input type="number" name="bonds" id="bonds" value="50" class="bonds"/> %
+                    <input type="numeric" name="bonds" id="bonds" value="50" class="bonds" formnovalidate pattern="[0-9]*"/> %
                 </span>
             </fieldset>
         </div>
         <div class="GuytonKlinger" style="display: none;">
             <label for="gk_input">Initial Withdrawal Amount</label>
             <span class="inputspan">
-                $ <input type="numeric" name="initial_amount" id="gk_input" value="40,000" class="input_strat" pattern="[0-9]*"/>
+                $ <input type="numeric" name="initial_amount" id="gk_input" value="40,000" class="input_strat" formnovalidate pattern="[0-9]*"/>
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
         <div class="ConstAmount" style="display: none;">
             <label for="const_amount">Amount</label>
             <span class="inputspan">
-                $ <input type="numeric" name="amount" id="const_amount" value="40000" class="input_strat" pattern="[0-9]*"/>
+                $ <input type="numeric" name="amount" id="const_amount" value="40000" class="input_strat" formnovalidate pattern="[0-9]*"/>
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
         <div class="ConstPercent" style="display: none;">
             <label for="const_percent">Percent</label>
             <span class="inputspan">
-                <input type="numeric" name="percent" id="const_percent" value="4" class="input_strat" pattern="[0-9]*"/> %
+                <input type="numeric" name="percent" id="const_percent" value="4" class="input_strat" formnovalidate pattern="[0-9]*"/> %
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
         <div class="HebelerAutopilot" style="display: none;">
             <label for="hebeler_autopilot">Age</label>
             <span class="inputspan">
-                <input type="numeric" name="age" id="hebeler_autopilot" value="60" class="input_strat" pattern="[0-9]*"/>
+                <input type="numeric" name="age" id="hebeler_autopilot" value="60" class="input_strat" formnovalidate pattern="[0-9]*"/>
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
         <div class="VPW" style="display: none;">
             <label for="vpw_1">Expected Return</label>
             <span class="inputspan">
-                <input type="numeric" name="expected_return_percent" id="vpw_1" value="" class="input_strat" pattern="[0-9]*"/> %
+                <input type="numeric" name="expected_return_percent" id="vpw_1" value="" class="input_strat" formnovalidate pattern="[0-9]*"/> %
             </span>
             <label for="vpw_2">Draw Down</label>
             <span class="inputspan">
-                <input type="numeric" name="drawdown_percent" id="vpw_2" value="100" class="input_strat" pattern="[0-9]*"/> %
+                <input type="numeric" name="drawdown_percent" id="vpw_2" value="100" class="input_strat" formnovalidate pattern="[0-9]*"/> %
             </span>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
