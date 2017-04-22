@@ -1,10 +1,10 @@
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/,/g , "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
 $.fn.digits = function(){ 
-    return this.each(function(){ 
-        $(this).val( $(this).val().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") ); 
+    return this.each(function(){
+        $(this).val( $(this).val().replace(/,/g , "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") ); 
     })
 }
 
@@ -204,6 +204,9 @@ function myFormatter(value, data, cell, row, options, formatterParams){
             return (tryParseFloat * 100).toFixed(0) + "%";
         case "money":
             var result = myFloatParse(value).toFixed(0);
+            if (result < 0){
+                return "-$" + numberWithCommas(Math.abs(result));
+            }
             return "$" + numberWithCommas(result);
         case "bool":
             return tickCross(value, data, cell, row, options);
@@ -254,13 +257,13 @@ function showStats(){
         fitColumns:true,
         movableCols: true,
         columns:[ 
-            {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
-            {title:"Min", field:"min", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"5th Percentile", field:"fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"Mean", field:"mean", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"95th Percentile", field:"nintey_fifth_percentile", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"Max", field:"max", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}},
-            {title:"Standard Deviation", field:"std_dev", sorter:"number", formatter:myFormatter, formatterParams:{formatAs:"money"}}
+            {title:"Stat", field:"name", formatter:myFormatter},
+            {title:"Min", field:"min", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"5th Percentile", field:"fifth_percentile", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"Mean", field:"mean", formatter:myFormatter, sortable:false, formatterParams:{formatAs:"money"}},
+            {title:"95th Percentile", field:"nintey_fifth_percentile", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}},
+            {title:"Max", field:"max", formatter:myFormatter, sortable:false, formatterParams:{formatAs:"money"}},
+            {title:"Standard Deviation", field:"std_dev", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}}
         ]
     });
     
