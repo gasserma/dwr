@@ -1,10 +1,10 @@
 function numberWithCommas(x) {
-    return x.toString().replace(/,/g , "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    return x.toString().replace(/\D/g,'').replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 
 $.fn.digits = function(){ 
     return this.each(function(){
-        $(this).val( $(this).val().replace(/,/g , "").replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") ); 
+        $(this).val( $(this).val().replace(/\D/g,'').replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,") ); 
     })
 }
 
