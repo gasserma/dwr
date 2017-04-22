@@ -1,5 +1,16 @@
+@media (max-width: 900px) {
+    .content {
+        margin: 5px;
+    }
+}
+
+@media (min-width: 901px) {
+    .content {
+        margin: 120px;
+    }
+}
+
 .content {
-    margin: 120px;
     font-family: Arial;
     font-weight: normal;
 }
