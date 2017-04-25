@@ -221,6 +221,10 @@ function myFormatter(value, data, cell, row, options, formatterParams){
     }
 }
 
+function tooltipFunc(field, value, data){
+    return data.tooltip;
+}
+
 function showStats(){
     var displayBoth = false;
     if (simResult2 != null) {
@@ -263,7 +267,7 @@ function showStats(){
         fitColumns:true,
         movableCols: true,
         columns:[ 
-            {title:"Stat", field:"name", formatter:myFormatter},
+            {title:"Stat", field:"name", formatter:myFormatter, tooltip:tooltipFunc},
             {title:"Min", field:"min", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}},
             {title:"5th Percentile", field:"fifth_percentile", sortable:false, formatter:myFormatter, formatterParams:{formatAs:"money"}},
             {title:"Mean", field:"mean", formatter:myFormatter, sortable:false, formatterParams:{formatAs:"money"}},

@@ -121,16 +121,21 @@ class Simulation:
 
     def getStats(self):
         stats = {
-            "end_portfolio_larger_rate": self.getPortfolioGrewRate(),
+            "portfolio_ended_up_larger": self.getPortfolioGrewRate(),
             "success_rate": self.getSuccessRate()
         }
         return stats
 
     def getDistStats(self):
         stats = [
-            gatherWebResponseData(self.underflow, "underflow"),
-            gatherWebResponseData(self.overflow, "overflow"),
-            gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value")
+            gatherWebResponseData(self.underflow, "underflow", "The sum of (actual withdrawal - initial withdrawal) "
+                                                               "for all withdrawals where the withdrawal was less than "
+                                                               "the initial withdrawal. This is a measure of missing "
+                                                               "purchasing power. 0 is the best possible result here."),
+            gatherWebResponseData(self.overflow, "overflow", "The sum of all the withdrawals  where the withdrawal was "
+                                                             "above the initial withdrawal amount. This is a measure of "
+                                                             "extra purchasing power. The higher, the better."),
+            gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value", None)
         ]
         return stats
 
@@ -145,7 +150,7 @@ class Simulation:
 
         stats = {
             "ending_portfolio_value": epv,
-            "end_portfolio_larger": pg
+            "portfolio_ended_up_larger": pg
         }
 
         return stats
@@ -224,9 +229,10 @@ def getPercentile(iter, percentile):
     return sort[index]
 
 
-def gatherWebResponseData(iter, name):
+def gatherWebResponseData(iter, name, tooltip):
     return {
         "name": name,
+        "tooltip" : tooltip,
         "mean": getMean(iter),
         "min": min(iter),
         "max": max(iter),
