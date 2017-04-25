@@ -2,7 +2,7 @@
 
 I built this site because I found the existing literature on retirement withdrawals (websites, papers, etc) to be lacking.
 Particularly, the statistics presented in those sources are woefully underwhelming, and have trouble representing any sort of reality.
-The problem how long one's nest egg will last is important and nuanced.
+The problem of how long one's nest egg will last is important and nuanced.
 There is no unified set of metrics for assessing the quality of a retirement plan.
 
 Simple metrics, like success rate, fall catastrophically short for certain withdrawal strategies.
