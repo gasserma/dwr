@@ -61,6 +61,21 @@ def about():
         content=Markup(markdown.markdown(f))
     )
 
+@app.route('/intro')
+@app.route('/tutorial')
+@app.route('/eli5')
+@app.route('/basics')
+def basics():
+    script = os.path.dirname(__file__)
+    path = os.path.join(script, "./templates/basics.md")
+    f = open(path, mode="r").read()
+
+    return render_template(
+        'basics.html',
+        title='DWR Basics',
+        content=Markup(markdown.markdown(f))
+    )
+
 @app.route('/faq')
 def faq():
     script = os.path.dirname(__file__)
@@ -77,7 +92,7 @@ def faq():
 def simulations():
     minYear = int(request.json.get("min_year", 1926))
     maxYear = int(request.json.get("max_year", 2010))
-    failureThreshhold = float(request.json.get("failure_threshhold", 20*1000))
+    failureThreshold = float(request.json.get("failure_threshold", 20*1000))
     initialPortfolioValue = float(request.json.get("initial_portfolio_value", 1*1000*1000))
     retirementLength = int(request.json.get("retirement_length", 30))
 
@@ -105,7 +120,7 @@ def simulations():
     result = runSimulation(
         retirementLength,
         initialPortfolioValue,
-        failureThreshhold,
+        failureThreshold,
         strategies,
         minYear,
         maxYear,
