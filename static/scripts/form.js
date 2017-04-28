@@ -426,11 +426,11 @@ $(document).ready(function () {
                 
                 $("label.successRate1").each(function (){
                     $(this).html((result1[0].stats.success_rate * 100).toFixed(0) + " % (Strategy 1)");
-                });
+                }).show();
                 
                 $("label.successRate2").each(function (){
                     $(this).html((result2[0].stats.success_rate * 100).toFixed(0) + " % (Strategy 2)");
-                });                
+                }).show();                
                 
                 sim.showSimulation(result1[0], result2[0]);
             } else {
