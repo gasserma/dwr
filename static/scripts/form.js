@@ -496,6 +496,35 @@ $(document).ready(function () {
     });
 });
 
+function setupDropdownHover(content){
+    $(content).on('touchstart', function(){
+        console.log('ts');
+        $(this).find('.dropdown-content').show(); 
+    });
+    $(content).mouseenter(function(){
+        console.log('me');
+        $(this).find('.dropdown-content').show(); 
+    });
+    $(content).mouseleave(function(){
+        console.log('ml');
+        $(this).find('.dropdown-content').hide(); 
+    });
+    $(content).on('touchmove', function(){
+        console.log('tm');
+        $(this).find('.dropdown-content').hide();
+    });
+    $(content).click(function(){
+        console.log('click');
+        $(this).find('.dropdown-content').hide(); 
+    });
+}
+
+$(document).ready(function () {
+    $(".dropdown").each(function(){
+        setupDropdownHover($(this));
+    });
+});
+
 var comparing = false;
 $(document).ready(function () {
     $('.compareButt').click(function () {
@@ -504,6 +533,10 @@ $(document).ready(function () {
             $(".runSimButt").hide();
 
             var newCreateDiv = $("#createClone").clone().removeAttr('id').insertAfter(".compareButt").show('slow');
+            newCreateDiv.find(".dropdown").each(function(){
+                setupDropdownHover($(this));
+            })
+            
             newCreateDiv.find('.caSelect').click(function () {
                 addStrategy("ConstAmount", "const_amount", $(".CreateSimulation").last(), 1);
             });

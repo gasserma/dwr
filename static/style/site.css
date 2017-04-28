@@ -97,15 +97,6 @@ legend {
 
 .dropdown-content a:hover {background-color: #f1f1f1}
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: #3e8e41;
-}
-
-
 .CreateSimulation {
     width: 300px;
     float: left;
