@@ -106,7 +106,6 @@ function getJsonRequest(createDiv) {
         }
     });
 
-    console.log(JSON.stringify(data));
     return data;
 }
 
@@ -236,6 +235,7 @@ function showStats(){
     if (!displayBoth){    
         $("#YearlyStats").children().first().tabulator({
             fitColumns:true,
+            responsiveLayout:true,
             movableCols: true,
             columns:[
                 {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
@@ -245,6 +245,7 @@ function showStats(){
     } else {
         $("#YearlyStats").children().first().tabulator({
             fitColumns:true,
+            responsiveLayout:true,
             movableCols: true,
             columns:[
                 {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
@@ -265,6 +266,7 @@ function showStats(){
     
     $("#DistStats").children().first().tabulator({
         fitColumns:true,
+        responsiveLayout:true,
         movableCols: true,
         columns:[ 
             {title:"Stat", field:"name", formatter:myFormatter, tooltip:tooltipFunc},
@@ -295,6 +297,7 @@ function showStats(){
     if (!displayBoth){    
         $("#MainStats").children().first().tabulator({
             fitColumns:true,
+            responsiveLayout:true,
             movableCols: true,
             columns:[
                 {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
@@ -304,6 +307,7 @@ function showStats(){
     } else {
         $("#MainStats").children().first().tabulator({
             fitColumns:true,
+            responsiveLayout:true,
             movableCols: true,
             columns:[
                 {title:"Stat", field:"name", sorter:"string", formatter:myFormatter},
@@ -345,6 +349,14 @@ function showStats(){
 
 function hideStats(){
     $(".Stats").children().hide(200);
+}
+
+function scaleCallback(ratio){
+    $(".successRate1, .successRate2, .keyLabelboth, .keyLabel1, .keyLabel2").each(function() {
+        var current = parseFloat($(this).css("font-size"));
+        var newSize = Math.max(10, (current * ratio));
+        $(this).css("font-size", newSize.toFixed(0)+"px")
+    });
 }
 
 var simResult1, simResult2;
@@ -403,16 +415,22 @@ $(document).ready(function () {
             // On single ajax call we get the data in result1
             // On double ajax call we get the data at result1[0] and result2[0]
             // Not sure why, but its working for now...so TODO figure this out.
-            console.log(JSON.stringify(result1));
             $("#keyClone").clone().removeAttr('id').insertAfter("#simgraph").show();
             $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
+            
+            var maxW = $(window).width();
+            var maxH = $(window).height();
+            
             sim.init(
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
                 Number(requests[0].min_year),
                 Number(requests[0].max_year),
                 failureThresholds,
-                displayYearCallback);
+                displayYearCallback,
+                maxW,
+                maxH,
+                scaleCallback);
             if (requests.length == 2) {
                 simResult1 = result1[0];
                 simResult2 = result2[0];
@@ -461,7 +479,7 @@ $(document).ready(function () {
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions
         }
-
+        
         // There has to be a better way to write this...
         if (requests.length == 1){
             $.when(
@@ -497,8 +515,8 @@ $(document).ready(function () {
 });
 
 function setupDropdownHover(content){
-    $(content).on('touchstart', function(){
-        $(this).find('.dropdown-content').show(); 
+    $(content).on('tap', function(){
+        $(this).find('.dropdown-content').toggle(); 
     });
     $(content).mouseenter(function(){
         $(this).find('.dropdown-content').show(); 

@@ -13,7 +13,7 @@ ul {
     padding: 0;
     overflow: hidden;
     background-color: #333;
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
     font-weight: bold;
@@ -114,7 +114,6 @@ legend {
 #actualBody {
     font-weight: bold;
     padding:20px;
-    margin-top:30px;
 }
 
 
@@ -171,15 +170,6 @@ label[type=key], select {
     padding-bottom: 1px;
     display: inline-block;
     border-bottom: 1px;
-    font-size: 20px;
-}
-
-.successRate1 {
-    font-size: 300%;
-}
-
-.successRate2 {
-    font-size: 300%;
 }
 
 .inputspan {

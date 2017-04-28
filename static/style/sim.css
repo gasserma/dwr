@@ -1,7 +1,7 @@
 #simgraph {
-    margin-left: 30px;
+    margin-left: 5px;
     height: 500;
     float: left;
 }
-.year.label { font-size: 80px; }
+
 .overlay { fill: none; pointer-events: all; }

@@ -177,33 +177,70 @@ var sim = new function(){
         return radius(b) - radius(a);
     };
 
-    var svg, xScale, yScale, rScale, xAxis, yAxis, label, w, h,
+    var svg, xScale, yScale, rScale, xAxis, yAxis, label, sizes,
         retirementLength, initialPortfolio, startYear, endYear, failureThreshholds, displayYearCallback,
         simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
-        dot, box, overlay;
+        dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback;
 
     // Init all the svg stuffs
-    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback) {
+    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, scaleCallback) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
         endYear = end;
         failureThreshholds = failureLimits;
         displayYearCallback = yearCallback;
+        maxH = maxHeight;
+        maxW = maxWidth;
+        formScaleCallback = scaleCallback;
 
         this.reInit();
     }
 
-    this.reInit = function reInit() {
-
-        // TODO, this is all rather arbirtrary...and we should either be okay with that or not.
-        var margins = {top: 10, right: 100, bottom: 50, left: 100};
-        w = 1000 - margins.right;
-        h = ((w+margins.right)*(1080.0/1920.0)) - margins.top - margins.bottom; // TODO: Convince everyone to buy a 1920 by 1080 screen...
-
-        xScale = d3.scaleLinear().domain([0, retirementLength]).range([0, w]);
-        yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([h, 0]);
-        rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, 35]);
+    this.reInit = function reInit() {        
+        // These represent the ideal conditions for...ummm...my browser on my monitor. (Or pretty generally a 1920x1080 screen)
+        // Based on the inputs we recieved about screen width and height.
+        // All of these numbers are talking about pixels.
+        
+        // This nonsense is wanting a 55 margin at 300 width, and a 100 margin at 1000 width. y=mx+b
+        // The most brittle coupling here is the y axis scale and the left margin.
+        var wMargins = Math.min(100, Math.max(0, maxW * .06 + 36));
+        var margins = {top: 10, right: wMargins, bottom: 50, left: wMargins};
+        var wTemp = 1000-margins.right-margins.left;
+        sizes = {
+            w:wTemp,
+            h:((wTemp+margins.right+margins.left)*(1080.0/1920.0)) - margins.top - margins.bottom,
+            r:35
+        }
+        
+        var htwRatio = sizes.h / sizes.w;
+        var minW = 350;
+        var minH = minW * htwRatio;
+        
+        var newW, newH;
+        if ((maxH + margins.top + margins.bottom) / (maxW + margins.left + margins.right) > htwRatio) {
+            // The width is the limiting factor
+            newW = Math.min(maxW - margins.left - margins.right, sizes.w);
+            newH = newW * htwRatio;            
+        } else {
+            // The height is the limiting factor
+            newH = Math.min(maxH - margins.top - margins.bottom, sizes.h);
+            newW = newH / htwRatio;
+        }
+        
+        changeRatio = newW / sizes.w;
+        sizes.w = newW;
+        sizes.h = newH;
+        sizes.r = sizes.r * changeRatio;
+        
+        if (formScaleCallback != null){
+            scaleCallback(changeRatio);
+        }
+        
+        // Some dots escape the graph. Do we care? Probably, but its not a huge issue.
+        yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([sizes.h, 0]);
+        xScale = d3.scaleLinear().domain([0, retirementLength]).range([0, sizes.w]);
+        rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, sizes.r]);
 
         xAxis = d3.axisBottom(xScale);
         yAxis = d3.axisLeft(yScale)
@@ -211,14 +248,14 @@ var sim = new function(){
 
         svg = d3.select("#simgraph")
                 .append("svg")
-                .attr("width", w + margins.left + margins.right)
-                .attr("height", h + margins.top + margins.bottom)
+                .attr("width", sizes.w + margins.left + margins.right)
+                .attr("height", sizes.h + margins.top + margins.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margins.left + "," + margins.top + ")");
 
         svg.append("g")
            .attr("class", "x axis")
-           .attr("transform", "translate(0," + h + ")")
+           .attr("transform", "translate(0," + sizes.h + ")")
            .call(xAxis);
 
         svg.append("g")
@@ -228,13 +265,15 @@ var sim = new function(){
         svg.append("text")
            .attr("class", "x label")
            .attr("text-anchor", "end")
-           .attr("x", w)
-           .attr("y", h - 5)
+           .style("font-size", (15 * changeRatio).toFixed(0) + "px")
+           .attr("x", sizes.w)
+           .attr("y", sizes.h - 5)
            .text("Years Into Simulation");
 
         svg.append("text")
            .attr("class", "y label")
            .attr("text-anchor", "end")
+           .style("font-size", (15 * changeRatio).toFixed(0) + "px")
            .attr("y", 5)
            .attr("dy", ".75em")
            .attr("transform", "rotate(-90)")
@@ -243,8 +282,9 @@ var sim = new function(){
         label = svg.append("text")
                    .attr("class", "year label")
                    .attr("text-anchor", "end")
-                   .attr("y", 80)
-                   .attr("x", margins.left + 160)
+                   .style("font-size", (80 * changeRatio).toFixed(0) + "px")
+                   .attr("y", (margins.top + 70) * changeRatio)
+                   .attr("x", (margins.left + 160) * changeRatio)
                    .text(startYear.toString());
     };
 
@@ -271,7 +311,7 @@ var sim = new function(){
                      .call(position)
                      .sort(order);
 
-        var buttSize = 40;
+        var buttSize = 40 * changeRatio;
         var betweenButtSize = box.width - (buttSize * 3)
         back = svg.append("svg:image")
                        .attr("class", "backButt")
