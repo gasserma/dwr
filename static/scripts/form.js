@@ -507,7 +507,7 @@ function setupDropdownHover(content){
         $(this).find('.dropdown-content').hide(); 
     });
     $(content).click(function(){
-        $(this).find('.dropdown-content').hide(); 
+        $(this).find('.dropdown-content').toggle(); 
     });
 }
 
