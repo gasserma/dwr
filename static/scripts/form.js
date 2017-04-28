@@ -506,9 +506,6 @@ function setupDropdownHover(content){
     $(content).mouseleave(function(){
         $(this).find('.dropdown-content').hide(); 
     });
-    $(content).on('touchstart', function(){
-        $(this).find('.dropdown-content').toggle();
-    });
     $(content).click(function(){
         $(this).find('.dropdown-content').toggle(); 
     });
