@@ -106,8 +106,68 @@ Green for more than the initial withdrawal, yellow for less.
 <label type="submit" class="compareGraphButt">Show Graph</label>
 <p id="compareGraph" style="display: none;"></p>
 
+### Anything else I should know?
+
+Sure...but some of this is pretty advanced, so don't worry if it doens't make sense immediately.
+Lets talk about two last things.  
+The various strategies you can visualize with this tool and the concept of diversifying your use of them.
+
+### The Strategies
+
+#### *Constant Amount*
+
+This is a very simple strategy.
+Pick an amount and withdraw that amount every year.
+The trinity study explores this strategy in depth.  
+[Trinity Study](http://afcpe.org/assets/pdf/vol1014.pdf)  
+[Trinity Study Update](https://www.onefpa.org/journal/Pages/Portfolio%20Success%20Rates%20Where%20to%20Draw%20the%20Line.aspx)  
+
+#### *Constant Percent*
+
+Another simple strategy.
+Withdraw a percentage of your portfolio every year.
+This isn't a great whole portfolio strategy, but can be useful in combination with other strategies.
+It also happens to be the most useful strategy for wrapping your mind around the visualization this site provides.
+
+#### *Guyton Klinger*
+
+This strategy rarely fails, but frequently underperforms the initial withdrawal.
+It is based on following some simple rules (and some not so simple ones as well) that cause increases and decreases in withdrawals based on market performance as well as maintaining cash reserves for bad years.  
+[Guyton Klinger](http://cornerstonewealthadvisors.com/wp-content/uploads/2014/09/08-06_WebsiteArticle.pdf)  
+
+#### *Hebeler Autopilot*
+
+This strategy is based on your life expectancy.
+Each year you get closer to dying you withdrawal a greater percentage.
+You trade constantly being confronted with your mortality for a solid strategy :).  
+[Hebeler's Autopilot](http://www.marketwatch.com/story/put-retirement-savings-withdrawals-on-autopilot-2013-07-24)  
+
+#### *VPW*
+
+This strategy is based on annuity payment calculations.
+You provide an expected return of your portfolio and the "payments" from your nest egg are calculated based on that.  
+[The VPW Post](https://www.bogleheads.org/forum/viewtopic.php?t=120430)  
+
+### Diversifying Among Strategies
+
+In most financial decisions, when you are presented with two appealing options, you should try to do both.
+This is why most people have stocks and bonds in their portfolios.
+This is why some people contribute to roth and traditional IRAs.
+There is no reason to not treat portfolio withdrawal strategies the same way.
+
+You will notice that when you add a strategy a "weight" appears.
+If you have one strategy it will have a weight of 100%. 
+If you add another strategy, the weights will split to 50% each and some of the default parameters to the strategies might change.
+When you run the simulation, your portfolio is split into as many buckets as you have strategies, according to the weights.
+The simulation then executes that strategy against that buckets worth of money.
+The final polka dot size you see is the sum of all the withdrawals from all the strategies.
+
+This is useful if you find you like the idea of having a conservative strategy for "your bare minimum" survival amount and an agressive strategy for everything else.
+It's useful whenever you wish you could combine properties of the various strategies.
+
+
 ### Okay, what next?
 
-Play around [here](.\home).
-Hover your mouse over things to learn about them.
-Check the FAQ for some more detailed information.
+Play around [here](.\home).  
+Check the [FAQ](.\faq) for some more detailed information.  
+If you want to give feedback find contact into in the [about section](.\about) or file bugs directly in the [source](.\source).

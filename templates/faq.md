@@ -8,7 +8,6 @@ Because it isn't finished and isn't ready to be used broadly.
 I'm still fixing bugs and writing tests.
 You shouldn't use this as your only source for retirement planning now.
 That said, some things are highly tested and working well.
-Feel free to trust that the constant amount and constant percentage strategies are giving you the correct result.
 
 ## Stocks and Bonds can mean many different things. What do they mean on this site?
 Currently, stocks means SP 500 data. 
@@ -27,7 +26,7 @@ When the graph shows your portfolio with the same value 20 years apart, it means
 ## Wait, the inflation calculations seem a little off.
 What is actually happening is that inflation is applied one year late.
 (Using the January CPI for Urban Consumers from the previous year)
-This again is a Trinity study convention.
+This, again, is a Trinity study convention.
 Their idea seems to have been that you would wait a year to actually see what inflation was before adjusting your withdrawal.
 
 ## Why do you auto-populate stocks and bonds with 50% each?
