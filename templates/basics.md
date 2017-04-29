@@ -119,8 +119,8 @@ The various strategies you can visualize with this tool and the concept of diver
 This is a very simple strategy.
 Pick an amount and withdraw that amount every year.
 The trinity study explores this strategy in depth.  
-[Trinity Study](http://afcpe.org/assets/pdf/vol1014.pdf)  
-[Trinity Study Update](https://www.onefpa.org/journal/Pages/Portfolio%20Success%20Rates%20Where%20to%20Draw%20the%20Line.aspx)  
+<a href="http://afcpe.org/assets/pdf/vol1014.pdf" target="_blank">Trinity Study</a>
+<a href="https://www.onefpa.org/journal/Pages/Portfolio%20Success%20Rates%20Where%20to%20Draw%20the%20Line.aspx" target="_blank">Trinity Study Update</a>
 
 #### *Constant Percent*
 
@@ -133,20 +133,20 @@ It also happens to be the most useful strategy for wrapping your mind around the
 
 This strategy rarely fails, but frequently underperforms the initial withdrawal.
 It is based on following some simple rules (and some not so simple ones as well) that cause increases and decreases in withdrawals based on market performance as well as maintaining cash reserves for bad years.  
-[Guyton Klinger](http://cornerstonewealthadvisors.com/wp-content/uploads/2014/09/08-06_WebsiteArticle.pdf)  
+<a href="http://cornerstonewealthadvisors.com/wp-content/uploads/2014/09/08-06_WebsiteArticle.pdf" target="_blank">Guyton Klinger</a>
 
 #### *Hebeler Autopilot*
 
 This strategy is based on your life expectancy.
 Each year you get closer to dying you withdrawal a greater percentage.
-You trade constantly being confronted with your mortality for a solid strategy :).  
-[Hebeler's Autopilot](http://www.marketwatch.com/story/put-retirement-savings-withdrawals-on-autopilot-2013-07-24)  
+You trade constantly being confronted with your mortality for a solid strategy :).    
+<a href="http://www.marketwatch.com/story/put-retirement-savings-withdrawals-on-autopilot-2013-07-24" target="_blank">Hebeler's Autopilot</a>
 
 #### *VPW*
 
 This strategy is based on annuity payment calculations.
 You provide an expected return of your portfolio and the "payments" from your nest egg are calculated based on that.  
-[The VPW Post](https://www.bogleheads.org/forum/viewtopic.php?t=120430)  
+<a href="https://www.bogleheads.org/forum/viewtopic.php?t=120430" target="_blank">The VPW Post</a>
 
 ### Diversifying Among Strategies
 
