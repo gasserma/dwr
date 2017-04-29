@@ -1,6 +1,6 @@
 This document sets out to explain the technical aspects of this site/tool.
 
-Everything else should be [self explanatory](http://dwr.azurewebsites.net)
+Everything else should be <a href="http:www.polkadotplanner.com" target="_blank">self explanatory!</a>
 
 ## Stack
 The code is hosted on **github**...which ought to be obvious if you are seeing this page.

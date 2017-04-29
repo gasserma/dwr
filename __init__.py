@@ -46,7 +46,7 @@ def topLevelError(e):
 def home():
     return render_template(
         'index.html',
-        title='DWR Home' #TODO this banjo kazooie stuff is adding nothing
+        title='PDP Home'
     )
 
 @app.route('/about')
@@ -57,7 +57,7 @@ def about():
 
     return render_template(
         'about.html',
-        title='DWR About',
+        title='PDP About',
         content=Markup(markdown.markdown(f))
     )
 
@@ -72,10 +72,11 @@ def basics():
 
     return render_template(
         'basics.html',
-        title='DWR Basics',
+        title='PDP Basics',
         content=Markup(markdown.markdown(f))
     )
 
+@app.route('/FAQ')
 @app.route('/faq')
 def faq():
     script = os.path.dirname(__file__)
@@ -84,7 +85,7 @@ def faq():
 
     return render_template(
         'faq.html',
-        title='DWR FAQ',
+        title='PDP FAQ',
         content=Markup(markdown.markdown(f))
     )
 

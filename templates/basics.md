@@ -111,8 +111,3 @@ Green for more than the initial withdrawal, yellow for less.
 Play around [here](.\home).
 Hover your mouse over things to learn about them.
 Check the FAQ for some more detailed information.
-
-## Still confused. Be more specific.
-
-Check the [FAQ](.\FAQ) if your questions aren't answered below.
-If they still aren't answered send me feedback via the [about page](.\about).

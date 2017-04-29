@@ -27,7 +27,7 @@ Please see the end of this page for a more comprehensive bibliography.
 
 # Who?
 
-Contact me at *placeholder*  
+Contact me at *pdotplanner@gmail.com*  
 
 Did you find a bug? The best way to get it fixed is to file an issue at the [github source](https://github.com/gasserma/dwr/issues)
 
