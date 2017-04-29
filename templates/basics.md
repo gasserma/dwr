@@ -60,8 +60,8 @@ Watch the animation.
 Try clicking the forward, backward, and reset buttons.
 Put your mouse over the year label to zoom around.
 
-PLACEHOLDER
-<p id="trinitygraph"></p>
+<label type="submit" class="trinityGraphButt">Show Graph</label>
+<p id="trinityGraph" style="display: none;"></p>
 
 ### Wait, why bother looking harder than the 4% rule?
 
@@ -88,8 +88,8 @@ Some of the dots are red.
 Dots turn red when the withdrawal is less than the initial amount.
 Big blue dots are awesome, small red dots are bad.
 
-PLACEHOLDER
-<p id="percentgraph"></p>
+<label type="submit" class="percentGraphButt">Show Graph</label>
+<p id="percentGraph" style="display: none;"></p>
 
 ### Cool, which was better?
 
@@ -103,8 +103,8 @@ This time, the constant amount is going to be in blue dots.
 The constant percent will be in green and yellow.
 Green for more than the initial withdrawal, yellow for less.
 
-PLACEHOLDER
-<p id="comparegraph"></p>
+<label type="submit" class="compareGraphButt">Show Graph</label>
+<p id="compareGraph" style="display: none;"></p>
 
 ### Okay, what next?
 

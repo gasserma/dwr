@@ -68,6 +68,16 @@ legend {
     background: yellow;
 }
 
+.trinityGraphButt:hover {
+    background: yellow;
+}
+.percentGraphButt:hover {
+    background: yellow;
+}
+.compareGraphButt:hover {
+    background: yellow;
+}
+
 .displayStatsButt:hover {
     background: yellow;
 }

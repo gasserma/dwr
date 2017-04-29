@@ -28,6 +28,10 @@ class TestWeb(unittest.TestCase):
         rv = self.app.get('/about')
         self.assertEqual(rv._status_code, 200)
 
+    def test_basicsExists(self):
+        rv = self.app.get('/basics')
+        self.assertEqual(rv._status_code, 200)
+
     def test_doesntExist(self):
         rv = self.app.get('/notarealpage')
         self.assertEqual(rv._status_code, 404)
@@ -47,7 +51,7 @@ class TestWeb(unittest.TestCase):
         request = dict(
             initial_portfolio_value=initial_portfolio_value,
             retirement_length=30,
-            failure_threshhold=0,
+            failure_threshold=0,
             min_year=1926,
             max_year=2010,
             strategies=strats,
@@ -76,7 +80,7 @@ class TestWeb(unittest.TestCase):
         request = dict(
             initial_portfolio_value=initial_portfolio_value,
             retirement_length=30,
-            failure_threshhold=0,
+            failure_threshold=0,
             min_year=1926,
             max_year=2010,
             strategies=strats,
@@ -124,7 +128,7 @@ class TestWeb(unittest.TestCase):
         request = dict(
             initial_portfolio_value=initial_portfolio_value,
             retirement_length=30,
-            failure_threshhold=20*1000,
+            failure_threshold=20*1000,
             min_year=1926,
             max_year=2010,
             strategies=strats,

@@ -58,11 +58,11 @@ result = runSimulation(
 print(result)
 print("\n\n\n")
 
-failureThreshhold = initialPortfolio * .02 # $20,000
+failureThreshold = initialPortfolio * .02 # $20,000
 result = runSimulation(
     retirementLength,
     initialPortfolio,
-    failureThreshhold,
+    failureThreshold,
     (
         (ConstantWithdrawalAmountStrategy(initialPortfolio * .04 * .5), Assets(.5, .5), .5),
         (ConstantPercentWithdrawalStrategy(.04), Assets(1.0, 0.0), .5)

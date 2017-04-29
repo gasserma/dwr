@@ -11,8 +11,8 @@ import json
 from json import encoder
 #encoder.FLOAT_REPR = lambda o: format(o, '.2f')
 
-def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False, testCallback=None):
-    simulation = Simulation(minSimYear, maxSimYear, length, ignoreInflation, initialPortfolio, failureThreshhold)
+def runSimulation(length, initialPortfolio, failureThreshold, initStrategies, minSimYear, maxSimYear, ignoreInflation=False, testCallback=None):
+    simulation = Simulation(minSimYear, maxSimYear, length, ignoreInflation, initialPortfolio, failureThreshold)
     strategies = []
     initPortfolios = []
     totalWeight = 0.0
@@ -41,7 +41,7 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
                 inflationRate = getInflation(startYear - 1, simulationYear - 1)
                 if ignoreInflation:
                     inflationRate = 1.0
-                failMin = failureThreshhold * inflationRate
+                failMin = failureThreshold * inflationRate
                 monthsPerYear = 12 
                 for month in range(1, monthsPerYear + 1):
                     monthGrowth = Assets.getMarketReturns(simulationYear, month)
@@ -79,13 +79,13 @@ def runSimulation(length, initialPortfolio, failureThreshhold, initStrategies, m
     return simulation
 
 class Simulation:
-    def __init__(self, minYear, maxYear, length, ignoreInflation, initialPortfolio, failureThreshhold):
+    def __init__(self, minYear, maxYear, length, ignoreInflation, initialPortfolio, failureThreshold):
         self.minYear = minYear
         self.maxYear = maxYear
         self.length = length
         self.ignoreInflation = ignoreInflation
         self.initialPortfolio = initialPortfolio
-        self.failureThreshhold = failureThreshhold
+        self.failureThreshold = failureThreshold
         self.iterations = 0
         self.failures = []
         self.underflow = []
@@ -199,8 +199,8 @@ class Simulation:
         else:
             output.append("All numbers are inflation adjusted")
 
-        output.append("Success Rate: {0:.2f} Initial Portfolio: {1} Failure Threshhold: {2}"
-                      .format(self.getSuccessRate(), self.initialPortfolio, self.failureThreshhold))
+        output.append("Success Rate: {0:.2f} Initial Portfolio: {1} Failure Threshold: {2}"
+                      .format(self.getSuccessRate(), self.initialPortfolio, self.failureThreshold))
 
         output.append("")
         output.append("Measure   \tMean\tMin\t5%tile\t50%tile\t95%tile\tMax")

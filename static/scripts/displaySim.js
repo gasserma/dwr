@@ -89,7 +89,7 @@ var sim = new function(){
                 resultSet : 0
             });
 
-            if (w < failureThreshholds[0]){
+            if (w < failureThresholds[0]){
                 retVal.success[0] = false;
             }
 
@@ -104,7 +104,7 @@ var sim = new function(){
                     resultSet : 1
                 });
 
-                if (w2 < failureThreshholds[1]){
+                if (w2 < failureThresholds[1]){
                     retVal.success[1] = false;
                 }
             }
@@ -127,10 +127,12 @@ var sim = new function(){
            .text(function(sr) { return tooltip(sr); });
 
         //d3.select("rect").style("fill", backgroundColor(singleStartYear.success))
-        d3.select("#simgraph").style("background-color", backgroundColor(singleStartYear.success))
+        d3.select(graphElement).style("background-color", backgroundColor(singleStartYear.success))
         currentYear = Math.round(simulationStartYear);
         label.text(currentYear);
-        displayYearCallback(currentYear);
+        if (displayYearCallback != null){
+            displayYearCallback(currentYear);
+        }
     };
 
     var manualScroll = function() {
@@ -178,21 +180,22 @@ var sim = new function(){
     };
 
     var svg, xScale, yScale, rScale, xAxis, yAxis, label, sizes,
-        retirementLength, initialPortfolio, startYear, endYear, failureThreshholds, displayYearCallback,
+        retirementLength, initialPortfolio, startYear, endYear, failureThresholds, displayYearCallback,
         simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
-        dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback;
+        dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback, graphElement;
 
     // Init all the svg stuffs
-    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, scaleCallback) {
+    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, scaleCallback, targetElement) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
         endYear = end;
-        failureThreshholds = failureLimits;
+        failureThresholds = failureLimits;
         displayYearCallback = yearCallback;
         maxH = maxHeight;
         maxW = maxWidth;
         formScaleCallback = scaleCallback;
+        graphElement = targetElement;
 
         this.reInit();
     }
@@ -246,7 +249,7 @@ var sim = new function(){
         yAxis = d3.axisLeft(yScale)
                   .tickFormat( function(d) { return "$" + d });
 
-        svg = d3.select("#simgraph")
+        svg = d3.select(graphElement)
                 .append("svg")
                 .attr("width", sizes.w + margins.left + margins.right)
                 .attr("height", sizes.h + margins.top + margins.bottom)
@@ -334,7 +337,7 @@ var sim = new function(){
                        .attr("xlink:href", "/static/content/refresh.png")
                        .on("click", function() {
                             svg.transition().duration(0);
-                            d3.select("#simgraph").html("");
+                            d3.select(graphElement).html("");
                             sim.reInit();
                             reShowSimulation();
                         });

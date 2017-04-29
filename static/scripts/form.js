@@ -374,7 +374,7 @@ $(document).ready(function () {
         });
         doStatsDisplay = false;
         
-        $("#simgraph").remove();
+        $("#simGraph").remove();
         $(".showParamsButt").remove();
         $(".displayStatsButt").remove();
         $(".Key:visible").remove();
@@ -407,7 +407,7 @@ $(document).ready(function () {
             }
         });
 
-        $("<p id=\"simgraph\"></p>").appendTo(body);
+        $("<p id=\"simGraph\"></p>").appendTo(body);
 
 
         function success(result1, result2) {
@@ -415,8 +415,8 @@ $(document).ready(function () {
             // On single ajax call we get the data in result1
             // On double ajax call we get the data at result1[0] and result2[0]
             // Not sure why, but its working for now...so TODO figure this out.
-            $("#keyClone").clone().removeAttr('id').insertAfter("#simgraph").show();
-            $("#resultsClone").clone().removeAttr('id').insertAfter("#simgraph").show();
+            $("#keyClone").clone().removeAttr('id').insertAfter("#simGraph").show();
+            $("#resultsClone").clone().removeAttr('id').insertAfter("#simGraph").show();
             
             var maxW = $(window).width();
             var maxH = $(window).height();
@@ -430,7 +430,8 @@ $(document).ready(function () {
                 displayYearCallback,
                 maxW,
                 maxH,
-                scaleCallback);
+                scaleCallback,
+                "#simGraph");
             if (requests.length == 2) {
                 simResult1 = result1[0];
                 simResult2 = result2[0];
