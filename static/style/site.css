@@ -7,6 +7,20 @@ body {
 }
 
 /* HEADER */
+@media (max-width: 900px) {
+    li a {
+        padding: 7px 8px;
+        font-size:75%;
+    }
+}
+
+@media (min-width: 901px) {
+    li a {
+        padding: 14px 16px;
+        font-size:100%;
+    }
+}
+
 ul {
     list-style-type: none;
     margin: 0;
@@ -27,7 +41,6 @@ li a {
     display: block;
     color: white;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
     font-weight: bold;
 }
