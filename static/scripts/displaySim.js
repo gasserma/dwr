@@ -408,13 +408,13 @@ var sim = new function(){
     var showPlayButton = function showPlayButton(){
         svg.transition().duration(0);
         d3.select(".playPauseButt").attr("xlink:href", "/static/content/play.png");
-        play = true;
+        playButtonShowing = true;
     }
     
     var showPauseButton = function showPauseButton(){
         svg.transition().duration(0);
         d3.select(".playPauseButt").attr("xlink:href", "/static/content/pause.png");
-        play = false;
+        playButtonShowing = false;
         animate(endYear, currentYear, retirementLength);   
     }
 
