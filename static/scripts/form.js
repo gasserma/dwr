@@ -345,6 +345,7 @@ function showStats(){
     }
     
     $("#MainStats").children().first().tabulator("setData", s);
+    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
 }
 
 function hideStats(){
@@ -794,7 +795,7 @@ $(document).ready(function (e) {
     });
 });
 
-$(document).keyup(function (e) {
+$(document).keydown(function (e) {
     if (e.which == 32){ // space bar
         sim.playPausePress();
         e.preventDefault();
