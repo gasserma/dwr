@@ -113,7 +113,6 @@ var sim = new function(){
         return retVal;
     };
 
-    var currentYear = null;
     var displaySimulationStartYear = function(simulationStartYear) {
         dot.selectAll("title").remove();
 
@@ -158,16 +157,10 @@ var sim = new function(){
         }
 
         function mousemove() {
+            showPlayButton();
             displaySimulationStartYear(yearScale.invert(d3.mouse(this)[0]));
         }
     }
-
-    var getMouseOverYear = function() {
-        var year = d3.interpolateNumber(startYear, endYear - retirementLength + 1);
-        return function(t) {
-            displaySimulationStartYear(year(t));
-        };
-    };
 
     var position = function(point) {
         point.attr("cx", function(sr) { return xScale(x(sr)); })
@@ -180,15 +173,16 @@ var sim = new function(){
     };
 
     var svg, xScale, yScale, rScale, xAxis, yAxis, label, sizes,
-        retirementLength, initialPortfolio, startYear, endYear, failureThresholds, displayYearCallback,
-        simResults, secondSimResults, // Clearly we are moving from 1 to 2, not 1 to n...
-        dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback, graphElement;
+        retirementLength, initialPortfolio, startYear, endYear, currentYear, failureThresholds, displayYearCallback,
+        simResults, secondSimResults, playButtonShowing, // Clearly we are moving from 1 to 2, not 1 to n...
+        dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback, graphElement=null;
 
     // Init all the svg stuffs
     this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, scaleCallback, targetElement) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
+        currentYear = start;
         endYear = end;
         failureThresholds = failureLimits;
         displayYearCallback = yearCallback;
@@ -200,7 +194,9 @@ var sim = new function(){
         this.reInit();
     }
 
-    this.reInit = function reInit() {        
+    this.reInit = function reInit() {  
+        playButtonShowing = false
+        currentYear = startYear;  
         // These represent the ideal conditions for...ummm...my browser on my monitor. (Or pretty generally a 1920x1080 screen)
         // Based on the inputs we recieved about screen width and height.
         // All of these numbers are talking about pixels.
@@ -299,6 +295,8 @@ var sim = new function(){
     }
 
     this.reShowSimulation = function reShowSimulation(){
+        playButtonShowing = false;
+        currentYear = startYear;
         box = label.node().getBBox();
 
         // Actually do our animation and initialize the rest.
@@ -315,60 +313,126 @@ var sim = new function(){
                      .sort(order);
 
         var buttSize = 40 * changeRatio;
-        var betweenButtSize = box.width - (buttSize * 3)
-        back = svg.append("svg:image")
-                       .attr("class", "backButt")
-                       .attr("x", box.x)
-                       .attr("y", box.y+box.height)
-                       .attr("width", buttSize)
-                       .attr("height", buttSize)
-                       .attr("xlink:href", "/static/content/back.png")
-                       .on("click", function() {
-                            svg.transition().duration(0);
-                            displaySimulationStartYear((currentYear == startYear) ? startYear : currentYear - 1);
-                        });
+        var betweenButtSize = box.width - (buttSize * 4)
+        svg.append("svg:image")
+           .attr("class", "backButt")
+           .attr("x", box.x)
+           .attr("y", box.y+box.height)
+           .attr("width", buttSize)
+           .attr("height", buttSize)
+           .attr("xlink:href", "/static/content/back.png")
+           .on("click", back);
 
-        reanimate = svg.append("svg:image")
-                       .attr("class", "reanimateButt")
-                       .attr("x", box.x + buttSize + (betweenButtSize/2))
-                       .attr("y", box.y+box.height)
-                       .attr("width", buttSize)
-                       .attr("height", buttSize)
-                       .attr("xlink:href", "/static/content/refresh.png")
-                       .on("click", function() {
-                            svg.transition().duration(0);
-                            d3.select(graphElement).html("");
-                            sim.reInit();
-                            reShowSimulation();
-                        });
+        svg.append("svg:image")
+           .attr("class", "reanimateButt")
+           .attr("x", box.x + buttSize + (betweenButtSize/3))
+           .attr("y", box.y+box.height)
+           .attr("width", buttSize)
+           .attr("height", buttSize)
+           .attr("xlink:href", "/static/content/refresh.png")
+           .on("click", function(){
+                currentYear = startYear;
+                svg.transition().duration(0);
+                d3.select(graphElement).html("");
+                sim.reInit();
+                reShowSimulation();
+            });
 
-        fwd = svg.append("svg:image")
-                       .attr("class", "fwdButt")
-                       .attr("x", box.x + buttSize + buttSize + betweenButtSize)
-                       .attr("y", box.y+box.height)
-                       .attr("width", buttSize)
-                       .attr("height", buttSize)
-                       .attr("xlink:href", "/static/content/fwd.png")
-                       .on("click", function() {
-                            svg.transition().duration(0);
-                            displaySimulationStartYear((currentYear == endYear) ? endYear : currentYear + 1);
-                        });
+        svg.append("svg:image")
+           .attr("class", "playPauseButt")
+           .attr("x", box.x + buttSize + buttSize + (2 * betweenButtSize / 3))
+           .attr("y", box.y+box.height)
+           .attr("width", buttSize)
+           .attr("height", buttSize)
+           .attr("xlink:href", "/static/content/pause.png")
+           .on("click", playPause);
+
+        svg.append("svg:image")
+           .attr("class", "fwdButt")
+           .attr("x", box.x + buttSize + buttSize + buttSize + betweenButtSize)
+           .attr("y", box.y+box.height)
+           .attr("width", buttSize)
+           .attr("height", buttSize)
+           .attr("xlink:href", "/static/content/fwd.png")
+           .on("click", fwd);
 
         overlay = svg.append("rect")
-                     .attr("class", "overlay")
-                     .attr("x", box.x)
-                     .attr("y", box.y)
-                     .attr("width", box.width)
-                     .attr("height", box.height)
-                     .on("mouseover", manualScroll);
+           .attr("class", "overlay")
+           .attr("x", box.x)
+           .attr("y", box.y)
+           .attr("width", box.width)
+           .attr("height", box.height)
+           .on("mouseover", manualScroll);
 
-        animate();
+        animate(endYear, startYear, retirementLength);
     };
 
-    var animate = function animate(){
+    this.forwardPress = function forwardPress(){
+        if (graphElement != null && !d3.select(graphElement).empty()){
+            fwd();
+        }
+    }
+
+    var fwd = function fwd(){
+        svg.transition().duration(0);
+        showPlayButton();
+        displaySimulationStartYear((currentYear == endYear) ? endYear : currentYear + 1);
+    };
+
+    this.backwardPress = function backwardPress(){
+        if (graphElement != null && !d3.select(graphElement).empty()){
+            back();
+        }
+    }
+
+    var back = function back(){
+        svg.transition().duration(0);
+        showPlayButton();
+        displaySimulationStartYear((currentYear == startYear) ? startYear : currentYear - 1);
+    };
+
+    this.playPausePress = function playPausePress(){
+        if (graphElement != null && !d3.select(graphElement).empty()){
+            playPause();
+        }
+    }
+
+    var playPause = function playPause(){
+        if (!playButtonShowing){
+            showPlayButton();
+        } else {                    
+            showPauseButton();
+        }
+    };
+    
+    var showPlayButton = function showPlayButton(){
+        svg.transition().duration(0);
+        d3.select(".playPauseButt").attr("xlink:href", "/static/content/play.png");
+        play = true;
+    }
+    
+    var showPauseButton = function showPauseButton(){
+        svg.transition().duration(0);
+        d3.select(".playPauseButt").attr("xlink:href", "/static/content/pause.png");
+        play = false;
+        animate(endYear, currentYear, retirementLength);   
+    }
+
+    var animYear, animEndYear, animRetirementLength;
+    var animateTween = function() {
+        var year = d3.interpolateNumber(animYear, animEndYear - animRetirementLength + 1);
+        return function(t) {
+            displaySimulationStartYear(year(t));
+        };
+    };
+    
+    var animate = function animate(ey, sy, rl){
+        animYear = sy;
+        animEndYear = ey;
+        animRetirementLength = rl;
         svg.transition()
-           .duration((endYear - startYear - retirementLength + 1) * 500) // If I was clever Id reference the yearscale. Also 650ms is totally arbitrary0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+           .duration((ey - sy - rl + 1) * 500) // If I was clever Id reference the yearscale. Also 650ms is totally arbitrary0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
            .ease(d3.easeLinear)
-           .attrTween("year", getMouseOverYear);
+           .attrTween("year", animateTween); // THE PROBLEM IS GETMOUSEOVER YEAR HAS STARTYEAR
     };
 };

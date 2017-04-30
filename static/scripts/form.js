@@ -794,6 +794,21 @@ $(document).ready(function (e) {
     });
 });
 
+$(document).keyup(function (e) {
+    if (e.which == 32){ // space bar
+        sim.playPausePress();
+        e.preventDefault();
+    }    
+    if (e.which == 37) { // left arrow
+        sim.backwardPress();
+        e.preventDefault();
+    }
+    if (e.which == 39) { // right arror
+        sim.forwardPress();
+        e.preventDefault();
+    }
+});
+
 function portfolioChange(inputDiv, strategyIndex){
     $(inputDiv).digits();
     var oldVal = myFloatParse(inputDiv.data('oldVal'), allowNeg=false);
