@@ -18,7 +18,7 @@ app = Flask(__name__)
 from flask import render_template
 import markdown
 from flask import Markup
-from simulation import runSimulation
+from simulator import run_simulation
 from strategies.guyton_klinger import GuytonKlinger
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 from strategies.constant_percent import ConstantPercentWithdrawalStrategy
@@ -118,7 +118,7 @@ def simulations():
 
         strategies.append((strategy, Assets(allocation), weight))
 
-    result = runSimulation(
+    result = run_simulation(
         retirementLength,
         initialPortfolioValue,
         failureThreshold,

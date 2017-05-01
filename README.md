@@ -111,3 +111,7 @@ That said, I agree with them largely, and on all the important data points (succ
 Still, it is curious...
 
 If you look in test_trinity.py you can see more of this enumerated.
+
+Note that the 1979 March Ibbotson's long term coroprate bond return was wrong in the 2010 yearbook.
+It was corrected in the 2016 book (or in between there somewhere).
+Its unclear which number the trinity study used.

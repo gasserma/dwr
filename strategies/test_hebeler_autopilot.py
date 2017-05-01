@@ -1,7 +1,7 @@
 import unittest
 
 from assets import Assets
-from simulation import runSimulation
+from simulator import run_simulation
 from strategies.hebeler_autopilot import HebelerAuto
 
 '''
@@ -12,7 +12,7 @@ class TestHebeler(unittest.TestCase):
         retirementLength = 30
         initialPortfolio = 1 * 1000 * 1000
 
-        result = runSimulation(
+        result = run_simulation(
             retirementLength,
             initialPortfolio,
             .05 * initialPortfolio * .5,

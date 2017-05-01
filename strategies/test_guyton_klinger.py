@@ -4,10 +4,10 @@ from assets import Assets
 from portfolio import Portfolio
 from strategies.guyton_klinger import GuytonKlinger
 
-'''
-This is a set of tests that cover guyton klinger. They are much more granular given how complicated guyton klinger is.
-'''
 class TestStrategies(unittest.TestCase):
+    """This is a set of tests that cover guyton klinger.
+    They are much more granular given how complicated guyton klinger is.
+    """
     def test_basicWithdrawal(self):
         length = 30
         gk = GuytonKlinger(.05, length)

@@ -2,7 +2,7 @@ import unittest
 
 from assets import Assets
 from portfolio import Portfolio
-from simulation import runSimulation
+from simulator import run_simulation
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 from strategies.constant_percent import ConstantPercentWithdrawalStrategy
 from strategies.guyton_klinger import GuytonKlinger
@@ -17,7 +17,7 @@ They frequently overlap with the strategy specific tests.
 '''
 class TestStrategies(unittest.TestCase):
     def test_unitPortfolio(self):
-        result = runSimulation(
+        result = run_simulation(
             30,
             1.0,
             .04,
@@ -33,7 +33,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_largePortfolio(self):
         i = 1000000
-        result = runSimulation(
+        result = run_simulation(
             30,
             i,
             i * 0.04,
@@ -49,7 +49,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_multipleStrategies(self):
         i = 1000000
-        result = runSimulation(
+        result = run_simulation(
             30,
             i,
             i * 0.04,
@@ -63,11 +63,9 @@ class TestStrategies(unittest.TestCase):
 
         self.assertAlmostEqual(result.getSuccessRate(), .95, delta=.005)
 
-
-
     def test_multipleDifferentStrategies(self):
         i = 1000000
-        result = runSimulation(
+        result = run_simulation(
             30,
             i,
             0.0,
@@ -170,7 +168,7 @@ class TestStrategies(unittest.TestCase):
                 "post": post
             }
 
-            runSimulation(
+            run_simulation(
                 simLength,
                 i,
                 i * 0.02,
@@ -179,8 +177,8 @@ class TestStrategies(unittest.TestCase):
                 ),
                 1926,
                 2010,
-                ignoreInflation=True,
-                testCallback=testhook
+                ignore_inflation=True,
+                test_callback=testhook
             )
             
             if not mblp.expectSuccess and not mblp.sawAFailure:

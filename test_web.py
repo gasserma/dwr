@@ -7,6 +7,8 @@ from __init__ import app
 '''
 Tests against the web work. Highly flask dependent.
 '''
+
+
 class TestWeb(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
@@ -40,7 +42,7 @@ class TestWeb(unittest.TestCase):
         initial_portfolio_value = 1 * 1000 * 1000
         strats = []
         strats.append(dict(
-            weight=.6, # This is what causes the error.
+            weight=.6,  # This is what causes the error.
             type="const_amount",
             args=dict(
                 amount=.04 * initial_portfolio_value
@@ -86,7 +88,7 @@ class TestWeb(unittest.TestCase):
             strategies=strats,
         )
 
-        jsonString=json.dumps(request)
+        jsonString = json.dumps(request)
 
         rv = self.app.post(
             "/simulations",
@@ -128,13 +130,13 @@ class TestWeb(unittest.TestCase):
         request = dict(
             initial_portfolio_value=initial_portfolio_value,
             retirement_length=30,
-            failure_threshold=20*1000,
+            failure_threshold=20 * 1000,
             min_year=1926,
             max_year=2010,
             strategies=strats,
         )
 
-        jsonString=json.dumps(request)
+        jsonString = json.dumps(request)
 
         rv = self.app.post(
             "/simulations",
@@ -145,4 +147,3 @@ class TestWeb(unittest.TestCase):
         # not a precise assertion, we just want some reasonable regressions guards on the json shapes.
         # as of now the rate is like .96
         self.assertTrue(.90 < float(response["stats"]["success_rate"]))
-

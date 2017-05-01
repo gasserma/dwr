@@ -1,7 +1,8 @@
 import unittest
 
 from assets import Assets
-from simulation import runSimulation
+from helpers import isclose
+from simulator import run_simulation
 from portfolio import Portfolio
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 
@@ -206,7 +207,7 @@ def doTrinityTest(expectedRate, length, withdrawalRate, stocks, bonds, ignoreInf
     if actualSuccessRate < expectedRate:
         delta = delta * 2
 
-    if actualSuccessRate < expectedRate + delta and actualSuccessRate > expectedRate - delta:
+    if isclose(actualSuccessRate, expectedRate, abs_tol=delta):
         return (True, actualSuccessRate)
     else:
         print("EXPECTED:\t{0:.2f}\tACTUAL:\t{1:.2f}\tRate tested:\t{2}\tYears\t{3}\tStocks:\t{4:.2f}\tBonds:\t{5:.2f}\tIgnoreInflations:\t{6}\tEndYear:\t{7}\tDelta:{8}"
@@ -218,7 +219,7 @@ def doTrinityTest(expectedRate, length, withdrawalRate, stocks, bonds, ignoreInf
 trinityMinYear = 1926
 trinityMaxYear = 1997
 def trinity(length, initialWithdrawal, initialPortfolio, ignoreInflation=False, maxYear=trinityMaxYear):
-    return runSimulation(
+    return run_simulation(
                     length,
                     1.0,
                     initialWithdrawal,

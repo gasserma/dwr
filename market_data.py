@@ -1,5 +1,7 @@
 import os
 
+from helpers import isclose
+
 cpi = {
     1924: 17.3,
     1925: 17.3,
@@ -183,7 +185,7 @@ def getSP500Return(lyear, lmonth):
             pyear = yearMonth[0]
             pmonth = yearMonth[1] - 1
             if pmonth == 0:
-                pyear = pyear -1
+                pyear -= 1
                 pmonth = 12
 
             if (pyear, pmonth) in value:
@@ -215,10 +217,10 @@ def getLongTermCorpBondsReturn(lyear, lmonth):
             yearRateCalc = 1.0
             for i in range(1, 13):
                 monthRate = float(split[i]) / 10000
-                yearRateCalc = yearRateCalc * (1.0 + monthRate)
+                yearRateCalc *= 1.0 + monthRate
                 longTermCorpBondsReturnCacne[(year, i)] = monthRate
 
-            if abs(yearRateCalc - yearRate + 1.0) < .00005:
-                raise ReferenceError # what exception should I use?
+            if not isclose(yearRateCalc, yearRate + 1.0, rel_tol=.001):
+                raise RuntimeError
 
     return longTermCorpBondsReturnCacne[(lyear, lmonth)] + 1.0

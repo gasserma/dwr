@@ -47,11 +47,11 @@ class GuytonKlinger(YearlyStrategyBase):
         # Capital Preservation Rule (CPR)
         if self.currentRate() > 1.2 * self.initialRate:
             if self.simulationLength - self.year > 15:
-                self.currentAmount = self.currentAmount * .9
+                self.currentAmount *= .9
 
         # Prosperity Rule (PR)
         if self.currentRate() < .8 * self.initialRate:
-            self.currentAmount = self.currentAmount * 1.1
+            self.currentAmount *= 1.1
 
         # Portfolio Management Rule (PMR)
         # Other half of this rule in grow(...)
