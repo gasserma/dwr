@@ -44,7 +44,7 @@ A lot of people quote the 4% rule.
 It says you can withdraw four percent of your initial nest egg, pretty much indefinitely.
 It is based on something called the Trinity Study.
 You can see what that looks like on this site.
-It is called the **Constant Amount** strategy here.
+It is called the *Constant Amount* strategy here.
 
 Lets pick a typical 30 year retirement with a $1,000,000 nest egg.
 4% of that is $40,000 per year.
@@ -74,9 +74,9 @@ I don't know.
 But this site will let you explore strategies and figure it out.
 
 Let's take a look.
-Next, we will try a strategy that is called the **Constant Percent** strategy; in it, we take out 4% of our portfolio every year.
-This is different than the **Constant Amount** 4% rule strategy.
-In the **Constant Amount** strategy, we took out $40,000 every year, which was 4% of the starting nest egg.
+Next, we will try a strategy that is called the *Constant Percent* strategy; in it, we take out 4% of our portfolio every year.
+This is different than the *Constant Amount* 4% rule strategy.
+In the *Constant Amount* strategy, we took out $40,000 every year, which was 4% of the starting nest egg.
 
 Notice that there are some new things showing up.
 The dots are changing sizes.
@@ -90,14 +90,14 @@ Big blue dots are awesome, small red dots are bad.
 
 ### Cool, which was better?
 
-Well, probably the **Constant Amount**.
+Well, probably the *Constant Amount*.
 But it's hard to say.
-The **Constant Amount** strategy is more predictable.
-But, the **Constant Percent** strategy had some years where you were withdrawing twice what the **Constant Amount** strategy gave you. 
+The *Constant Amount* strategy is more predictable.
+But, the *Constant Percent* strategy had some years where you were withdrawing twice what the *Constant Amount* strategy gave you. 
 
 Let's compare them side by side.
-This time, the **Constant Amount** is going to be in blue dots.
-The **Constant Percent** will be in green and yellow.
+This time, the *Constant Amount* is going to be in blue dots.
+The *Constant Percent* will be in green and yellow.
 Green for more than the initial withdrawal, yellow for less.
 
 <label type="submit" class="compareGraphButt">Show Graph</label>

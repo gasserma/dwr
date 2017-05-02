@@ -57,7 +57,7 @@ When strategies are created, if possible verify their conclusions and sources.
 test_Trinity.py is a great example of this in action.
 
 ## Source Layout
-This isn't fully inclusive. It is just intended to give an overview.
+This isn't fully inclusive. It is just intended to give an overview.  
 root\\    
 &nbsp;&nbsp;templates\\  
 &nbsp;&nbsp;strategies\\ -*the various withdrawal strategy implementations are here*  

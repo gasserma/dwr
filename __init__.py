@@ -27,7 +27,7 @@ from strategies.vpw import Vpw
 from assets import Assets
 
 # TODO standardize logging and exception handling here.
-# TODO test these erro handlings
+# TODO test these error handlings
 # TODO handle more than these...404 at least
 @app.errorhandler(500)
 def topLevel500(e):
