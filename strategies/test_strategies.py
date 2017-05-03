@@ -1,7 +1,7 @@
 import unittest
 
 from assets import Assets
-from portfolio import Portfolio
+from portfolio import Portfolio, LinearRamp
 from simulator import run_simulation
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 from strategies.constant_percent import ConstantPercentWithdrawalStrategy
@@ -47,6 +47,22 @@ class TestStrategies(unittest.TestCase):
         self.assertAlmostEqual(result.getSuccessRate(), .95, delta=.005)
 
 
+    def test_ramp(self):
+        i = 1000000
+        result = run_simulation(
+            30,
+            i,
+            i * 0.04,
+            (
+                (ConstantWithdrawalAmountStrategy(i * .04), LinearRamp(Assets(.8, .2), Assets(.2, .8), (30 + 1) * 12), 1.0),
+            ),
+            1926,
+            1997
+        )
+
+        self.assertAlmostEqual(result.getSuccessRate(), 1.0, delta=.005)
+
+
     def test_multipleStrategies(self):
         i = 1000000
         result = run_simulation(
@@ -80,6 +96,36 @@ class TestStrategies(unittest.TestCase):
         # it always works because you never run out with a percent withdrwawal strategy
         self.assertAlmostEqual(result.getSuccessRate(), 1.0, delta=.005)
 
+    def test_linearRamp(self):
+        for i in [2, 10, 30, 80]:
+            start = Assets(1.0, 0.0)
+            end = Assets(0.0, 1.0)
+            ramp = LinearRamp(start, end, i)
+            
+            count = 0
+            allocations = []
+            for allocation in ramp:
+                count += 1
+                allocations.append(allocation)
+
+            self.assertEqual(allocations[0], start)
+            self.assertEqual(allocations[-1], end)
+            self.assertEqual(count, i)
+
+    def test_linearRampNegative(self):
+        start = Assets(1.0, 0.0)
+        end = Assets(0.2, 1.0)
+        ramp = LinearRamp(start, end, 10)
+
+        gotException = False
+        try:
+            for allocation in ramp:
+                pass
+        except:
+            gotException = True
+            
+        self.assertTrue(gotException)
+            
     def test_yearBase(self):
         length = 30
         gk = GuytonKlinger(.05, length)

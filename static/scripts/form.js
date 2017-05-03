@@ -92,6 +92,10 @@ function getJsonRequest(createDiv) {
                 strat["weight"] = myFloatParse(this.value)/100.0;
             });
 
+            // NOTE: There is a somewhat subtle coupling here.
+            // The order these are pushed needs to correspond to the order
+            // in the python Assets class. So stocks first, then bonds,
+            // then whatever comes next.
             $(this).find(".stocks").each(function() {
                 assets.push(myFloatParse(this.value)/100.0);
             });

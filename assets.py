@@ -1,6 +1,7 @@
 import math
 
 from market_data import getSP500TotalReturn, getLongTermCorpBondsReturn
+from helpers import *
 
 '''
 The point of this class is to stop you from having to write .stocks/.bonds/.gold etc everywhere
@@ -69,7 +70,7 @@ class Assets(tuple):
         # should this just compare the sum?
         if isinstance(other, Assets):
             for i in range(0, len(self)):
-                if other[i] != self[i]:
+                if not isclose(other[i], self[i]):
                     return False
             return True
         else:

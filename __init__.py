@@ -8,6 +8,9 @@ from logging.handlers import RotatingFileHandler
 
 import flask
 from flask import Flask, request
+
+from portfolio import LinearRamp
+
 app = Flask(__name__)
 
 # the logger is breaking unit tests...need to find a way of logging only for real
@@ -100,23 +103,33 @@ def simulations():
     strategies = []
     for s in request.json["strategies"]:
         args = s["args"]
-        allocation = [float(f) for f in s["asset_allocation"]]
+        if type(s["asset_allocation"]) is dict:
+            if s["asset_allocation"]["type"].lower() == "linear_ramp":
+                allocation = LinearRamp(
+                    Assets([float(f) for f in s["asset_allocation"]["start"]]),
+                    Assets([float(f) for f in s["asset_allocation"]["end"]]),
+                    (retirementLength + 1) * 12
+                )
+            else:
+                raise NotImplemented("Unrecognized ramp: {0}".format(s["asset_allocation"]["type"].lower()))
+        else:
+            allocation = Assets([float(f) for f in s["asset_allocation"]])
         weight = float(s.get("weight", 1.0))
-        type = s["type"]
-        if type.lower() == "guyton_klinger":
+        strategyType = s["type"]
+        if strategyType.lower() == "guyton_klinger":
             strategy = GuytonKlinger(float(args.get("initial_amount")), retirementLength)
-        elif type.lower() == "const_amount":
+        elif strategyType.lower() == "const_amount":
             strategy = ConstantWithdrawalAmountStrategy(float(args["amount"]))
-        elif type.lower() == "const_percent":
+        elif strategyType.lower() == "const_percent":
             strategy = ConstantPercentWithdrawalStrategy(float(args["percent"]))
-        elif type.lower() == "hebeler_autopilot":
+        elif strategyType.lower() == "hebeler_autopilot":
             strategy = HebelerAuto(int(args["age"]))
-        elif type.lower() == "vpw":
+        elif strategyType.lower() == "vpw":
             strategy = Vpw(float(args["expected_return_percent"]), int(retirementLength), float(args["drawdown_percent"]))
         else:
-            raise NotImplemented("Unrecognized strategy: {0}".format(type))
+            raise NotImplemented("Unrecognized strategy: {0}".format(strategyType))
 
-        strategies.append((strategy, Assets(allocation), weight))
+        strategies.append((strategy, allocation, weight))
 
     result = run_simulation(
         retirementLength,
@@ -129,9 +142,9 @@ def simulations():
 
     results = result.getSimResults()
     initialWithdrawal = results[0]["withdrawals"][0]
-    if type.lower() == "const_percent":
+    if strategyType.lower() == "const_percent":
         initialWithdrawal = initialPortfolioValue * float(args["percent"])
-    if type.lower() == "guyton_klinger":
+    if strategyType.lower() == "guyton_klinger":
         initialWithdrawal = float(args.get("initial_amount"))
 
     return flask.jsonify(
