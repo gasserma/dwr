@@ -2,7 +2,7 @@ import unittest
 
 from assets import Assets
 from portfolio import Portfolio, LinearRamp
-from simulator import run_simulation
+from simulator import runSimulation
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 from strategies.constant_percent import ConstantPercentWithdrawalStrategy
 from strategies.guyton_klinger import GuytonKlinger
@@ -17,7 +17,7 @@ They frequently overlap with the strategy specific tests.
 '''
 class TestStrategies(unittest.TestCase):
     def test_unitPortfolio(self):
-        result = run_simulation(
+        result = runSimulation(
             30,
             1.0,
             .04,
@@ -33,7 +33,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_largePortfolio(self):
         i = 1000000
-        result = run_simulation(
+        result = runSimulation(
             30,
             i,
             i * 0.04,
@@ -49,7 +49,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_ramp(self):
         i = 1000000
-        result = run_simulation(
+        result = runSimulation(
             30,
             i,
             i * 0.04,
@@ -65,7 +65,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_multipleStrategies(self):
         i = 1000000
-        result = run_simulation(
+        result = runSimulation(
             30,
             i,
             i * 0.04,
@@ -81,7 +81,7 @@ class TestStrategies(unittest.TestCase):
 
     def test_multipleDifferentStrategies(self):
         i = 1000000
-        result = run_simulation(
+        result = runSimulation(
             30,
             i,
             0.0,
@@ -214,7 +214,7 @@ class TestStrategies(unittest.TestCase):
                 "post": post
             }
 
-            run_simulation(
+            runSimulation(
                 simLength,
                 i,
                 i * 0.02,
@@ -223,8 +223,8 @@ class TestStrategies(unittest.TestCase):
                 ),
                 1926,
                 2010,
-                ignore_inflation=True,
-                test_callback=testhook
+                ignoreInfation=True,
+                testCallback=testhook
             )
             
             if not mblp.expectSuccess and not mblp.sawAFailure:

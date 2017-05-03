@@ -1,7 +1,7 @@
 import unittest
 
 from assets import Assets
-from simulator import run_simulation
+from simulator import runSimulation
 from strategies.vpw import Vpw
 
 '''
@@ -12,7 +12,7 @@ class TestVPW(unittest.TestCase):
         retirementLength = 30
         initialPortfolio = 1 * 1000 * 1000
 
-        result = run_simulation(
+        result = runSimulation(
             retirementLength,
             initialPortfolio,
             .05 * initialPortfolio * .5,

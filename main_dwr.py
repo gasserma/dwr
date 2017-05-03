@@ -1,5 +1,5 @@
 from assets import Assets
-from simulator import run_simulation
+from simulator import runSimulation
 from strategies.guyton_klinger import GuytonKlinger
 
 """
@@ -8,7 +8,7 @@ This is just a playground file. Useful for running the profiler, first attempt a
 retirementLength = 30
 initialPortfolio = 1 * 1000 * 1000
 
-result = run_simulation(
+result = runSimulation(
     retirementLength,
     initialPortfolio,
     .05 * initialPortfolio * .5,

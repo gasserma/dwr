@@ -2,7 +2,7 @@ import unittest
 
 from assets import Assets
 from helpers import isclose
-from simulator import run_simulation
+from simulator import runSimulation
 from portfolio import Portfolio
 from strategies.constant_amount import ConstantWithdrawalAmountStrategy
 
@@ -219,7 +219,7 @@ def doTrinityTest(expectedRate, length, withdrawalRate, stocks, bonds, ignoreInf
 trinityMinYear = 1926
 trinityMaxYear = 1997
 def trinity(length, initialWithdrawal, initialPortfolio, ignoreInflation=False, maxYear=trinityMaxYear):
-    return run_simulation(
+    return runSimulation(
                     length,
                     1.0,
                     initialWithdrawal,
