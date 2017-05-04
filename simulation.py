@@ -52,6 +52,11 @@ class Simulation:
         return stats
 
     def getDistStats(self):
+        mwd = []
+        for rd in self.recordedData:
+            for data in rd:
+                mwd.append(data[2])
+                
         stats = [
             gatherWebResponseData(self.underflow, "underflow", "The sum of (actual withdrawal - initial withdrawal) "
                                                                "for all withdrawals where the withdrawal was less than "
@@ -60,7 +65,8 @@ class Simulation:
             gatherWebResponseData(self.overflow, "overflow", "The sum of all the withdrawals  where the withdrawal was "
                                                              "above the initial withdrawal amount. This is a measure of "
                                                              "extra purchasing power. The higher, the better."),
-            gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value", None)
+            gatherWebResponseData(self.endPortfolioValue, "end_portfolio_value", None),
+            gatherWebResponseData(mwd, "monthly_withdrawal_amount", None)
         ]
         return stats
 
@@ -73,9 +79,17 @@ class Simulation:
         for i in range(0, self.iterations):
             pg.append(self.recordedData[i][-1][3] > self.initialPortfolio)
 
+        wd = []
+        for i in range(0, self.iterations):
+            d = []
+            for data in self.recordedData[i]:
+                d.append(data[2])
+            wd.append(getMean(d))
+
         stats = {
             "ending_portfolio_value": epv,
-            "portfolio_ended_up_larger": pg
+            "portfolio_ended_up_larger": pg,
+            "average_monthly_withdrawal": wd
         }
 
         return stats
