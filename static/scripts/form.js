@@ -76,7 +76,6 @@ function getJsonRequest(createDiv) {
     createDiv.nextUntil(".CreateSimulation").each(function () {
         if ($(this).is(":visible") && $(this).attr('class') == "Strategy") { //There is certainly a jquery'er way to do this.
             var strat = {};
-            var assets = [];
             strat['args'] = {};
             $(this).find(".input_strat").each(function() {
                 if (this.name.indexOf("percent") != -1){
@@ -96,13 +95,47 @@ function getJsonRequest(createDiv) {
             // The order these are pushed needs to correspond to the order
             // in the python Assets class. So stocks first, then bonds,
             // then whatever comes next.
-            $(this).find(".stocks").each(function() {
-                assets.push(myFloatParse(this.value)/100.0);
-            });
-
-            $(this).find(".bonds").each(function() {
-                assets.push(myFloatParse(this.value)/100.0);
-            });
+            //
+            // for the assets[] we want to build one of two things...
+            // for a const strategy we want a simple array of [stocks, bonds]
+            // for a ramp strategy we want a json object that looks like
+            //   { 
+            //     type="linear_ramp",
+            //     start=[startstocks, startbonds],
+            //     end=[endstocks, endbonds]
+            //   }
+            
+            var assets = null;
+            if ($(this).data("rampconst")=="const"){
+                assets = [];
+                $(this).find(".stocks").each(function() {
+                    assets.push(myFloatParse(this.value)/100.0);
+                });
+    
+                $(this).find(".bonds").each(function() {
+                    assets.push(myFloatParse(this.value)/100.0);
+                });
+            } else {
+                var sStocks, sBonds, eStocks, eBonds;
+                $(this).find(".rampstartstocks").each(function() {
+                    sStocks = myFloatParse(this.value)/100.0;
+                });
+                $(this).find(".rampendstocks").each(function() {
+                    eStocks = myFloatParse(this.value)/100.0;
+                });
+                $(this).find(".rampstartbonds").each(function() {
+                    sBonds = myFloatParse(this.value)/100.0;
+                });
+                $(this).find(".rampendbonds").each(function() {
+                    eBonds = myFloatParse(this.value)/100.0;
+                });
+                
+                assets = {
+                    type: "linear_ramp",
+                    start: [sStocks, sBonds],
+                    end: [eStocks, eBonds]
+                }
+            }
 
             strat["asset_allocation"] = assets;
             strat["type"] = $(this).data("type");
@@ -628,6 +661,18 @@ function runSimulationAvailable(){
     return available;
 }
 
+function swapRampAndConstant(strategyDiv){
+    if ($(strategyDiv).data("rampconst") == "const"){
+        $(strategyDiv).data("rampconst", "ramp");
+        $(strategyDiv).find(".constcontainer").hide();
+        $(strategyDiv).find(".rampcontainer").show();        
+    } else {
+        $(strategyDiv).data("rampconst", "const");
+        $(strategyDiv).find(".rampcontainer").hide();
+        $(strategyDiv).find(".constcontainer").show();   
+    }
+}
+
 var strategies = [[],[]]
 var stratId = 0;
 function addStrategy(c, t, create, strategyIndex){
@@ -647,6 +692,15 @@ function addStrategy(c, t, create, strategyIndex){
                                           .insertAfter($(strategies[strategyIndex][strategies[strategyIndex].length -1]))
                                           .show();
     }
+
+    newStratDiv.data("rampconst", "const");
+    newStratDiv.find('.constimage').click(function(){
+        swapRampAndConstant($(this).parent().parent().parent());
+    });
+
+    newStratDiv.find('.bondsrampimage, .stocksrampimage').click(function(){
+        swapRampAndConstant($(this).parent().parent().parent());
+    });
 
     stratId++;
     newStratDiv.data("stratId", stratId);
@@ -724,24 +778,144 @@ function addStrategy(c, t, create, strategyIndex){
 
     $(newStratDiv).find(".stocks").change(function (){
         var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
         $(this).val(newVal);
 
         var bondVal = 100 - newVal;
-        $(this).parent().parent()
-        .find(".bonds")
-        .val(bondVal.toFixed(0))
-        .effect("highlight", { color: '#84b1f9'}, 3000); // Thats like a lightish blueish color.
+        $(this).parent().parent().parent()
+                        .find(".bonds")
+                        .val(bondVal.toFixed(0))
+                        .effect("highlight", { color: '#84b1f9'}, 3000); // Thats like a lightish blueish color.
     });
 
     $(newStratDiv).find(".bonds").change(function (){
         var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
         $(this).val(newVal);
 
         var stockVal = 100 - newVal;
-        $(this).parent().parent()
-        .find(".stocks")
-        .val(stockVal.toFixed(0))
-        .effect("highlight", { color: '#84b1f9'}, 3000); // Thats like a lightish blueish color.
+        $(this).parent().parent().parent()
+                        .find(".stocks")
+                        .val(stockVal.toFixed(0))
+                        .effect("highlight", { color: '#84b1f9'}, 3000);
+    });
+
+    // TODO THIS IS A FACTORING DISASTER, THERE HAS TO BE A BETTER WAY.
+    $(newStratDiv).find(".rampstartstocks").change(function (){
+        var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
+        $(this).val(newVal);
+        if (newVal <= 50){
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
+        } else {
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampdown.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
+        }
+
+        var endVal = 100 - newVal;
+        $(this).parent().parent().parent().parent()
+            .find(".rampendstocks")
+            .val(endVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartbonds")
+            .val(endVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampendbonds")
+            .val(newVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+    });
+    $(newStratDiv).find(".rampendstocks").change(function (){
+        var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
+        $(this).val(newVal);
+        if (newVal > 50){
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
+        } else {
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampdown.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
+        }
+        
+        var startVal = 100 - newVal;
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartstocks")
+            .val(startVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartbonds")
+            .val(newVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampendbonds")
+            .val(startVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+    });
+    $(newStratDiv).find(".rampendbonds").change(function (){
+        var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
+        $(this).val(newVal);        
+        if (newVal <= 50){
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
+        } else {
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampdown.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
+        }
+
+        var startVal = 100 - newVal;
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartstocks")
+            .val(newVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampendstocks")
+            .val(startVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartbonds")
+            .val(startVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+    });
+    $(newStratDiv).find(".rampstartbonds").change(function (){
+        var newVal = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+        if (newVal >= 100){
+            newVal = 100;
+        }
+        $(this).val(newVal);        
+        if (newVal > 50){
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
+        } else {
+            $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampdown.png");
+            $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
+        }
+
+        var endVal = 100 - newVal;
+        $(this).parent().parent().parent().parent()
+            .find(".rampstartstocks")
+            .val(endVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampendstocks")
+            .val(newVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
+        $(this).parent().parent().parent().parent()
+            .find(".rampendbonds")
+            .val(endVal.toFixed(0))
+            .effect("highlight", { color: '#84b1f9'}, 3000);
     });
 
     balanceWeights();
