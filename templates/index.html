@@ -32,6 +32,9 @@
     <link rel="prefetch" href="/static/content/constant.png">
     <link rel="prefetch" href="/static/content/rampup.png">
     <link rel="prefetch" href="/static/content/rampdown.png"><!--I mean, we could rotate the png...but this just seems easier.-->
+    <link rel="prefetch" href="/static/content/constant-hover.png">
+    <link rel="prefetch" href="/static/content/rampup-hover.png">
+    <link rel="prefetch" href="/static/content/rampdown-hover.png">
 </head>
 <ul class="topnav" id="myTopnav">
     <li><a href="/home">Home</a></li>
@@ -84,14 +87,14 @@
                 </span>
                 <span class="constcontainer">
                     <label for="stocks">Stocks</label>
-                    <span class="alterableinputspan">
+                    <span class="constspan">
                         <input type="text" name="weight" id="stocks" value="50" class="stocks" inputmode="numeric"/> %
                     </span>
                     <img class="constimage" src="/static/content/constant.png" width="auto" height="23px" title="Maintain a consistent allocation. Click to change.">
                 </span>
                 <span class="constcontainer">
                     <label for="bonds">Bonds</label>
-                    <span class="alterableinputspan">
+                    <span class="constspan">
                         <input type="text" name="bonds" id="bonds" value="50" class="bonds" inputmode="numeric"/> %
                     </span>
                     <img class="constimage" src="/static/content/constant.png" width="auto" height="23px" title="Maintain a consistent allocation. Click to change.">
@@ -100,10 +103,10 @@
                     <label for="stocksrampspan">Stocks</label>
                     <span class="rampspan" id="stocksrampspan">
                         <span class="rampspanborder">
-                            S:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampstartstocks" value="80" class="rampstartstocks" inputmode="numeric"/> %
+                            <span title="Start Value">S:</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampstartstocks" value="80" class="rampstartstocks" inputmode="numeric"/> %
                         </span>
                         <span class="rampspanborder">
-                            E:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampendstocks" value="20" class="rampendstocks" inputmode="numeric"/> %
+                            <span title="End Value">E:</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampendstocks" value="20" class="rampendstocks" inputmode="numeric"/> %
                         </span>
                     </span>
                     <img class="stocksrampimage" src="/static/content/rampdown.png" width="auto" height="23px" title="Linearly ramp from a starting percent to an ending percent. Click to change.">
@@ -112,10 +115,10 @@
                     <label for="bondsrampspan">Bonds</label>
                     <span class="rampspan" id="bondsrampspan">
                         <span class="rampspanborder">
-                            S:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampstartbonds" value="20" class="rampstartbonds" inputmode="numeric"/> %
+                            <span title="Start Value">S:</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampstartbonds" value="20" class="rampstartbonds" inputmode="numeric"/> %
                         </span>
                         <span class="rampspanborder">
-                            E:&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampendbonds" value="80" class="rampendbonds" inputmode="numeric"/> %
+                            <span title="End Value">E:</span>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" name="ramp" id="rampendbonds" value="80" class="rampendbonds" inputmode="numeric"/> %
                         </span>
                     </span>
                     <img class="bondsrampimage" src="/static/content/rampup.png" width="auto" height="23px" title="Linearly ramp from a starting percent to an ending percent. Click to change.">

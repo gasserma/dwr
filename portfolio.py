@@ -6,9 +6,9 @@ class Portfolio:
     def __init__(self, allocation, value=1.0):
         if type(allocation) is LinearRamp:
             if not isclose(sum(allocation.start), 1.0):
-                raise RuntimeError("Allocations need to add up to 1.0")
+                raise RuntimeError("Start allocations need to add up to 1.0")
             if not isclose(sum(allocation.end), 1.0):
-                raise RuntimeError("Allocations need to add up to 1.0")
+                raise RuntimeError("End allocations need to add up to 1.0")
             self.allocation = allocation.start
             self.ramp = allocation
         else:

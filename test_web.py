@@ -101,6 +101,41 @@ class TestWeb(unittest.TestCase):
         response = json.loads(rv.data)
         self.assertAlmostEqual(1.0, float(response["stats"]["success_rate"]), delta=.005)
 
+    # consider combining, right now this is some lazy copy paste
+    def test_rampWebAsymetricRamps(self):
+        initial_portfolio_value = 1 * 1000 * 1000
+        strats = []
+        strats.append(dict(
+            weight=1.0,
+            type="const_amount",
+            args=dict(
+                amount=.04 * initial_portfolio_value
+            ),
+            asset_allocation=dict(
+                type="linear_ramp",
+                start=[.9, .1],
+                end=[.5, .5]
+            )
+        ))
+
+        request = dict(
+            initial_portfolio_value=initial_portfolio_value,
+            retirement_length=30,
+            failure_threshold=0,
+            min_year=1926,
+            max_year=2010,
+            strategies=strats,
+        )
+
+        jsonString = json.dumps(request)
+
+        rv = self.app.post(
+            "/simulations",
+            data=jsonString,
+            content_type="application/json")
+        response = json.loads(rv.data)
+        self.assertAlmostEqual(1.0, float(response["stats"]["success_rate"]), delta=.005)
+
     def test_trinityResultsWeb(self):
         initial_portfolio_value = 1 * 1000 * 1000
         strats = []

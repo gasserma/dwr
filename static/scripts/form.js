@@ -697,6 +697,42 @@ function addStrategy(c, t, create, strategyIndex){
     newStratDiv.find('.constimage').click(function(){
         swapRampAndConstant($(this).parent().parent().parent());
     });
+    newStratDiv.find('.constimage').mouseenter(function(){
+        $(this).attr("src", "/static/content/constant-hover.png")
+    });
+    newStratDiv.find('.constimage').mouseleave(function(){
+        $(this).attr("src", "/static/content/constant.png")
+    });
+    
+    var rampHover = function(ramp, entering){
+        var current = $(ramp).attr("src");
+        if (current.indexOf("rampup") != -1){
+            if (entering){
+                $(ramp).attr("src", "/static/content/rampup-hover.png")
+            } else {
+                $(ramp).attr("src", "/static/content/rampup.png")
+            }
+        } else {
+            if (entering){
+                $(ramp).attr("src", "/static/content/rampdown-hover.png")
+            } else {
+                $(ramp).attr("src", "/static/content/rampdown.png")
+            }      
+        }
+    };
+    newStratDiv.find('.stocksrampimage').mouseenter(function(){
+        rampHover($(this), true);
+    });
+    newStratDiv.find('.stocksrampimage').mouseleave(function(){
+        rampHover($(this), false);
+    });
+    newStratDiv.find('.bondsrampimage').mouseenter(function(){
+        rampHover($(this), true);
+    });
+    newStratDiv.find('.bondsrampimage').mouseleave(function(){
+        rampHover($(this), false);
+    });
+
 
     newStratDiv.find('.bondsrampimage, .stocksrampimage').click(function(){
         swapRampAndConstant($(this).parent().parent().parent());
@@ -821,16 +857,8 @@ function addStrategy(c, t, create, strategyIndex){
 
         var endVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
-            .find(".rampendstocks")
-            .val(endVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
             .find(".rampstartbonds")
             .val(endVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
-            .find(".rampendbonds")
-            .val(newVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
     $(newStratDiv).find(".rampendstocks").change(function (){
@@ -848,14 +876,6 @@ function addStrategy(c, t, create, strategyIndex){
         }
         
         var startVal = 100 - newVal;
-        $(this).parent().parent().parent().parent()
-            .find(".rampstartstocks")
-            .val(startVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
-            .find(".rampstartbonds")
-            .val(newVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
         $(this).parent().parent().parent().parent()
             .find(".rampendbonds")
             .val(startVal.toFixed(0))
@@ -877,15 +897,7 @@ function addStrategy(c, t, create, strategyIndex){
 
         var startVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
-            .find(".rampstartstocks")
-            .val(newVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
             .find(".rampendstocks")
-            .val(startVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
-            .find(".rampstartbonds")
             .val(startVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
@@ -906,14 +918,6 @@ function addStrategy(c, t, create, strategyIndex){
         var endVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
             .find(".rampstartstocks")
-            .val(endVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
-            .find(".rampendstocks")
-            .val(newVal.toFixed(0))
-            .effect("highlight", { color: '#84b1f9'}, 3000);
-        $(this).parent().parent().parent().parent()
-            .find(".rampendbonds")
             .val(endVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });

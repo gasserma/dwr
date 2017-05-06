@@ -195,7 +195,7 @@ label[type=key], select {
     border-bottom: 1px;
 }
 
-.alterableinputspan, .rampspan {
+.constspan, .rampspan {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -247,7 +247,7 @@ label[type=key], select {
     font-weight: normal;
 }
 
-.alterableinputspan input {
+.constspan input {
     border: 0;
     display: inline-block;
     width: 80%;
@@ -267,6 +267,7 @@ label[type=key], select {
     width: 49px;
     font-size: 105%;
     font-weight: normal;
+    text-align: right;
 }
 
 /* indicating a clear lack of understanding of css... */
