@@ -123,7 +123,7 @@ class TestWeb(unittest.TestCase):
             retirement_length=30,
             failure_threshold=0,
             min_year=1926,
-            max_year=2010,
+            max_year=2014,
             strategies=strats,
         )
 

@@ -195,14 +195,13 @@ label[type=key], select {
     border-bottom: 1px;
 }
 
-.constspan, .rampspan {
+.constspan, .rampspan, .yearspan {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    width: 229px;
     padding: 3px 1px;
     margin: 1px 1px;
     display: inline-block;
@@ -213,7 +212,9 @@ label[type=key], select {
     overflow: hidden;
     font-size: 105%;
 }
-
+.constspan, .rampspan {
+    width: 229px;
+}
 .inputspan {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -222,7 +223,7 @@ label[type=key], select {
     -ms-user-select: none;
     user-select: none;
     width: 100%;
-    padding: 3px 5px;
+    padding: 2px 1px;
     margin: 2px 0;
     display: inline-block;
     border: 1px solid #ccc;
@@ -268,6 +269,19 @@ label[type=key], select {
     font-size: 105%;
     font-weight: normal;
     text-align: right;
+}
+.yearspanborder {
+    border: 1px solid #ccc;
+    border-radius: px;
+    padding: 3px 1px;
+    margin: 1px 1px;
+}
+.yearspan input {
+    border: 0;
+    display: inline-block;
+    width: 80px;
+    font-size: 105%;
+    font-weight: normal;
 }
 
 /* indicating a clear lack of understanding of css... */

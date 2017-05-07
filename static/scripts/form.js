@@ -52,6 +52,20 @@ function validateForm(){
         }
     });
 
+    $('#min_year').each(function(){
+        if ($(this).val() < 1926){
+            $(this).effect("highlight", { color: "red" }, 1000);
+            foundBad = true;
+        }
+    });
+    
+    $('#max_year').each(function(){
+        if ($(this).val() > 2014){
+            $(this).effect("highlight", { color: "red" }, 1000);
+            foundBad = true;
+        }
+    });
+
     if (foundBad){
         return false;
     }
@@ -59,18 +73,16 @@ function validateForm(){
     return true;
 }
 
-var minYear = 1926;
-var maxYear = 2010;
+var minYear, maxYear;
 function getJsonRequest(createDiv) {
     var data = {}
 
     createDiv.find(".input_main").each(function () {
         data[this.name] = myFloatParse(this.value);
     });
-
-    // Hardcoded for now...
-    data["min_year"] = minYear;
-    data["max_year"] = maxYear;
+    
+    minYear = data.min_year;
+    maxYear = data.max_year;
 
     data['strategies'] = [];
     createDiv.nextUntil(".CreateSimulation").each(function () {
@@ -581,7 +593,36 @@ $(document).ready(function () {
             comparing = true;
             $(".runSimButt").hide();
 
-            var newCreateDiv = $("#createClone").clone().removeAttr('id').insertAfter(".compareButt").show('slow');
+            var newCreateDiv = $("#createClone").clone().removeAttr('id').insertAfter(".compareButt");
+            newCreateDiv.find('.retirementlengthcontainer').each(function() {$(this).hide();})
+            newCreateDiv.find('.yearcontainer').each(function() {$(this).hide();})
+            
+            $("#createClone").find('input[name=retirement_length]').change(function(){
+                var newVal = myFloatParse($(this).val(), allowNeg=false);
+                newVal = newVal.toFixed(0).replace(/,/g, '');
+                $(this).val(newVal);
+                newCreateDiv.find('input[name=retirement_length]').each(function() {
+                    $(this).val(newVal);
+                });
+            });
+            $("#createClone").find('input[name=min_year]').change(function(){
+                var newVal = myFloatParse($(this).val(), allowNeg=false);
+                newVal = newVal.toFixed(0).replace(/,/g, '');
+                $(this).val(newVal);
+                newCreateDiv.find('input[name=min_year]').each(function() {
+                    $(this).val(newVal).digits();
+                });
+            });      
+            $("#createClone").find('input[name=max_year]').change(function(){
+                var newVal = myFloatParse($(this).val(), allowNeg=false);
+                newVal = newVal.toFixed(0).replace(/,/g, '');
+                $(this).val(newVal);
+                newCreateDiv.find('input[name=max_year]').each(function() {
+                    $(this).val(newVal).digits();
+                });
+            });      
+            
+            newCreateDiv.show('slow');
             newCreateDiv.find(".dropdown").each(function(){
                 setupDropdownHover($(this));
             })
@@ -607,21 +648,9 @@ $(document).ready(function () {
             newCreateDiv.find('input[name=initial_portfolio_value]').focus(function () {
                 $(this).data('oldVal', myFloatParse($(this).val(), allowNeg=false));
             });
-
-            newCreateDiv.find('input[name=retirement_length]').change(function () {
-                var newVal = myFloatParse($(this).val(), allowNeg=false);
-                $(this).val(newVal).digits();
-            });
             newCreateDiv.find('input[name=failure_threshold]').change(function () {
                 var newVal = myFloatParse($(this).val(), allowNeg=false);
                 $(this).val(newVal).digits();
-            });   
-
-            newCreateDiv.find('input[name=retirement_length]').change(function () {
-                var value = Math.floor(myFloatParse($(this).val(), allowNeg=false));
-                $(document).find('.CreateSimulation').first().find('input[name=retirement_length]').each(function (){
-                    $(this).val(value).digits().effect("highlight", { color: '#84b1f9'}, 3000);
-                });
             });
 
             $(this).text("Remove Second Strategy");
@@ -958,11 +987,22 @@ $(document).ready(function (e) {
             
     $('.CreateSimulation').find('input[name=retirement_length]').change(function () {
         var newVal = myFloatParse($(this).val(), allowNeg=false);
-        $(this).val(newVal).digits();
+        newVal = newVal.toFixed(0).replace(/,/g, '');
+        $(this).val(newVal);
     });
     $('.CreateSimulation').find('input[name=failure_threshold]').change(function () {
         var newVal = myFloatParse($(this).val(), allowNeg=false);
         $(this).val(newVal).digits();
+    });
+    $('.CreateSimulation').find('input[name=min_year]').change(function(){
+        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        newVal = newVal.toFixed(0).replace(/,/g, '');
+        $(this).val(newVal);
+    });   
+    $('.CreateSimulation').find('input[name=max_year]').change(function(){
+        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        newVal = newVal.toFixed(0).replace(/,/g, '');
+        $(this).val(newVal);
     });   
 });
 

@@ -90,13 +90,17 @@ cpi = {
     2008: 211.08,
     2009: 211.143,
     2010: 216.687,
-    2011: 220.223
+    2011: 220.223,
+    2012: 226.665,
+    2013: 230.280,
+    2014: 233.916,
+    2015: 233.707
 }
 
 # Keeping all the keys of this dict as strings because that way we can steal the data effortlessly from cFIREsim
 # We will optimize all this later...it probably needs it if we ever do monte carlo on top of this.
 def getCPI(year):
-    if int(year) > 2011 or int(year) < 1924:
+    if int(year) > 2015 or int(year) < 1924:
         raise IndexError
     return cpi[int(year)]
 
