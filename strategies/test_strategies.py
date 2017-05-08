@@ -60,7 +60,7 @@ class TestStrategies(unittest.TestCase):
             1997
         )
 
-        self.assertAlmostEqual(result.getSuccessRate(), 1.0, delta=.005)
+        self.assertAlmostEqual(result.getSuccessRate(), .98, delta=.005)
 
 
     def test_multipleStrategies(self):
@@ -90,7 +90,7 @@ class TestStrategies(unittest.TestCase):
                 (ConstantPercentWithdrawalStrategy(.10), Assets(1.0, 0.0), .5)
             ),
             1926,
-            2010
+            2009
         )
 
         # it always works because you never run out with a percent withdrwawal strategy
@@ -222,7 +222,7 @@ class TestStrategies(unittest.TestCase):
                     s[0],
                 ),
                 1926,
-                2010,
+                2009,
                 ignoreInfation=True,
                 testCallback=testhook
             )

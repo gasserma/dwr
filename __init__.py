@@ -95,7 +95,7 @@ def faq():
 @app.route("/simulations", methods=["POST"])
 def simulations():
     minYear = int(request.json.get("min_year", 1926))
-    maxYear = int(request.json.get("max_year", 2010))
+    maxYear = int(request.json.get("max_year", 2009))
     failureThreshold = float(request.json.get("failure_threshold", 20*1000))
     initialPortfolioValue = float(request.json.get("initial_portfolio_value", 1*1000*1000))
     retirementLength = int(request.json.get("retirement_length", 30))
@@ -137,7 +137,7 @@ def simulations():
         failureThreshold,
         strategies,
         minYear,
-        maxYear,
+        maxYear
     )
 
     results = result.getSimResults()

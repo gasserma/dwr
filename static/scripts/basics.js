@@ -88,7 +88,7 @@ $(document).ready(function () {
             retirement_length:30,
             failure_threshold:0,
             min_year:1926,
-            max_year:2010,
+            max_year:2009,
             strategies:[
                 {
                     weight:1.0,
@@ -126,7 +126,7 @@ $(document).ready(function () {
             retirement_length:30,
             failure_threshold:20000,
             min_year:1926,
-            max_year:2010,
+            max_year:2009,
             strategies:[
                 {
                     weight:1.0,
@@ -164,7 +164,7 @@ $(document).ready(function () {
             retirement_length:30,
             failure_threshold:0,
             min_year:1926,
-            max_year:2010,
+            max_year:2009,
             strategies:[
                 {
                     weight:1.0,
@@ -181,7 +181,7 @@ $(document).ready(function () {
             retirement_length:30,
             failure_threshold:20000,
             min_year:1926,
-            max_year:2010,
+            max_year:2009,
             strategies:[
                 {
                     weight:1.0,

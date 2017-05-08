@@ -1,1 +1,3 @@
-{}
+{
+  "test_trinity.py::TestTrinity::test_trinityWTF": true
+}

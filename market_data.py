@@ -105,10 +105,8 @@ def getCPI(year):
     return cpi[int(year)]
 
 def getInflation(baseYear, currentYear):
-    # turns out these CPI numbers are january numbers for the given year, so we subtract 1
-    # because thats really like december of the previous year.
-    startCpi = getCPI(baseYear - 1)
-    endCpi = getCPI(currentYear - 1)
+    startCpi = getCPI(baseYear)
+    endCpi = getCPI(currentYear)
     return 1.0 + ((endCpi - startCpi) / startCpi)
 
 def getSP500TotalReturn(year, month):
@@ -226,5 +224,8 @@ def getLongTermCorpBondsReturn(lyear, lmonth):
 
             if not isclose(yearRateCalc, yearRate + 1.0, rel_tol=.001):
                 raise RuntimeError
+
+    if not (lyear, lmonth) in longTermCorpBondsReturnCacne:
+        raise RuntimeError
 
     return longTermCorpBondsReturnCacne[(lyear, lmonth)] + 1.0

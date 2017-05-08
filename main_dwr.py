@@ -16,7 +16,7 @@ result = runSimulation(
         (GuytonKlinger(.05 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
     ),
     1926,
-    2010
+    2009
 )
 
 result.getSimResults()

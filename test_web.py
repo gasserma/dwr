@@ -55,7 +55,7 @@ class TestWeb(unittest.TestCase):
             retirement_length=30,
             failure_threshold=0,
             min_year=1926,
-            max_year=2010,
+            max_year=2009,
             strategies=strats,
         )
 
@@ -88,7 +88,7 @@ class TestWeb(unittest.TestCase):
             retirement_length=30,
             failure_threshold=0,
             min_year=1926,
-            max_year=2010,
+            max_year=2009,
             strategies=strats,
         )
 
@@ -99,7 +99,7 @@ class TestWeb(unittest.TestCase):
             data=jsonString,
             content_type="application/json")
         response = json.loads(rv.data)
-        self.assertAlmostEqual(1.0, float(response["stats"]["success_rate"]), delta=.005)
+        self.assertAlmostEqual(.98, float(response["stats"]["success_rate"]), delta=.005)
 
     # consider combining, right now this is some lazy copy paste
     def test_rampWebAsymetricRamps(self):
@@ -123,7 +123,7 @@ class TestWeb(unittest.TestCase):
             retirement_length=30,
             failure_threshold=0,
             min_year=1926,
-            max_year=2014,
+            max_year=2015,
             strategies=strats,
         )
 
@@ -134,7 +134,7 @@ class TestWeb(unittest.TestCase):
             data=jsonString,
             content_type="application/json")
         response = json.loads(rv.data)
-        self.assertAlmostEqual(1.0, float(response["stats"]["success_rate"]), delta=.005)
+        self.assertAlmostEqual(.98, float(response["stats"]["success_rate"]), delta=.005)
 
     def test_trinityResultsWeb(self):
         initial_portfolio_value = 1 * 1000 * 1000
@@ -151,9 +151,9 @@ class TestWeb(unittest.TestCase):
         request = dict(
             initial_portfolio_value=initial_portfolio_value,
             retirement_length=30,
-            failure_threshold=0,
+            failure_threshold=.04 * initial_portfolio_value,
             min_year=1926,
-            max_year=2010,
+            max_year=1997,
             strategies=strats,
         )
 
@@ -164,7 +164,7 @@ class TestWeb(unittest.TestCase):
             data=jsonString,
             content_type="application/json")
         response = json.loads(rv.data)
-        self.assertAlmostEqual(.96, float(response["stats"]["success_rate"]), delta=.005)
+        self.assertAlmostEqual(.95, float(response["stats"]["success_rate"]), delta=.005)
 
     def test_simulations(self):
         initial_portfolio_value = 1 * 1000 * 1000
@@ -201,7 +201,7 @@ class TestWeb(unittest.TestCase):
             retirement_length=30,
             failure_threshold=20 * 1000,
             min_year=1926,
-            max_year=2010,
+            max_year=2009,
             strategies=strats,
         )
 

@@ -60,7 +60,7 @@ function validateForm(){
     });
     
     $('#max_year').each(function(){
-        if ($(this).val() > 2014){
+        if ($(this).val() > 2015){
             $(this).effect("highlight", { color: "red" }, 1000);
             foundBad = true;
         }

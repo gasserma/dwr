@@ -42,11 +42,6 @@ I've tried to stay true to the sources for the various strategies in the context
 For example, the Constant Amount withdrawal strategy populates with a 4% initial withdrawal, which seems to be the main takeaway from the Trinity study.
 I don't mean to suggest that any of the pre-populated values are the recommended ones.
 
-## My retirement length was set to 30 years. Why do I see 31 dots?
-This is a Trinity study convention. 
-X periods is X portfolio growths and X + 1 portfolio withdrawals.
-This imbues pessimism into the system, which is good.
-
 ## I'm running IE6 and your site doesn't work.
 People running old versions of Internet Explorer have no hope of ever retiring so it is okay that the site doesn't work.
 Just assume 0% success rate on everything.

@@ -56,9 +56,9 @@ def runSimulation(
         try:
             underflow = 0.0
             overflow = 0.0
-            for simulationYear in range(startYear, startYear + length + 1):
+            for simulationYear in range(startYear, startYear + length):
                 candidateFailureYear = simulationYear
-                inflationRate = getInflation(startYear - 1, simulationYear - 1)
+                inflationRate = getInflation(startYear-1, simulationYear-1)
                 if ignoreInfation:
                     inflationRate = 1.0
                 failMin = failureThreshold * inflationRate
