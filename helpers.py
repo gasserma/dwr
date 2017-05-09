@@ -4,4 +4,4 @@ def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
 
 
 def lessthanorequal(a, b, rel_tol=1e-09, abs_tol=0.0):
-    return a <= max(rel_tol * abs(b), abs_tol)
+    return isclose(a, b, rel_tol, abs_tol) or a < b

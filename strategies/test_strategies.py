@@ -30,6 +30,19 @@ class TestStrategies(unittest.TestCase):
 
         self.assertAlmostEqual(result.getSuccessRate(), .95, delta=.005)
 
+    def test_constantPercentRegression(self):
+        result = runSimulation(
+            30,
+            1.0,
+            .1,
+            (
+                (ConstantPercentWithdrawalStrategy(.1), Assets(.5, .5), 1.0),
+            ),
+            1926,
+            1997
+        )
+
+        self.assertLessEqual(result.getSuccessRate(), .95)
 
     def test_largePortfolio(self):
         i = 1000000
