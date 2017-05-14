@@ -996,11 +996,19 @@ $(document).ready(function (e) {
     });
     $('.CreateSimulation').find('input[name=min_year]').change(function(){
         var newVal = myFloatParse($(this).val(), allowNeg=false);
+        if (newVal < 1926){
+            newVal = 1926;
+            $(this).effect("highlight", { color: 'red'}, 3000)
+        }
         newVal = newVal.toFixed(0).replace(/,/g, '');
         $(this).val(newVal);
     });   
     $('.CreateSimulation').find('input[name=max_year]').change(function(){
         var newVal = myFloatParse($(this).val(), allowNeg=false);
+        if (newVal > 2015){
+            newVal = 2015;
+            $(this).effect("highlight", { color: 'red'}, 3000)
+        }
         newVal = newVal.toFixed(0).replace(/,/g, '');
         $(this).val(newVal);
     });   
