@@ -86,7 +86,7 @@ def runSimulation(
                     if testCallback:
                         testCallback["post"](currentPortfolioValue, actualWithdrawal / inflationRate)
 
-                    if lessthanorequal(actualWithdrawal, failMin / monthsPerYear):
+                    if actualWithdrawal <= .999999999 * failMin / monthsPerYear:
                         raise StopIteration
                     if diff < 0:
                         underflow += diff / inflationRate
