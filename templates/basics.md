@@ -3,9 +3,9 @@
 ### How much do I need to retire?  
 
 No one knows.
-WWIII might start tomorrow, you might win the lottery, you might acquire an expensive disease, you might acquire a lucrative disease, or you find you spend a lot less, or more, in retirement.  
+WWIII might start tomorrow, you might win the lottery, you might acquire an expensive disease, you might acquire a lucrative disease, or you might find you spend a lot less, or more, in retirement.  
 
-But, for most people, retirement follows a pretty straightforward path, without a lot of surprising financial obstacles.
+But for most people, retirement follows a pretty straightforward path, without a lot of surprising financial obstacles.
 This means you *can* plan for it.
 
 The best way to do that is to ask yourself:  
@@ -17,7 +17,7 @@ The best way to do that is to ask yourself:
 Once you have those answers, this site can tell you what your chances are.
 Nothing is magic.
 If you want $80,000 per year for 30 years and have only $1,000,000 saved, you aren't going to get encouraging results.
-But you will get results; they will say something like "5% success." 
+But you will get results; they will say something like "5% chance of success." 
 So, that isn't great. 
 What should you do?
 Save more, want less, or be more pessimistic about your lifespan (which might actually work - negative thoughts can have an effect on longevity).
@@ -30,13 +30,13 @@ I don't.
 No one does. 
 Incidentally, there are currently very few known lucrative diseases.  
 
-This site looks at what has happened.
+This site looks at what has happened using historical financial data [Note to Mike - I don't actually know where the data comes from? Like I guess it's from the stock market??].
 The past is often our best indication of what will happen. 
 Specifically, this site will take every year from 1926 to the present, and show you what would have happened if you retired then.
 You can see how you would have fared during the Great Depression, WWII, and a lot of normal times, too.
 
 This site isn't claiming to know the future, just the past.
-But, so far things have been pretty predictable. 
+But so far, things have been pretty predictable. 
 
 ### What's the accepted answer?
 
@@ -44,7 +44,7 @@ A lot of people quote the 4% rule.
 It says you can withdraw four percent of your initial nest egg, pretty much indefinitely.
 It is based on something called the Trinity Study.
 You can see what that looks like on this site.
-It is called the *Constant Amount* strategy here.
+Here on PDP, we are calling this the *Constant Amount* strategy.
 
 Lets pick a typical 30 year retirement with a $1,000,000 nest egg.
 4% of that is $40,000 per year.
@@ -66,7 +66,7 @@ Put your mouse over the year label to zoom around.
 
 The 4% rule has weaknesses.
 Other ideas have strengths.
-This is important, spending 10 minutes to feel more confident about your retirement isn't a lot.
+This is important; spending 10 minutes to feel more confident about your retirement isn't a lot.
   
 ### Okay, so what do I do instead?
 
@@ -105,7 +105,7 @@ Green for more than the initial withdrawal, yellow for less.
 
 ### Anything else I should know?
 
-Sure...but some of this is pretty advanced, so don't worry if it doens't make sense immediately.
+Sure...but some of this is pretty advanced, so don't worry if it doesn't make sense immediately.
 Let's talk about two last things:  
 The various strategies you can visualize with this tool, and the concept of diversifying your use of the strategies.
 
@@ -154,12 +154,12 @@ There is no reason to not treat portfolio withdrawal strategies the same way.
 
 You will notice that when you add a strategy, a "weight" appears.
 If you have one strategy, it will have a weight of 100%. 
-If you add another strategy, the weights will split to 50% each, and some of the default parameters to the strategies might change.
+If you add another strategy, the weights will split to 50% each, and some of the default parameters of the strategies might change.
 When you run the simulation, your portfolio is split into as many buckets as you have strategies, according to the weights.
-The simulation then executes that strategy against that buckets worth of money.
+The simulation then executes that strategy against that bucket's worth of money.
 The final polka dot size you see is the sum of all the withdrawals from all the strategies.
 
-This is useful if you find you like the idea of having a conservative strategy for your "bare minimum" survival amount, and an agressive strategy for everything else.
+This is useful if you like the idea of having a conservative strategy for your "bare minimum" survival amount, and an agressive strategy for everything else.
 It's useful whenever you wish you could combine properties of the various strategies.
 
 
