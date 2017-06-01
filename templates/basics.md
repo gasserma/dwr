@@ -30,7 +30,7 @@ I don't.
 No one does. 
 Incidentally, there are currently very few known lucrative diseases.  
 
-This site looks at what has happened using historical financial data [Note to Mike - I don't actually know where the data comes from? Like I guess it's from the stock market??].
+This site looks at what has happened using historical financial data (from the SP500, and Ibbotson's Long Term Corporate Bond Index).
 The past is often our best indication of what will happen. 
 Specifically, this site will take every year from 1926 to the present, and show you what would have happened if you retired then.
 You can see how you would have fared during the Great Depression, WWII, and a lot of normal times, too.
