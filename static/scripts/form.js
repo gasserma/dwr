@@ -776,7 +776,7 @@ function addStrategy(c, t, create, strategyIndex){
     if (c == "GuytonKlinger"){
         $("<legend>Guyton Klinger</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=initial_amount]').each(function() {
-            var defaultVal = myFloatParse($(this).val(), allowNeg=false);
+            var defaultVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
             $(this).val(defaultVal * ratio).digits();
         });
     }
@@ -784,7 +784,7 @@ function addStrategy(c, t, create, strategyIndex){
     if (c == "ConstAmount"){
         $("<legend>Constant Amount</legend>").appendTo(newStratDiv.find('.stratFieldset'));
         $(newStrat).find('input[name=amount]').each(function() {
-            var defaultVal = myFloatParse($(this).val(), allowNeg=false);
+            var defaultVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
             $(this).val(defaultVal * ratio).digits();
         });
     }
@@ -803,12 +803,12 @@ function addStrategy(c, t, create, strategyIndex){
     
     // Right now all the strategies have numeric and only positive input.
     $(newStrat).find('.input_strat').change(function() {
-        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         $(this).val(newVal).digits();
     });
 
     $(newStrat).find('input[name=expected_return_percent]').off('change').change(function() {
-        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         $(this).val(newVal);
     });
 
@@ -982,7 +982,7 @@ $(document).ready(function (e) {
     });
 
     $('.CreateSimulation').find('input[name=initial_portfolio_value]').focus(function () {
-        $(this).data('oldVal', myFloatParse($(this).val(), allowNeg=false));
+        $(this).data('oldVal', myFloatParse($(this).val(), allowNeg=false).toFixed(0));
     });
             
     $('.CreateSimulation').find('input[name=retirement_length]').change(function () {
@@ -991,11 +991,11 @@ $(document).ready(function (e) {
         $(this).val(newVal);
     });
     $('.CreateSimulation').find('input[name=failure_threshold]').change(function () {
-        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         $(this).val(newVal).digits();
     });
     $('.CreateSimulation').find('input[name=min_year]').change(function(){
-        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         if (newVal < 1926){
             newVal = 1926;
             $(this).effect("highlight", { color: 'red'}, 3000)
@@ -1004,7 +1004,7 @@ $(document).ready(function (e) {
         $(this).val(newVal);
     });   
     $('.CreateSimulation').find('input[name=max_year]').change(function(){
-        var newVal = myFloatParse($(this).val(), allowNeg=false);
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         if (newVal > 2015){
             newVal = 2015;
             $(this).effect("highlight", { color: 'red'}, 3000)
@@ -1017,7 +1017,7 @@ $(document).ready(function (e) {
 $(document).ready(function (e) {
     $('.CreateSimulation').find('input[name=retirement_length]').change(function () {
         if ($(document).find('.CreateSimulation').length > 1){
-            var value = Math.floor(myFloatParse($(this).val(), allowNeg=false));
+            var value = Math.floor(myFloatParse($(this).val(), allowNeg=false)).toFixed(0);
             $(document).find('.CreateSimulation').last().find('input[name=retirement_length]').each(function (){
                 $(this).val(value).effect("highlight", { color: '#84b1f9'}, 3000);
             });
@@ -1055,12 +1055,12 @@ function portfolioChange(inputDiv, strategyIndex){
         if (Number($(this).data("strategyIndex")) == strategyIndex){
             $(this).find('.GuytonKlinger :input').each(function (){
                 var old = $(this).val();
-                $(this).val(myFloatParse(old, allowNeg=false) * ratio, allowNeg=false).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+                $(this).val((myFloatParse(old, allowNeg=false) * ratio).toFixed(0), allowNeg=false).digits().effect("highlight", { color: '#84b1f9'}, 3000);
             });
 
             $(this).find('.ConstAmount :input').each(function (){
                 var old = $(this).val();
-                $(this).val(myFloatParse(old, allowNeg=false) * ratio, allowNeg=false).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+                $(this).val((myFloatParse(old, allowNeg=false) * ratio).toFixed(0), allowNeg=false).digits().effect("highlight", { color: '#84b1f9'}, 3000);
             });
         }
     });
@@ -1068,12 +1068,12 @@ function portfolioChange(inputDiv, strategyIndex){
     if (strategyIndex == 0){
         $('.CreateSimulation').first().find('input[name=failure_threshold]').each(function () {
             var old = $(this).val();
-            $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+            $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
     } else {
         $('.CreateSimulation').last().find('input[name=failure_threshold]').each(function () {
             var old = $(this).val();
-            $(this).val(myFloatParse(old) * ratio).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+            $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
     }
 }
@@ -1159,7 +1159,7 @@ function weightChanged(weightInputReference) {
 
     $(weightInputReference).parent().parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
-        $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio)).digits();
+        $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio).toFixed(0)).digits();
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }
@@ -1167,7 +1167,7 @@ function weightChanged(weightInputReference) {
 
     $(weightInputReference).parent().parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
-        $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio)).digits();
+        $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio).toFixed(0)).digits();
         if (highlight){
             $(this).effect("highlight", { color: '#84b1f9'}, 3000);
         }
