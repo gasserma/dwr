@@ -86,7 +86,7 @@ root\\
 I usually just let pycharm do this for me.
 3. Install...uh...a web browser.
 4. Clone the source code.
-5. from the source root, run "python runserver.py". This wil fire up a local flask server, the cmd line output will give you an address. Mine is http://localhost:5555/
+5. from the source root, run "python runserver.py". This will fire up a local flask server, the cmd line output will give you an address. Mine is http://localhost:5555/
 6. Visit that address in a web browser.
 7. At this point if you modify any of the code it should almost immediately show up on the site. Don't forget to force refresh the browser (ctrl+f5 for me).
 
