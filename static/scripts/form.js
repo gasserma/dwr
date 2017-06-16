@@ -770,6 +770,15 @@ function addStrategy(c, t, create, strategyIndex){
     stratId++;
     newStratDiv.data("stratId", stratId);
     strategies[strategyIndex].push(newStratDiv);
+
+    if (strategies[strategyIndex].length > 1){
+        for (var i = 0; i < strategies[strategyIndex].length; i++){
+            strategies[strategyIndex][i].find(".weightcontainer").show();
+        }
+    } else {
+        $(newStratDiv).find(".weightcontainer").hide();
+    }
+
     $(newStratDiv).data("type", t);
     $(newStratDiv).data("strategyIndex", strategyIndex);
     var newStrat = $("." + c).last().clone();
@@ -819,6 +828,16 @@ function addStrategy(c, t, create, strategyIndex){
         for (var i = 0; i < strategies[strategyIndex].length; i++){
             if (strategies[strategyIndex][i].data("stratId") == id){
                 strategies[strategyIndex].splice(i, 1);
+            }
+        }
+
+        if (strategies[strategyIndex].length > 1){
+            for (var i = 0; i < strategies[strategyIndex].length; i++){
+                strategies[strategyIndex][i].find(".weightcontainer").show();
+            }
+        } else {
+            for (var i = 0; i < strategies[strategyIndex].length; i++){
+                strategies[strategyIndex][i].find(".weightcontainer").hide();
             }
         }
 
@@ -876,7 +895,9 @@ function addStrategy(c, t, create, strategyIndex){
             newVal = 100;
         }
         $(this).val(newVal);
-        if (newVal <= 50){
+
+        var endVal = myFloatParse($(this).parent().parent().parent().parent().find(".rampendstocks").val());
+        if (newVal <= endVal){
             $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
         } else {
@@ -884,10 +905,10 @@ function addStrategy(c, t, create, strategyIndex){
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
         }
 
-        var endVal = 100 - newVal;
+        var bondVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
             .find(".rampstartbonds")
-            .val(endVal.toFixed(0))
+            .val(bondVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
     $(newStratDiv).find(".rampendstocks").change(function (){
@@ -896,7 +917,9 @@ function addStrategy(c, t, create, strategyIndex){
             newVal = 100;
         }
         $(this).val(newVal);
-        if (newVal > 50){
+
+        var startVal = myFloatParse($(this).parent().parent().parent().parent().find(".rampstartstocks").val());
+        if (newVal > startVal){
             $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
         } else {
@@ -904,10 +927,10 @@ function addStrategy(c, t, create, strategyIndex){
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
         }
         
-        var startVal = 100 - newVal;
+        var bondVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
             .find(".rampendbonds")
-            .val(startVal.toFixed(0))
+            .val(bondVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
     $(newStratDiv).find(".rampendbonds").change(function (){
@@ -915,8 +938,10 @@ function addStrategy(c, t, create, strategyIndex){
         if (newVal >= 100){
             newVal = 100;
         }
-        $(this).val(newVal);        
-        if (newVal <= 50){
+        $(this).val(newVal);
+
+        var startVal = myFloatParse($(this).parent().parent().parent().parent().find(".rampstartbonds").val());
+        if (newVal <= startVal){
             $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
         } else {
@@ -924,10 +949,10 @@ function addStrategy(c, t, create, strategyIndex){
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
         }
 
-        var startVal = 100 - newVal;
+        var stockVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
             .find(".rampendstocks")
-            .val(startVal.toFixed(0))
+            .val(stockVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
     $(newStratDiv).find(".rampstartbonds").change(function (){
@@ -935,8 +960,10 @@ function addStrategy(c, t, create, strategyIndex){
         if (newVal >= 100){
             newVal = 100;
         }
-        $(this).val(newVal);        
-        if (newVal > 50){
+        $(this).val(newVal);
+
+        var endVal = myFloatParse($(this).parent().parent().parent().parent().find(".rampendbonds").val());
+        if (newVal > endVal){
             $(newStratDiv).find(".stocksrampimage").attr("src", "/static/content/rampup.png");
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampdown.png");
         } else {
@@ -944,10 +971,10 @@ function addStrategy(c, t, create, strategyIndex){
             $(newStratDiv).find(".bondsrampimage").attr("src", "/static/content/rampup.png");
         }
 
-        var endVal = 100 - newVal;
+        var stockVal = 100 - newVal;
         $(this).parent().parent().parent().parent()
             .find(".rampstartstocks")
-            .val(endVal.toFixed(0))
+            .val(stockVal.toFixed(0))
             .effect("highlight", { color: '#84b1f9'}, 3000);
     });
 
@@ -1086,7 +1113,7 @@ function balanceWeights() {
         var accountedFor = 0.0;
 
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().parent().data("strategyIndex")) == i){
                 if ($(this).data("manualChange")){
                     accountedFor += Math.floor(myFloatParse($(this).val(), allowNeg=false));
                 } else {
@@ -1098,7 +1125,7 @@ function balanceWeights() {
         if (accountedFor > 100.0){
             accountedFor = 0.0;
             $('.weight').each(function (){
-                if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
+                if (Number($(this).parent().parent().parent().parent().data("strategyIndex")) == i){
                     $(this).data("manualChange", false)
                 }
             });
@@ -1106,7 +1133,7 @@ function balanceWeights() {
 
         var lastWeightChanged = null;
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().parent().data("strategyIndex")) == i){
                 if (!$(this).data("manualChange")){
                     var newString = Math.floor((100.0-accountedFor)/weightCount);
                     if ($(this).val() != newString){
@@ -1126,7 +1153,7 @@ function balanceWeights() {
         }
 
         $('.weight').each(function (){
-            if (Number($(this).parent().parent().parent().data("strategyIndex")) == i){
+            if (Number($(this).parent().parent().parent().parent().data("strategyIndex")) == i){
                 weightChanged($(this));
             }
         });
@@ -1157,7 +1184,7 @@ function weightChanged(weightInputReference) {
         $(weightInputReference).effect("highlight", { color: '#84b1f9'}, 3000);
     }
 
-    $(weightInputReference).parent().parent().parent().find('.GuytonKlinger :input').each(function (){
+    $(weightInputReference).parent().parent().parent().parent().find('.GuytonKlinger :input').each(function (){
         var old = $(this).val();
         $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio).toFixed(0)).digits();
         if (highlight){
@@ -1165,7 +1192,7 @@ function weightChanged(weightInputReference) {
         }
     });
 
-    $(weightInputReference).parent().parent().parent().find('.ConstAmount :input').each(function (){
+    $(weightInputReference).parent().parent().parent().parent().find('.ConstAmount :input').each(function (){
         var old = $(this).val();
         $(this).val(Math.floor(myFloatParse(old, allowNeg=false) * ratio).toFixed(0)).digits();
         if (highlight){

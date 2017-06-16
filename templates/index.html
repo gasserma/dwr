@@ -60,7 +60,7 @@
                     </span>
                 </span>
 
-                <label for="failure_threshold">Failure Threshold</label>
+                <label for="failure_threshold" title="Any yearly withdrawals below this amount count as a failure for that simulation year.">Withdrawal Failure Threshold</label>
                 <span class="inputspan">
                     $ <input type="text" name="failure_threshold" id="failure_threshold" value="20,000" class="input_main" inputmode="numeric"/>
                 </span>
@@ -95,9 +95,11 @@
 
         <div class="Strategy" id="stratClone" style="display: none;">
             <fieldset class="stratFieldset">
-                <label for="weight">Weight</label>
-                <span class="inputspan">
-                    <input type="text" name="weight" id="weight" value="100" class="weight" inputmode="numeric"/> %
+                <span class="weightcontainer">
+                    <label for="weight">Weight</label>
+                    <span class="inputspan">
+                        <input type="text" name="weight" id="weight" value="100" class="weight" inputmode="numeric"/> %
+                    </span>
                 </span>
                 <span class="constcontainer">
                     <label for="stocks">Stocks</label>
