@@ -79,7 +79,7 @@ var sim = new function(){
 
         for(simYear=0; simYear < retirementLength + 1; simYear++){
             // These * 1.000001 are ghetto floating point comparisons.
-            var ex = simResults.results[index].withdrawals[simYear] * 1.000001 >= simResults.initial_withdrawal_amt;
+            var ex = simResults.results[index].withdrawals[simYear] * 1.000001 >= simResults.grumpy_amt;
             var w = simResults.results[index].withdrawals[simYear];
             retVal.data.push({
                 portfolio_amt : simResults.results[index].portfolio_values[simYear],
@@ -94,7 +94,7 @@ var sim = new function(){
             }
 
             if (comparing()) {
-                ex = secondSimResults.results[index].withdrawals[simYear] * 1.000001 >= secondSimResults.initial_withdrawal_amt;
+                ex = secondSimResults.results[index].withdrawals[simYear] * 1.000001 >= secondSimResults.grumpy_amt;
                 var w2 = secondSimResults.results[index].withdrawals[simYear];
                 retVal.data.push({
                     portfolio_amt : secondSimResults.results[index].portfolio_values[simYear],

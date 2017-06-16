@@ -58,7 +58,7 @@ function validateForm(){
             foundBad = true;
         }
     });
-    
+
     $('#max_year').each(function(){
         if ($(this).val() > 2015){
             $(this).effect("highlight", { color: "red" }, 1000);
@@ -394,7 +394,9 @@ function showStats(){
     }
     
     $("#MainStats").children().first().tabulator("setData", s);
-    $("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+
+    // this scrolls to the bottom, which is useful for when we don't auto display the stats.
+    //$("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
 }
 
 function hideStats(){
@@ -483,6 +485,8 @@ $(document).ready(function () {
                 scaleCallback,
                 "#simGraph");
             if (requests.length == 2) {
+                result1[0].grumpy_amt = myFloatParse($("#grumpy_threshold").val(), allowNeg=false);
+                result2[0].grumpy_amt = myFloatParse($("#grumpy_threshold").val(), allowNeg=false);
                 simResult1 = result1[0];
                 simResult2 = result2[0];
                 $(".keyLabel1").find("circle").each(function (){
@@ -503,6 +507,7 @@ $(document).ready(function () {
                 
                 sim.showSimulation(result1[0], result2[0]);
             } else {
+                result1.grumpy_amt = myFloatParse($("#grumpy_threshold").val(), allowNeg=false);
                 simResult1 = result1;
                 simResult2 = null;
                 $(".keyLabel1").find("circle").each(function (){
@@ -515,7 +520,7 @@ $(document).ready(function () {
                 $("label.successRate2").hide();
                 sim.showSimulation(result1, null);
             }
-            $("<label type=\"submit\" class=\"displayStatsButt\">Show Statistics</label>").appendTo(body).click(function() {
+            $("<label type=\"submit\" class=\"displayStatsButt\">Hide Statistics</label>").appendTo(body).click(function() {
                 if ($(this).text() == "Show Statistics"){
                     $(this).text("Hide Statistics");
                     showStats();
@@ -526,6 +531,7 @@ $(document).ready(function () {
             });           
             
             $(".Stats").appendTo($("#actualBody")).hide();
+            showStats();
         }
         function failure(response) {
             alert("Failed to call web server." + JSON.stringify(response)); // TODO clean up error conditions
@@ -649,7 +655,11 @@ $(document).ready(function () {
                 $(this).data('oldVal', myFloatParse($(this).val(), allowNeg=false));
             });
             newCreateDiv.find('input[name=failure_threshold]').change(function () {
-                var newVal = myFloatParse($(this).val(), allowNeg=false);
+                var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
+                $(this).val(newVal).digits();
+            });
+            newCreateDiv.find('input[name=grumpy_threshold]').change(function () {
+                var newVal = myFloatParse($(this).val()).toFixed(0);
                 $(this).val(newVal).digits();
             });
 
@@ -1021,6 +1031,11 @@ $(document).ready(function (e) {
         var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         $(this).val(newVal).digits();
     });
+    $('.CreateSimulation').find('input[name=grumpy_threshold]').change(function () {
+        var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
+        $(this).val(newVal).digits();
+    });
+
     $('.CreateSimulation').find('input[name=min_year]').change(function(){
         var newVal = myFloatParse($(this).val(), allowNeg=false).toFixed(0);
         if (newVal < 1926){

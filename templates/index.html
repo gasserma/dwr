@@ -53,6 +53,16 @@
                     $ <input type="text" name="initial_portfolio_value" id="initial_portfolio_value" value="1,000,000" class="input_main" inputmode="numeric"/>
                 </span>
 
+                <label for="grumpy_threshold" title="Any yearly withdrawals below this amount cause the dots to change color.">Withdrawal Grumpy Threshold</label>
+                <span class="inputspan">
+                    $ <input type="text" name="grumpy_threshold" id="grumpy_threshold" value="30,000" class="input_main" inputmode="numeric"/>
+                </span>
+
+                <label for="failure_threshold" title="Any yearly withdrawals below this amount count as a failure for that simulation year.">Withdrawal Failure Threshold</label>
+                <span class="inputspan">
+                    $ <input type="text" name="failure_threshold" id="failure_threshold" value="20,000" class="input_main" inputmode="numeric"/>
+                </span>
+
                 <span class="retirementlengthcontainer">
                     <label for="retirement_length">Retirement Length</label>
                     <span class="inputspan">
@@ -60,11 +70,6 @@
                     </span>
                 </span>
 
-                <label for="failure_threshold" title="Any yearly withdrawals below this amount count as a failure for that simulation year.">Withdrawal Failure Threshold</label>
-                <span class="inputspan">
-                    $ <input type="text" name="failure_threshold" id="failure_threshold" value="20,000" class="input_main" inputmode="numeric"/>
-                </span>
-                
                 <span class="yearcontainer">
                     <label for="yearspan" title="These default values were chosen to match the 2010 update of the Trinity Study.">Years</label>
                     <span class="yearspan" id="yearspan">
@@ -187,22 +192,22 @@
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
                     <circle cx="10" cy="10" r="10" fill="blue"></circle>
                 </svg>
-                <label type="key" class="keyLabel1" style="font-size:20px">&gt;= Initial Withdrawal Amount</label>
+                <label type="key" class="keyLabel1" style="font-size:20px">&gt;= Grumpy Withdrawal Threshold</label>
                 <br>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel1">
                     <circle cx="10" cy="10" r="10" fill="red"></circle>
                 </svg>
-                <label type="key" class="keyLabel1" style="font-size:20px">&lt; Initial Withdrawal Amount</label>
+                <label type="key" class="keyLabel1" style="font-size:20px">&lt; Grumpy Withdrawal Threshold</label>
                 <br class="keyLabel2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
                     <circle cx="10" cy="10" r="10" fill="green"></circle>
                 </svg>
-                <label type="key" class="keyLabel2" style="font-size:20px">&gt;= Initial Withdrawal Amount (Strategy 2)</label>
+                <label type="key" class="keyLabel2" style="font-size:20px">&gt;= Grumpy Withdrawal Threshold (Strategy 2)</label>
                 <br class="keyLabel2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" class="keyLabel2">
                     <circle cx="10" cy="10" r="10" fill="yellow"></circle>
                 </svg>
-                <label type="key" class="keyLabel2" style="font-size:20px">&lt; Initial Withdrawal Amount (Strategy 2)</label>
+                <label type="key" class="keyLabel2" style="font-size:20px">&lt; Grumpy Withdrawal Threshold (Strategy 2)</label>
                 <br class="keyLabel1">
                 <label type="key" class="keyLabelboth" style="font-size:20px">Circle Radius &prop; Withdrawal Amount</label>
             </fieldset>

@@ -95,6 +95,10 @@ legend {
     background: yellow;
 }
 
+.showParamsButt:hover {
+    background: yellow;
+}
+
 /* DROPDOWNS */
 .dropdown {
     width: 100%;
