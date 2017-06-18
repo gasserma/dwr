@@ -1112,8 +1112,16 @@ function portfolioChange(inputDiv, strategyIndex){
             var old = $(this).val();
             $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
+        $('.CreateSimulation').first().find('input[name=grumpy_threshold]').each(function () {
+            var old = $(this).val();
+            $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+        });
     } else {
         $('.CreateSimulation').last().find('input[name=failure_threshold]').each(function () {
+            var old = $(this).val();
+            $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
+        });
+        $('.CreateSimulation').last().find('input[name=grumpy_threshold]').each(function () {
             var old = $(this).val();
             $(this).val((myFloatParse(old) * ratio).toFixed(0)).digits().effect("highlight", { color: '#84b1f9'}, 3000);
         });
