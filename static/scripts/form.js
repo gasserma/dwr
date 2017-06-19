@@ -472,7 +472,38 @@ $(document).ready(function () {
             
             var maxW = $(window).width();
             var maxH = $(window).height();
-            
+
+            var maxDot = Number(requests[0].initial_portfolio_value) * 4; // This is our min.
+
+            if (requests.length == 1) {
+                for (r=0; r < result1.results.length; r++){
+                    for (p=0; p < result1.results[r].portfolio_values.length; p++){
+                        var dotY = result1.results[r].portfolio_values[p];
+                        if (dotY > maxDot){
+                            maxDot = dotY;
+                        }
+                    }
+                }
+            } else {
+               for (r=0; r < result1[0].results.length; r++){
+                    for (p=0; p < result1[0].results[r].portfolio_values.length; p++){
+                        var dotY = result1[0].results[r].portfolio_values[p];
+                        if (dotY > maxDot){
+                            maxDot = dotY;
+                        }
+                    }
+                }
+
+                for (r=0; r < result2[0].results.length; r++){
+                    for (p=0; p < result2[0].results[r].portfolio_values.length; p++){
+                        var dotY = result2[0].results[r].portfolio_values[p];
+                        if (dotY > maxDot){
+                            maxDot = dotY;
+                        }
+                    }
+                }
+            }
+
             sim.init(
                 Number(requests[0].retirement_length),
                 Number(requests[0].initial_portfolio_value),
@@ -482,6 +513,7 @@ $(document).ready(function () {
                 displayYearCallback,
                 maxW,
                 maxH,
+                maxDot,
                 scaleCallback,
                 "#simGraph");
             if (requests.length == 2) {

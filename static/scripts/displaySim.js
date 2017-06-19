@@ -42,7 +42,8 @@ var sim = new function(){
         var inflationFactor = getInflationFactor(simulationStartYear - 1, year - 1);
         return "Withdrawal (Real): $" + Number(sr.withdrawal.toFixed(0)).toLocaleString('en-US', {currency: 'USD'}) + " " +
                "\nWithdrawal (Nominal): $" + Number((sr.withdrawal * inflationFactor).toFixed(0)).toLocaleString('en-US', {currency: 'USD'}) + " " +
-               "\nYear: " + year + "";
+               "\nYear: " + year + " " +
+               "\nPortfolio (after last withdrawal of this year): $" + Number((sr.portfolio_amt).toFixed(0)).toLocaleString('en-US', {currency: 'USD'})
     }
 
     // Turns out this looks like shit, but I will leave it in while I brainstorm.
@@ -207,11 +208,11 @@ var sim = new function(){
 
     var svg, xScale, yScale, rScale, xAxis, yAxis, label, sizes,
         retirementLength, initialPortfolio, startYear, endYear, currentYear, failureThresholds, displayYearCallback,
-        simResults, secondSimResults, playButtonShowing, // Clearly we are moving from 1 to 2, not 1 to n...
+        simResults, secondSimResults, maxDot, playButtonShowing, // Clearly we are moving from 1 to 2, not 1 to n...
         dot, box, overlay, maxW, maxH, changeRatio, formScaleCallback, graphElement=null;
 
     // Init all the svg stuffs
-    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, scaleCallback, targetElement) {
+    this.init = function init(length, initPortfolio, start, end, failureLimits, yearCallback, maxWidth, maxHeight, maxD, scaleCallback, targetElement) {
         retirementLength = length;
         initialPortfolio = initPortfolio;
         startYear = start;
@@ -221,6 +222,7 @@ var sim = new function(){
         displayYearCallback = yearCallback;
         maxH = maxHeight;
         maxW = maxWidth;
+        maxDot = maxD;
         formScaleCallback = scaleCallback;
         graphElement = targetElement;
 
@@ -270,7 +272,7 @@ var sim = new function(){
         }
         
         // Some dots escape the graph. Do we care? Probably, but its not a huge issue.
-        yScale = d3.scaleLinear().domain([0, initialPortfolio * 4]).range([sizes.h, 0]);
+        yScale = d3.scaleLinear().domain([0, maxDot]).range([sizes.h, 0]);
         xScale = d3.scaleLinear().domain([0, retirementLength]).range([0, sizes.w]);
         rScale = d3.scaleSqrt().domain([0, initialPortfolio / 5.0]).range([0, sizes.r]);
 
