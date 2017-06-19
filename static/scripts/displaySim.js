@@ -36,15 +36,20 @@ var sim = new function(){
 
         return .9;
     };
-    var tooltip = function(sr) {
-        return "$" + Number(sr.withdrawal.toFixed(0)).toLocaleString('en-US', {currency: 'USD'});
+    var tooltip = function(sr, simulationStartYear) {
+        simulationStartYear = Math.round(simulationStartYear);
+        var year = sr.year + simulationStartYear;
+        var inflationFactor = getInflationFactor(simulationStartYear - 1, year - 1);
+        return "Withdrawal (Real): $" + Number(sr.withdrawal.toFixed(0)).toLocaleString('en-US', {currency: 'USD'}) + " " +
+               "\nWithdrawal (Nominal): $" + Number((sr.withdrawal * inflationFactor).toFixed(0)).toLocaleString('en-US', {currency: 'USD'}) + " " +
+               "\nYear: " + year + "";
     }
 
     // Turns out this looks like shit, but I will leave it in while I brainstorm.
     var backgroundColor = function(sr){
-        return "transparent"
-        /*
-        if (sr.length == 1){
+        return "transparent";
+
+        /*if (sr.length == 1){
             if (!sr[0]) {
                 return "#ffbfbf"; // light red
             }
@@ -58,8 +63,7 @@ var sim = new function(){
             }
         }
 
-        return "transparent"
-        */
+        return "transparent";*/
     }
 
     // This has the potential to fail if we ever get market data for the year 926 or earlier
@@ -77,7 +81,7 @@ var sim = new function(){
             retVal.success.push(true);
         }
 
-        for(simYear=0; simYear < retirementLength + 1; simYear++){
+        for(simYear=0; simYear < retirementLength; simYear++){
             // These * 1.000001 are ghetto floating point comparisons.
             var ex = simResults.results[index].withdrawals[simYear] * 1.000001 >= simResults.grumpy_amt;
             var w = simResults.results[index].withdrawals[simYear];
@@ -123,10 +127,39 @@ var sim = new function(){
            .style("fill", function(sr) { return color(sr); })
            .sort(order)
            .append("svg:title")
-           .text(function(sr) { return tooltip(sr); });
+           .text(function(sr) { return tooltip(sr, simulationStartYear); });
 
-        //d3.select("rect").style("fill", backgroundColor(singleStartYear.success))
         d3.select(graphElement).style("background-color", backgroundColor(singleStartYear.success))
+
+        if (singleStartYear.success.length == 1){
+            if (singleStartYear.success[0]){
+                d3.select("#redx").style("visibility", "hidden");
+            } else {
+                d3.select("#redx").style("visibility", "visible");
+            }
+        } else {
+            if (singleStartYear.success[0]){
+                d3.select("#redx")
+                  .attr("x", box.x - 20)
+                  .style("visibility", "hidden");
+            }
+            if (!singleStartYear.success[0]) {
+                d3.select("#redx")
+                  .attr("x", box.x - 20)
+                  .style("visibility", "visible");
+            }
+            if (singleStartYear.success[1]){
+                d3.select("#yellowx")
+                  .attr("x", box.x + 20)
+                  .style("visibility", "hidden");
+            }
+            if (!singleStartYear.success[1]) {
+                d3.select("#yellowx")
+                  .attr("x", box.x + 20)
+                  .style("visibility", "visible");
+            }
+        }
+
         currentYear = Math.round(simulationStartYear);
         label.text(currentYear);
         if (displayYearCallback != null){
@@ -356,6 +389,25 @@ var sim = new function(){
            .attr("xlink:href", "/static/content/fwd.png")
            .on("click", fwd);
 
+        svg.append("svg:image")
+           .attr("id", "redx")
+           .attr("x", box.x)
+           .attr("y", box.y)
+           .attr("width", box.width)
+           .attr("height", box.height)
+           .attr("xlink:href", "/static/content/redX.png")
+           .style("visibility", "hidden");
+
+        svg.append("svg:image")
+           .attr("id", "yellowx")
+           .attr("x", box.x)
+           .attr("y", box.y)
+           .attr("width", box.width)
+           .attr("height", box.height)
+           .attr("xlink:href", "/static/content/yellowX.png")
+           .attr("opacity", .9)
+           .style("visibility", "hidden");
+
         overlay = svg.append("rect")
            .attr("class", "overlay")
            .attr("x", box.x)
@@ -431,8 +483,111 @@ var sim = new function(){
         animEndYear = ey;
         animRetirementLength = rl;
         svg.transition()
-           .duration((ey - sy - rl + 1) * 500) // If I was clever Id reference the yearscale. Also 650ms is totally arbitrary0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+           .duration((ey - sy - rl + 1) * 500) // If I was clever Id reference the yearscale. Also 650ms is totally arbitrary
            .ease(d3.easeLinear)
            .attrTween("year", animateTween); // THE PROBLEM IS GETMOUSEOVER YEAR HAS STARTYEAR
     };
+
+    var getInflationFactor = function getInflationFactor(baseYear, currentYear){
+        startCpi = cpi[baseYear];
+        endCpi = cpi[currentYear];
+        return 1.0 + ((endCpi - startCpi) / startCpi);
+    }
+
+    // This is a huge chunk of brittleness. It is a copy of the CPI used on the server side...
+    // So, make sure they stay in sync...
+    var cpi = {
+        "1924": 17.3,
+        "1925": 17.3,
+        "1926": 17.9,
+        "1927": 17.5,
+        "1928": 17.3,
+        "1929": 17.1,
+        "1930": 17.1,
+        "1931": 15.9,
+        "1932": 14.3,
+        "1933": 12.9,
+        "1934": 13.2,
+        "1935": 13.6,
+        "1936": 13.8,
+        "1937": 14.1,
+        "1938": 14.2,
+        "1939": 14,
+        "1940": 13.9,
+        "1941": 14.1,
+        "1942": 15.7,
+        "1943": 16.9,
+        "1944": 17.4,
+        "1945": 17.8,
+        "1946": 18.2,
+        "1947": 21.5,
+        "1948": 23.7,
+        "1949": 24,
+        "1950": 23.5,
+        "1951": 25.4,
+        "1952": 26.5,
+        "1953": 26.6,
+        "1954": 26.9,
+        "1955": 26.7,
+        "1956": 26.8,
+        "1957": 27.6,
+        "1958": 28.6,
+        "1959": 29,
+        "1960": 29.3,
+        "1961": 29.8,
+        "1962": 30,
+        "1963": 30.4,
+        "1964": 30.9,
+        "1965": 31.2,
+        "1966": 31.8,
+        "1967": 32.9,
+        "1968": 34.1,
+        "1969": 35.6,
+        "1970": 37.8,
+        "1971": 39.8,
+        "1972": 41.1,
+        "1973": 42.6,
+        "1974": 46.6,
+        "1975": 52.1,
+        "1976": 55.6,
+        "1977": 58.5,
+        "1978": 62.5,
+        "1979": 68.3,
+        "1980": 77.8,
+        "1981": 87,
+        "1982": 94.3,
+        "1983": 97.8,
+        "1984": 101.9,
+        "1985": 105.5,
+        "1986": 109.6,
+        "1987": 111.2,
+        "1988": 115.7,
+        "1989": 121.1,
+        "1990": 127.4,
+        "1991": 134.6,
+        "1992": 138.1,
+        "1993": 142.6,
+        "1994": 146.2,
+        "1995": 150.3,
+        "1996": 154.4,
+        "1997": 159.1,
+        "1998": 161.6,
+        "1999": 164.3,
+        "2000": 168.8,
+        "2001": 175.1,
+        "2002": 177.1,
+        "2003": 181.7,
+        "2004": 185.2,
+        "2005": 190.7,
+        "2006": 198.3,
+        "2007": 202.416,
+        "2008": 211.08,
+        "2009": 211.143,
+        "2010": 216.687,
+        "2011": 220.223,
+        "2012": 226.665,
+        "2013": 230.280,
+        "2014": 233.916,
+        "2015": 233.707
+    }
 };
