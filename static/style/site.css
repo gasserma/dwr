@@ -6,6 +6,10 @@ body {
     margin:0;
 }
 
+.dot {
+    stroke: #000;
+}
+
 /* HEADER */
 @media (max-width: 900px) {
     li a {
@@ -71,32 +75,45 @@ legend {
 
 .removeStrategyButt:hover {
     background: red;
+    cursor: pointer;
+}
+
+.addStrategyButt:hover {
+    background: green;
+    cursor: pointer;
 }
 
 .runSimButt:hover {
     background: green;
+    cursor: pointer;
 }
 
 .compareButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 
 .trinityGraphButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 .percentGraphButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 .compareGraphButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 
 .displayStatsButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 
 .showParamsButt:hover {
     background: yellow;
+    cursor: pointer;
 }
 
 /* DROPDOWNS */
@@ -122,7 +139,10 @@ legend {
     display: block;
 }
 
-.dropdown-content a:hover {background-color: #f1f1f1}
+.dropdown-content a:hover {
+    background-color: green;
+    cursor: pointer;
+}
 
 .CreateSimulation {
     width: 300px;

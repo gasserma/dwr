@@ -600,6 +600,8 @@ $(document).ready(function () {
             $(".runSimButt").hide();
 
             var newCreateDiv = $("#createClone").clone().removeAttr('id').insertAfter(".compareButt");
+            chooseAddStrategyButtonText(1);
+
             newCreateDiv.find('.retirementlengthcontainer').each(function() {$(this).hide();})
             newCreateDiv.find('.yearcontainer').each(function() {$(this).hide();})
             
@@ -665,7 +667,6 @@ $(document).ready(function () {
 
             $(this).text("Remove Second Strategy");
         } else {
-            $(".runSimButt").show();
             comparing = false;
             var lastCreate = $(".CreateSimulation").last();
             $(lastCreate).nextUntil(".CreateSimulation").each(function () {
@@ -675,8 +676,11 @@ $(document).ready(function () {
             });
 
             strategies[1] = [];
-
             $(lastCreate).remove();
+            if (runSimulationAvailable()){
+                $(".runSimButt").show();
+            }
+
             $(this).text("Compare With Another Strategy");
         }
     });
@@ -789,6 +793,8 @@ function addStrategy(c, t, create, strategyIndex){
         $(newStratDiv).find(".weightcontainer").hide();
     }
 
+    chooseAddStrategyButtonText(strategyIndex);
+
     $(newStratDiv).data("type", t);
     $(newStratDiv).data("strategyIndex", strategyIndex);
     var newStrat = $("." + c).last().clone();
@@ -857,6 +863,8 @@ function addStrategy(c, t, create, strategyIndex){
         if (!runSimulationAvailable()){
             $(".runSimButt").hide('slow');
         }
+
+        chooseAddStrategyButtonText(strategyIndex);
     });
 
     if (runSimulationAvailable()){
@@ -989,6 +997,22 @@ function addStrategy(c, t, create, strategyIndex){
     });
 
     balanceWeights();
+}
+
+function chooseAddStrategyButtonText(strategyIndex){
+    if (strategyIndex == 0){
+        if (strategies[strategyIndex].length == 0){
+            $(".addStrategyButt").first().text("Add Withdrawal Strategy");
+        } else {
+            $(".addStrategyButt").first().text("Diversify Withdrawal Strategies");
+        }
+    } else {
+        if (strategies[strategyIndex].length == 0){
+            $(".addStrategyButt").last().text("Add Withdrawal Strategy");
+        } else {
+            $(".addStrategyButt").last().text("Diversify Withdrawal Strategies");
+        }
+    }
 }
 
 $(document).ready(function (e) {
