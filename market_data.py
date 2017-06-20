@@ -149,13 +149,13 @@ def getSP500Dividends(lyear, lmonth):
     if (lyear, lmonth) not in sp500DividendsCache:
         script = os.path.dirname(__file__)
         path = os.path.join(script, "./data/sp500dividends.txt")
-        f = open(path, mode="r")
-        for line in f:
-            split = line.split()
-            month = mapMonthStringToInt(split[0])
-            year = int(split[2])
-            val = float(split[3].replace("%", "")) / 100.00
-            sp500DividendsCache[(year, month)] = val
+        with open(path, mode="r") as f:
+            for line in f:
+                split = line.split()
+                month = mapMonthStringToInt(split[0])
+                year = int(split[2])
+                val = float(split[3].replace("%", "")) / 100.00
+                sp500DividendsCache[(year, month)] = val
 
     return (sp500DividendsCache[(lyear, lmonth)] / 12) + 1.0
 
@@ -168,35 +168,35 @@ def getSP500Return(lyear, lmonth):
         value = {}
         script = os.path.dirname(__file__)
         path = os.path.join(script, "./data/sp500.txt")
-        f = open(path, mode="r")
-        for line in f:
-            split = line.split()
-            month = mapMonthStringToInt(split[0])
-            year = int(split[2])
-            val = float(split[3].replace(",", ""))
+        with open(path, mode="r") as f:
+            for line in f:
+                split = line.split()
+                month = mapMonthStringToInt(split[0])
+                year = int(split[2])
+                val = float(split[3].replace(",", ""))
 
-            # except this file tracs to the 1st of the month...
-            month -= 1
-            if month == 0:
-                year -= 1
-                month = 12
+                # except this file tracs to the 1st of the month...
+                month -= 1
+                if month == 0:
+                    year -= 1
+                    month = 12
 
-            value[(year, month)] = val
+                value[(year, month)] = val
 
-        for yearMonth in value.keys():
-            pyear = yearMonth[0]
-            pmonth = yearMonth[1] - 1
-            if pmonth == 0:
-                pyear -= 1
-                pmonth = 12
+            for yearMonth in value.keys():
+                pyear = yearMonth[0]
+                pmonth = yearMonth[1] - 1
+                if pmonth == 0:
+                    pyear -= 1
+                    pmonth = 12
 
-            if (pyear, pmonth) in value:
-                cur = value[yearMonth]
-                prev = value[(pyear, pmonth)]
-                rate = cur / prev
-                sp500ReturnsCache[yearMonth] = rate
-            else:
-                sp500ReturnsCache[yearMonth] = 1.0
+                if (pyear, pmonth) in value:
+                    cur = value[yearMonth]
+                    prev = value[(pyear, pmonth)]
+                    rate = cur / prev
+                    sp500ReturnsCache[yearMonth] = rate
+                else:
+                    sp500ReturnsCache[yearMonth] = 1.0
 
     return sp500ReturnsCache[(lyear, lmonth)]
 
@@ -209,21 +209,21 @@ def getLongTermCorpBondsReturn(lyear, lmonth):
     if (lyear, lmonth) not in longTermCorpBondsReturnCacne:
         script = os.path.dirname(__file__)
         path = os.path.join(script, "./data/longtermcorpbonds.txt")
-        f = open(path, mode="r")
-        for line in f:
-            if "YEAR" in line:
-                continue
-            split = line.split()
-            year = int(split[0])
-            yearRate = float(split[13]) / 10000
-            yearRateCalc = 1.0
-            for i in range(1, 13):
-                monthRate = float(split[i]) / 10000
-                yearRateCalc *= 1.0 + monthRate
-                longTermCorpBondsReturnCacne[(year, i)] = monthRate
+        with open(path, mode="r") as f:
+            for line in f:
+                if "YEAR" in line:
+                    continue
+                split = line.split()
+                year = int(split[0])
+                yearRate = float(split[13]) / 10000
+                yearRateCalc = 1.0
+                for i in range(1, 13):
+                    monthRate = float(split[i]) / 10000
+                    yearRateCalc *= 1.0 + monthRate
+                    longTermCorpBondsReturnCacne[(year, i)] = monthRate
 
-            if not isclose(yearRateCalc, yearRate + 1.0, rel_tol=.001):
-                raise RuntimeError
+                if not isclose(yearRateCalc, yearRate + 1.0, rel_tol=.001):
+                    raise RuntimeError
 
     if not (lyear, lmonth) in longTermCorpBondsReturnCacne:
         raise RuntimeError

@@ -92,6 +92,8 @@ function getJsonRequest(createDiv) {
             $(this).find(".input_strat").each(function() {
                 if (this.name.indexOf("percent") != -1){
                     strat['args'][this.name] = myFloatParse(this.value)/100.0;
+                } else if (this.name.indexOf("gk_") != -1) {
+                    strat['args'][this.name] = $(this).is(":checked");
                 } else {
                     strat['args'][this.name] = myFloatParse(this.value);
                 }

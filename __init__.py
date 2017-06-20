@@ -56,13 +56,12 @@ def home():
 def about():
     script = os.path.dirname(__file__)
     path = os.path.join(script, "./templates/about.md")
-    f = open(path, mode="r").read()
-
-    return render_template(
-        'about.html',
-        title='PDP About',
-        content=Markup(markdown.markdown(f))
-    )
+    with open(path, mode="r") as f:
+        return render_template(
+            'about.html',
+            title='PDP About',
+            content=Markup(markdown.markdown(f.read()))
+        )
 
 @app.route('/intro')
 @app.route('/tutorial')
@@ -71,26 +70,24 @@ def about():
 def basics():
     script = os.path.dirname(__file__)
     path = os.path.join(script, "./templates/basics.md")
-    f = open(path, mode="r").read()
-
-    return render_template(
-        'basics.html',
-        title='PDP Basics',
-        content=Markup(markdown.markdown(f))
-    )
+    with open(path, mode="r") as f:
+        return render_template(
+            'basics.html',
+            title='PDP Basics',
+            content=Markup(markdown.markdown(f.read()))
+        )
 
 @app.route('/FAQ')
 @app.route('/faq')
 def faq():
     script = os.path.dirname(__file__)
     path = os.path.join(script, "./templates/faq.md")
-    f = open(path, mode="r").read()
-
-    return render_template(
-        'faq.html',
-        title='PDP FAQ',
-        content=Markup(markdown.markdown(f))
-    )
+    with open(path, mode="r") as f:
+        return render_template(
+            'faq.html',
+            title='PDP FAQ',
+            content=Markup(markdown.markdown(f.read()))
+        )
 
 @app.route("/simulations", methods=["POST"])
 def simulations():
@@ -117,7 +114,13 @@ def simulations():
         weight = float(s.get("weight", 1.0))
         strategyType = s["type"]
         if strategyType.lower() == "guyton_klinger":
-            strategy = GuytonKlinger(float(args.get("initial_amount")), retirementLength)
+            strategy = GuytonKlinger(
+                float(args.get("initial_amount")),
+                bool(args.get("gk_pmr")),
+                bool(args.get("gk_wr")),
+                bool(args.get("gk_cpr")),
+                bool(args.get("gk_pr")),
+                retirementLength)
         elif strategyType.lower() == "const_amount":
             strategy = ConstantWithdrawalAmountStrategy(float(args["amount"]))
         elif strategyType.lower() == "const_percent":

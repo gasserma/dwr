@@ -151,8 +151,12 @@
         <div class="GuytonKlinger" style="display: none;">
             <label for="gk_input">Initial Withdrawal Amount</label>
             <span class="inputspan">
-                $ <input type="text" name="initial_amount" id="gk_input" value="40,000" class="input_strat"  inputmode="numeric"/>
+                $ <input type="text" name="initial_amount" id="gk_input" value="40,000" class="input_strat" inputmode="numeric"/>
             </span>
+            <input type="checkbox" name="gk_pmr" class="input_strat" title="This rule has been abandoned by Guyton and Klinger. This rule causes a cash reserve to be built out of various overperforming assets that is then used to fund withdrawals in down years.">Portfolio Management Rule<br>
+            <input type="checkbox" name="gk_wr" class="input_strat" title="This rule puts a cap on increasing withdrawals in accordance with inflation." checked>Withdrawal Rule<br>
+            <input type="checkbox" name="gk_cpr" class="input_strat" title="This rule shrinks the withdrawal amount when the withdrawal rate becomes significantly larger than the initial rate." checked>Capital Preservation Rule<br>
+            <input type="checkbox" name="gk_pr" class="input_strat" title="This rule grows the withdrawal amount when the withdrawal rate becomes significantly less than in initial rate." checked>Prosperity Rule<br>
             <label type="submit" class="removeStrategyButt">Click To Remove</label>
         </div>
         <div class="ConstAmount" style="display: none;">

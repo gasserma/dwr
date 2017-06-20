@@ -10,7 +10,7 @@ class TestStrategies(unittest.TestCase):
     """
     def test_basicWithdrawal(self):
         length = 30
-        gk = GuytonKlinger(.05, length)
+        gk = GuytonKlinger(.05, True, True, True, True, length)
         gk.reset(Portfolio(Assets(.5, .5)))
         withdrawal = gk.yearWithdraw(1.0)
         self.assertAlmostEqual(withdrawal, .05, delta=.005)

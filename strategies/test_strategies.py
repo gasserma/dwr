@@ -141,7 +141,7 @@ class TestStrategies(unittest.TestCase):
             
     def test_yearBase(self):
         length = 30
-        gk = GuytonKlinger(.05, length)
+        gk = GuytonKlinger(.05, True, True, True, True,  length)
         gk.reset(Portfolio(Assets(.5, .5)))
 
         # withdraw and grow once
@@ -182,7 +182,7 @@ class TestStrategies(unittest.TestCase):
         simLength = 30
 
         strategies = [
-            ((GuytonKlinger(i * .04, simLength), assets, 1.0), True),
+            ((GuytonKlinger(i * .04, True, True, True, True,  simLength), assets, 1.0), True),
             ((ConstantWithdrawalAmountStrategy(i * .04), assets, 1.0), True),
             ((ConstantPercentWithdrawalStrategy(.04), assets, 1.0), True),
             ((Vpw(.02, simLength, .04), assets, 1.0), True),

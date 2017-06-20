@@ -13,7 +13,7 @@ result = runSimulation(
     initialPortfolio,
     .05 * initialPortfolio * .5,
     (
-        (GuytonKlinger(.05 * initialPortfolio, retirementLength), Assets(.5, .5), 1.0),
+        (GuytonKlinger(.05 * initialPortfolio, True, True, True, True, retirementLength), Assets(.5, .5), 1.0),
     ),
     1926,
     2009
