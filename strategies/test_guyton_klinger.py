@@ -2,6 +2,7 @@ import unittest
 
 from assets import Assets
 from portfolio import Portfolio
+from simulator import runSimulation
 from strategies.guyton_klinger import GuytonKlinger
 
 class TestStrategies(unittest.TestCase):
@@ -21,7 +22,23 @@ class TestStrategies(unittest.TestCase):
             monthlyWithdrawals += gk.withdraw(1.0, 12)
         self.assertAlmostEqual(withdrawal, monthlyWithdrawals, delta=.005)
 
+    def test_noOptions(self):
+        retirementLength = 30
 
+        result = runSimulation(
+            retirementLength,
+            1 * 1000 * 1000,
+            20000,
+            (
+                (GuytonKlinger(40000, False, False, False, False, retirementLength), Assets(.5, .5), 1.0),
+            ),
+            1926,
+            2009
+        )
+
+        result.getSimResults()
+
+        print(result)
 
 
 
