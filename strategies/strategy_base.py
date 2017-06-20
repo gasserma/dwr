@@ -48,8 +48,10 @@ class YearlyStrategyBase(StrategyBase):
             self.cash = self.yearWithdraw(inflationRate) # inflation rates are already yearly
 
         currWithdrawal = self.getCurrentWithdrawalAmount() / 12
-        if self.cash < 0:
-            return self.cash
+        if self.cash - currWithdrawal < 0:
+            retval = self.cash
+            self.cash = 0
+            return retval
 
         self.cash -= currWithdrawal
         return currWithdrawal
