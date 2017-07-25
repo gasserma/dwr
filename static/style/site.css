@@ -78,11 +78,6 @@ legend {
     cursor: pointer;
 }
 
-.addStrategyButt:hover {
-    background: green;
-    cursor: pointer;
-}
-
 .runSimButt:hover {
     background: green;
     cursor: pointer;
