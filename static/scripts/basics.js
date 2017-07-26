@@ -26,9 +26,12 @@ function success(result1, result2) {
         4*1000*1000,
         scaleCallback,
         element);
-    if (requests.length == 2) {        
+    if (requests.length == 2) {
+        result1.grumpy_amt = 40000;
         sim.showSimulation(result1[0], result2[0]);
     } else {
+        result1.grumpy_amt = 40000;
+        result2.grumpy_amt = 40000;
         sim.showSimulation(result1, null);
     }
 }
