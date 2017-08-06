@@ -59,7 +59,7 @@ def about():
     with open(path, mode="r") as f:
         return render_template(
             'about.html',
-            title='PDP About',
+            title='PolkaDotPlanner - About',
             content=Markup(markdown.markdown(f.read()))
         )
 
@@ -73,7 +73,7 @@ def basics():
     with open(path, mode="r") as f:
         return render_template(
             'basics.html',
-            title='PDP Basics',
+            title='PolkaDotPlanner - Basics',
             content=Markup(markdown.markdown(f.read()))
         )
 
@@ -85,7 +85,7 @@ def faq():
     with open(path, mode="r") as f:
         return render_template(
             'faq.html',
-            title='PDP FAQ',
+            title='PolkaDotPlanner - FAQ',
             content=Markup(markdown.markdown(f.read()))
         )
 
