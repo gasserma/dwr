@@ -49,7 +49,7 @@ def topLevelError(e):
 def home():
     return render_template(
         'index.html',
-        title='PDP Home'
+        title='PolkaDotPlanner - Home'
     )
 
 @app.route('/about')
